@@ -2,9 +2,9 @@
 
 #include "../cardTypes/Treasure.hpp"
 
-class Copper: public Treasure {
+class Silver: public Treasure {
 
 public:
-    Copper();
+    Silver();
     void play();
 };

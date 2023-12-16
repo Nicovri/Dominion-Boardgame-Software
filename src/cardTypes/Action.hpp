@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../game/Card.hpp"
 
 class Action: public Card {
@@ -8,5 +10,6 @@ public:
     bool isActionCard();
     bool isTreasureCard();
     bool isVictoryCard();
+    virtual void play() = 0;
     virtual void useEffect();
 };

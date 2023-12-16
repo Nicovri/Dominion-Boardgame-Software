@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Pile.hpp"
+// #include "Board.hpp"
+#include "Card.hpp"
 #include "../cardTypes/Action.hpp"
 #include "../cardTypes/Treasure.hpp"
 #include <string>
@@ -14,7 +16,8 @@ class Player {
     int nbCoins;
     Pile deck;
     Pile discard;
-    std::vector<Card> hand;
+    std::vector<Card*> hand;
+    // Board *game;
 
 public:
     Player(std::string username);
@@ -26,10 +29,11 @@ public:
     int getNbBuys() const;
     int getNbCoins() const;
     int getNbCardsInHand() const;
-    Card getCard(int indexInHand) const;
+    Card* getCard(int indexInHand) const;
 
-    void setBaseDeck(std::vector<Card> baseDeck);
-    void getNewCard(Card card);
+    // void assignToGame(Board b);
+    void setBaseDeck(std::vector<Card*> baseDeck);
+    void getNewCard(Card *card);
     void getDeckFromDiscard();
     void getHandFromDeck();
     void getNewCardFromDeck();

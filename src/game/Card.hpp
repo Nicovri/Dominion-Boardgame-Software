@@ -12,10 +12,10 @@ public:
     Card();
     Card(int price, std::string title, bool isVisible);
     virtual ~Card() = default;
-    virtual bool isActionCard();
-    virtual bool isTreasureCard();
-    virtual bool isVictoryCard();
-    // virtual void playCard() = 0;
+    virtual bool isActionCard() = 0;
+    virtual bool isTreasureCard() = 0;
+    virtual bool isVictoryCard() = 0;
+    virtual void play() = 0;
 
-    friend std::ostream& operator<<(std::ostream &os, const Card &c);
+    friend std::ostream& operator<<(std::ostream &os, const Card *c);
 };

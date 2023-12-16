@@ -5,8 +5,9 @@ SRCDIR=./src
 BUILDDIR=./build
 CARDSDIR=$(BUILDDIR)/cards
 
-# $(BUILDDIR)/graphics.o: $(SRCDIR)/graphics.cpp
-# 	$(CXX) $(CXXFLAGS) -I ./include/ -c $< -o $@
+# compile:
+# 	$(CXX) -Isfml/include -c ./src/main.cpp
+# 	$(CXX) ./build/main.o -o sfml-app -Lsfml/lib -lsfml-graphics -lsfml-window -lsfml-system
 # # ???
 
 $(BUILDDIR)/%.o: $(SRCDIR)/game/%.cpp | $(BUILDDIR)
@@ -21,7 +22,7 @@ $(BUILDDIR)/cards/%.o: $(SRCDIR)/cards/%.cpp | $(CARDSDIR)
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | $(BUILDDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BUILDDIR)/dominion-game: $(BUILDDIR)/main.o $(BUILDDIR)/enums.o $(BUILDDIR)/Board.o $(BUILDDIR)/Set.o $(BUILDDIR)/Player.o $(BUILDDIR)/Card.o $(BUILDDIR)/Pile.o $(BUILDDIR)/Point.o $(BUILDDIR)/Victory.o $(BUILDDIR)/Treasure.o $(BUILDDIR)/Action.o $(CARDSDIR)/Estate.o $(CARDSDIR)/Duchy.o $(CARDSDIR)/Copper.o
+$(BUILDDIR)/dominion-game: $(BUILDDIR)/main.o $(BUILDDIR)/enums.o $(BUILDDIR)/Board.o $(BUILDDIR)/Set.o $(BUILDDIR)/Player.o $(BUILDDIR)/Card.o $(BUILDDIR)/Pile.o $(BUILDDIR)/Point.o $(BUILDDIR)/Victory.o $(BUILDDIR)/Treasure.o $(BUILDDIR)/Action.o $(CARDSDIR)/Curse.o $(CARDSDIR)/Estate.o $(CARDSDIR)/Duchy.o $(CARDSDIR)/Province.o $(CARDSDIR)/Copper.o $(CARDSDIR)/Silver.o $(CARDSDIR)/Gold.o
 	$(CXX) $^ -o $@
 
 .PHONY: run clean

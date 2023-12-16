@@ -7,9 +7,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
-#include "cards/Copper.hpp"
-#include "cards/Estate.hpp"
+// #include <SFML/Graphics.hpp>
 
 /*
     argv[0] : program name
@@ -33,7 +31,7 @@ int main(int argc, char* argv[]) {
 
     Board b {players};
 
-    std::vector<Card> baseDeck = {Copper(), Copper(), Copper(), Copper(), Copper(), Copper(), Copper(), Estate(), Estate(), Estate()};
+    std::vector<Card*> baseDeck = Set::getBaseDeck();
     std::vector<Pile> piles = Set::getSetCards(nbPlayers, SetName::Base);
 
     b.initializeBoard(baseDeck, piles);

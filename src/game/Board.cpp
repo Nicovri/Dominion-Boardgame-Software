@@ -26,8 +26,9 @@ Player Board::getCurrentPlayer() const { return this->players.at(currentPlayer);
 
 int Board::getCurrentPlayerIndex() const { return this->currentPlayer; }
 
-bool Board::initializeBoard(std::vector<Card> baseDeck, std::vector<Pile> piles) {
+bool Board::initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles) {
     for(Player &p : this->players) {
+        // p.assignToGame(*this);
         p.setBaseDeck(baseDeck);
         p.getHandFromDeck();
     }
@@ -44,7 +45,7 @@ void Board::playRound() {
     while(p->hasActionCards() || p->getNbActions() > 0) {
         if(!p->hasActionCards()) { break; }
         int cardIndex = -2;
-        while(p->getCard(cardIndex).isActionCard() || cardIndex < -1 || cardIndex > p->getNbCardsInHand()-1) {
+        while(p->getCard(cardIndex)->isActionCard() || cardIndex < -1 || cardIndex > p->getNbCardsInHand()-1) {
             std::cout << "Which card would you like to play?: ";
             std::cin >> cardIndex;
         }
@@ -53,8 +54,9 @@ void Board::playRound() {
         }
     }
     for(int i = 0; i < p->getNbCardsInHand(); i++) {
+        std::cout << p->getCard(i)->isTreasureCard();
         // Never works because the instance is Card and not Treasure as it should be
-        if(p->getCard(i).isTreasureCard()) {
+        if(p->getCard(i)->isTreasureCard()) {
             p->playCard(i);
         }
     }

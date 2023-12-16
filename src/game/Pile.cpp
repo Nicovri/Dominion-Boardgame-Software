@@ -2,14 +2,14 @@
 
 Pile::Pile() {}
 
-Pile::Pile(Card c, int num) {
+Pile::Pile(Card *c, int num) {
     for(int i = 0; i < num; i++) {
         cardStack.push(c);
     }
 }
 
-Pile::Pile(std::vector<Card> cards) {
-    for(Card c : cards) {
+Pile::Pile(std::vector<Card*> cards) {
+    for(Card *c : cards) {
         this->cardStack.push(c);
     }
 }
@@ -29,7 +29,7 @@ Pile& Pile::operator=(const Pile &p) {
 
 void Pile::shuffle() {
     srand(time(NULL));
-    std::vector<Card> v = {};
+    std::vector<Card*> v = {};
     while(!this->isEmpty()) {
         v.push_back(cardStack.top());
         cardStack.pop();
@@ -52,8 +52,8 @@ void Pile::clear() {
 
 int Pile::getNbCards() { return this->cardStack.size(); }
 
-std::vector<Card> Pile::getCards(int number) {
-    std::vector<Card> cards = {};
+std::vector<Card*> Pile::getCards(int number) {
+    std::vector<Card*> cards = {};
     for(int i = 0; i < number; i++) {
         if(!this->isEmpty()) {
             cards.push_back(cardStack.top());
@@ -63,7 +63,7 @@ std::vector<Card> Pile::getCards(int number) {
     return cards;
 }
 
-void Pile::addCard(Card card) {
+void Pile::addCard(Card *card) {
     this->cardStack.push(card);
 }
 

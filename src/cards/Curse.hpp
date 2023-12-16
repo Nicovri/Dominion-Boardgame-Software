@@ -2,9 +2,9 @@
 
 #include "../cardTypes/Victory.hpp"
 
-class Estate: public Victory {
+class Curse: public Victory {
 
 public:
-    Estate();
+    Curse();
     void play();
 };

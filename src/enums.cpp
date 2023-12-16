@@ -1,9 +1,24 @@
-enum class ActionCardName {};
+enum class ActionCardName {
+    Workshop,
+    Woodcutter,
+    Cellar,
+    Chapel,
+    Smithy,
+    Market,
+    Mine,
+    Remodel,
+    Witch,
+    Village
+};
 
 enum class OtherCardName {
+    Curse,
     Estate,
     Duchy,
-    Copper
+    Province,
+    Copper,
+    Silver,
+    Gold
 };
 
 enum class SetName {

@@ -19,7 +19,7 @@ public:
     int getNbPiles() const;
     Player getCurrentPlayer() const;
     int getCurrentPlayerIndex() const;
-    bool initializeBoard(std::vector<Card> baseDeck, std::vector<Pile> piles);
+    bool initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles);
     void playRound();
 
     friend std::ostream& operator<<(std::ostream &os, const Board &b);

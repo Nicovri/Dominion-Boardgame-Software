@@ -29,16 +29,18 @@ int Player::getNbCoins() const { return this->nbCoins; }
 
 int Player::getNbCardsInHand() const { return this->hand.size(); }
 
-Card Player::getCard(int indexInHand) const {
+Card* Player::getCard(int indexInHand) const {
     if(indexInHand <= this->getNbCardsInHand()-1 && indexInHand >= 0) {
         return this->hand.at(indexInHand);
     }
-    return Card();
+    return NULL;
 }
 
-void Player::setBaseDeck(std::vector<Card> baseDeck) { this->deck = Pile{baseDeck}; }
+// void Player::assignToGame(Board b) { this->game = &b; }
 
-void Player::getNewCard(Card card) {
+void Player::setBaseDeck(std::vector<Card*> baseDeck) { this->deck = Pile{baseDeck}; }
+
+void Player::getNewCard(Card *card) {
     this->discard.addCard(card);
     this->nbBuys--;
 }
@@ -70,8 +72,8 @@ void Player::getNewCardFromDeck() {
 }
 
 bool Player::hasActionCards() {
-    for(Card c : hand) {
-        if(c.isActionCard()) {
+    for(Card *c : hand) {
+        if(c->isActionCard()) {
             return true;
         }
     }
@@ -79,8 +81,8 @@ bool Player::hasActionCards() {
 }
 
 bool Player::hasTreasureCards() {
-    for(Card c : hand) {
-        if(c.isTreasureCard()) {
+    for(Card *c : hand) {
+        if(c->isTreasureCard()) {
             return true;
         }
     }
@@ -93,8 +95,7 @@ void Player::beginRound() {
 }
 
 void Player::playCard(int indexInHand) {
-    Card *c = &this->hand.at(indexInHand);
-    std::cout << c->isTreasureCard();
+    Card *c = this->hand.at(indexInHand);
     if(c->isActionCard()) {
         dynamic_cast<Action*>(c)->useEffect();
     }
@@ -104,7 +105,7 @@ void Player::playCard(int indexInHand) {
 }
 
 void Player::finishRound() {
-    for(Card c : this->hand) {
+    for(Card *c : this->hand) {
         discard.addCard(c);
     }
     this->hand.clear();
