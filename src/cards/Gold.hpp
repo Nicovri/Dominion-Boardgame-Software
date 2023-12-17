@@ -6,5 +6,5 @@ class Gold: public Treasure {
 
 public:
     Gold();
-    void play();
+    void play(Board &b);
 };

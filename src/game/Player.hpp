@@ -9,15 +9,18 @@
 #include <iostream>
 #include <vector>
 
+class Board;
+
 class Player {
     std::string username;
     int nbActions;
     int nbBuys;
     int nbCoins;
+    int nbVictory;
     Pile deck;
     Pile discard;
-    std::vector<Card*> hand;
-    // Board *game;
+    Pile hand;
+    Board *game;
 
 public:
     Player(std::string username);
@@ -28,21 +31,25 @@ public:
     int getNbActions() const;
     int getNbBuys() const;
     int getNbCoins() const;
+    int getTotalVictoryPoints() const;
+    void addVictoryPoints(int nb);
+    void addCoins(int nb);
     int getNbCardsInHand() const;
     Card* getCard(int indexInHand) const;
 
-    // void assignToGame(Board b);
+    void assignToGame(Board &b);
     void setBaseDeck(std::vector<Card*> baseDeck);
     void getNewCard(Card *card);
     void getDeckFromDiscard();
     void getHandFromDeck();
     void getNewCardFromDeck();
-    int getTotalVictoryPoints() const;
+    void setTotalVictoryPoints();
     bool hasActionCards();
     bool hasTreasureCards();
     void beginRound();
     void playCard(int indexInHand);
     void finishRound();
 
-    friend std::ostream& operator<<(std::ostream &os, const Player &p);
+    friend bool operator<(const Player& l, const Player& r);
+    friend std::ostream& operator<<(std::ostream &os, const Player *p);
 };

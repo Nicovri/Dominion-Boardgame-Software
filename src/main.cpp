@@ -15,7 +15,7 @@
 */
 int main(int argc, char* argv[]) {
     int nbPlayers = 0;
-    std::vector<Player> players;
+    std::vector<Player*> players;
 
     while(nbPlayers < 2 || nbPlayers > 4) {
         std::cout << "How many players are you? (2 to 4): ";
@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
         std::string username;
         std::cout << "What is your username, player " << i << "?: ";
         std::cin >> username;
-        players.push_back(Player{username});
+        players.push_back(new Player{username});
     }
 
     Board b {players};
@@ -39,8 +39,15 @@ int main(int argc, char* argv[]) {
     std::cout << b << std::endl;
 
     b.playRound();
-
     std::cout << b << std::endl;
+
+    // while(!b.gameIsOver()) {
+    //     b.playRound();
+    //     std::cout << b << std::endl;
+    // }
+
+    // b.showResults();
+
 
     if(argc == 2 && strcmp(argv[1], "1")) {
         

@@ -1,6 +1,6 @@
 #include "Board.hpp"
 
-Board::Board(std::vector<Player> ps) {
+Board::Board(std::vector<Player*> ps) {
     if(ps.size() < 2 || ps.size() > 4) {
         // Error
     } else  {
@@ -10,11 +10,11 @@ Board::Board(std::vector<Player> ps) {
     }
 }
 
-Board::Board(Player &p1, Player &p2) { this->players.push_back(p1); this->players.push_back(p2); }
+Board::Board(Player &p1, Player &p2) { this->players.push_back(&p1); this->players.push_back(&p2); }
 
-Board::Board(Player &p1, Player &p2, Player &p3) { this->players.push_back(p1); this->players.push_back(p2); this->players.push_back(p3); }
+Board::Board(Player &p1, Player &p2, Player &p3) { this->players.push_back(&p1); this->players.push_back(&p2); this->players.push_back(&p3); }
 
-Board::Board(Player &p1, Player &p2, Player &p3, Player &p4) { this->players.push_back(p1); this->players.push_back(p2); this->players.push_back(p3); this->players.push_back(p4); }
+Board::Board(Player &p1, Player &p2, Player &p3, Player &p4) { this->players.push_back(&p1); this->players.push_back(&p2); this->players.push_back(&p3); this->players.push_back(&p4); }
 
 Board::~Board() {}
 
@@ -22,17 +22,19 @@ int Board::getNbPlayers() const { return this->players.size(); }
 
 int Board::getNbPiles() const { return this->piles.size(); }
 
-Player Board::getCurrentPlayer() const { return this->players.at(currentPlayer); }
+Player* Board::getCurrentPlayer() const { return this->players.at(currentPlayer); }
 
 int Board::getCurrentPlayerIndex() const { return this->currentPlayer; }
 
 bool Board::initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles) {
-    for(Player &p : this->players) {
-        // p.assignToGame(*this);
-        p.setBaseDeck(baseDeck);
-        p.getHandFromDeck();
+    for(const auto &p : this->players) {
+        p->assignToGame(*this);
+        p->setBaseDeck(baseDeck);
+        p->getHandFromDeck();
     }
     for(Pile &p : piles) {
+        p.assignToGame(*this);
+        trash.assignToGame(*this);
         this->piles.push_back(p);
     }
     this->currentPlayer = 0;
@@ -40,7 +42,7 @@ bool Board::initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles
 }
 
 void Board::playRound() {
-    Player *p = &this->players.at(currentPlayer);
+    Player *p = this->players.at(currentPlayer);
     p->beginRound();
     while(p->hasActionCards() || p->getNbActions() > 0) {
         if(!p->hasActionCards()) { break; }
@@ -54,8 +56,6 @@ void Board::playRound() {
         }
     }
     for(int i = 0; i < p->getNbCardsInHand(); i++) {
-        std::cout << p->getCard(i)->isTreasureCard();
-        // Never works because the instance is Card and not Treasure as it should be
         if(p->getCard(i)->isTreasureCard()) {
             p->playCard(i);
         }
@@ -71,17 +71,37 @@ void Board::playRound() {
             p->getNewCard(this->piles.at(pileIndex).getCards(1).at(0));
         }
     }
+    p->finishRound();
     if(currentPlayer == int(this->players.size())-1) {
         currentPlayer = 0;
     } else {
         currentPlayer++;
     }
-    p->finishRound();
+}
+
+void Board::showResults() {
+    std::sort(players.rbegin(), players.rend());
+    std::cout << "Game is over! Here are the results." << std::endl;
+    for(int i = 1; i <= int(players.size()); i++) {
+        std::cout << i << ": " << players.at(i-1)->getUsername() << " with " << players.at(i-1)->getTotalVictoryPoints() << " VP" << std::endl;
+    }
+    std::cout << "Well done!" << std::endl;
+}
+
+bool Board::gameIsOver() {
+    int emptyPiles = 0;
+    for(const auto& p : this->piles) {
+        // How to find the Province pile specifically?
+        if(p.isEmpty()) {
+            emptyPiles++;
+        }
+    }
+    return emptyPiles >= 3;
 }
 
 std::ostream& operator<<(std::ostream &os, const Board &b) {
     os << "============================================================" << std::endl << std::endl;
-    for(const Player &p : b.players) {
+    for(const auto &p : b.players) {
         os << p << std::endl;
     }
     for(const Pile &p : b.piles) {

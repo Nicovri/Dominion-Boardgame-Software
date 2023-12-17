@@ -8,9 +8,11 @@
 #include <random>
 #include "Card.hpp"
 
+class Board;
+
 class Pile {
-    // A changer en vector pour certaines Actions
-    std::stack<Card*> cardStack;
+    std::vector<Card*> cardStack;
+    Board *game;
 
 public:
     Pile();
@@ -19,13 +21,16 @@ public:
     ~Pile();
     Pile(const Pile &p);
     Pile& operator=(const Pile& p);
-    int getTotalVictoryPoints() const;
+    void assignToGame(Board &b);
+    void setTotalVictoryPoints() const;
     void shuffle();
     bool isEmpty() const;
     void clear();
-    int getNbCards();
+    int getNbCards() const;
     std::vector<Card*> getCards(int number); // Error check if enough cards
+    Card* getCard(int cardIndex) const;
     void addCard(Card *c);
+    void addCards(std::vector<Card*> cards);
 
     friend std::ostream& operator<<(std::ostream &os, const Pile &p);
 };

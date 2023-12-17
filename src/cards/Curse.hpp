@@ -6,5 +6,5 @@ class Curse: public Victory {
 
 public:
     Curse();
-    void play();
+    void play(Board &b);
 };

@@ -4,13 +4,13 @@ Pile::Pile() {}
 
 Pile::Pile(Card *c, int num) {
     for(int i = 0; i < num; i++) {
-        cardStack.push(c);
+        cardStack.push_back(c);
     }
 }
 
 Pile::Pile(std::vector<Card*> cards) {
     for(Card *c : cards) {
-        this->cardStack.push(c);
+        this->cardStack.push_back(c);
     }
 }
 
@@ -25,20 +25,22 @@ Pile& Pile::operator=(const Pile &p) {
     return *this;
 }
 
-//
+void Pile::assignToGame(Board &b) { this->game = &b; }
+
+void Pile::setTotalVictoryPoints() const {
+    for(const auto& card : cardStack) {
+        if(card->isVictoryCard()) {
+            card->play(*game);
+        }
+    }
+}
 
 void Pile::shuffle() {
-    srand(time(NULL));
-    std::vector<Card*> v = {};
-    while(!this->isEmpty()) {
-        v.push_back(cardStack.top());
-        cardStack.pop();
-    }
-    std::random_device rd;
-    std::mt19937 g(rd());
-    std::shuffle(v.begin(), v.end(), g);
-    for(auto c : v) {
-        cardStack.push(c);
+    if(!this->isEmpty()) {
+        srand(time(NULL));
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(cardStack.begin(), cardStack.end(), g);
     }
 }
 
@@ -46,30 +48,41 @@ bool Pile::isEmpty() const { return cardStack.empty(); }
 
 void Pile::clear() {
     while(!this->isEmpty()) {
-        cardStack.pop();
+        cardStack.pop_back();
     }
 }
 
-int Pile::getNbCards() { return this->cardStack.size(); }
+int Pile::getNbCards() const { return this->cardStack.size(); }
 
 std::vector<Card*> Pile::getCards(int number) {
     std::vector<Card*> cards = {};
     for(int i = 0; i < number; i++) {
         if(!this->isEmpty()) {
-            cards.push_back(cardStack.top());
-            cardStack.pop();
+            cards.push_back(cardStack.at(cardStack.size()-1));
+            cardStack.pop_back();
         }
     }
     return cards;
 }
 
+Card* Pile::getCard(int cardIndex) const {
+    Card *c = this->cardStack.at(cardIndex);
+    return c;
+}
+
 void Pile::addCard(Card *card) {
-    this->cardStack.push(card);
+    this->cardStack.push_back(card);
+}
+
+void Pile::addCards(std::vector<Card*> cards) {
+    for(Card *card: cards) {
+        this->cardStack.push_back(card);
+    }
 }
 
 std::ostream& operator<<(std::ostream &os, const Pile &p) {
     if(!p.isEmpty()) {
-        os << p.cardStack.top() << std::endl;
+        os << p.cardStack.at(p.cardStack.size()-1) << std::endl;
     }
     os << "Cards in the pile: " << p.cardStack.size() << std::endl;
     return os;

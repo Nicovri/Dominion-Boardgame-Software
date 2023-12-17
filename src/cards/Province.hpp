@@ -6,5 +6,5 @@ class Province: public Victory {
 
 public:
     Province();
-    void play();
+    void play(Board &b);
 };

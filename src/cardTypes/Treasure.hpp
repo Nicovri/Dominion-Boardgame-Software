@@ -12,5 +12,5 @@ public:
     bool isActionCard();
     bool isTreasureCard();
     bool isVictoryCard();
-    virtual void play() = 0;
+    virtual void play(Board &b) = 0;
 };

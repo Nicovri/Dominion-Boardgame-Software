@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 
+class Board;
 class Card {
     int price;
     std::string title;
@@ -15,7 +16,7 @@ public:
     virtual bool isActionCard() = 0;
     virtual bool isTreasureCard() = 0;
     virtual bool isVictoryCard() = 0;
-    virtual void play() = 0;
+    virtual void play(Board &b) = 0;
 
     friend std::ostream& operator<<(std::ostream &os, const Card *c);
 };

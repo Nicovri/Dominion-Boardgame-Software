@@ -8,4 +8,4 @@ bool Action::isTreasureCard() { return false; }
 
 bool Action::isVictoryCard() { return false; }
 
-void Action::useEffect() { play(); }
+void Action::useEffect(Board &b) { play(b); }

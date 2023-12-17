@@ -6,5 +6,5 @@ class Estate: public Victory {
 
 public:
     Estate();
-    void play();
+    void play(Board &b);
 };

@@ -6,5 +6,5 @@ class Duchy: public Victory {
 
 public:
     Duchy();
-    void play();
+    void play(Board &b);
 };
