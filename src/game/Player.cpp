@@ -49,7 +49,10 @@ void Player::assignToGame(Board &b) {
     this->hand.assignToGame(*game);
 }
 
-void Player::setBaseDeck(std::vector<Card*> baseDeck) { this->deck = Pile{baseDeck}; }
+void Player::setBaseDeck(std::vector<Card*> baseDeck) {
+    this->deck = Pile{baseDeck};
+    this->deck.shuffle();
+}
 
 void Player::getNewCard(Card *card) {
     this->discard.addCard(card);

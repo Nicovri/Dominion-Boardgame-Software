@@ -4,6 +4,8 @@ Card::Card() {}
 
 Card::Card(int price, std::string title, bool isVisible): price(price), title(title), isVisible(isVisible) {}
 
+int Card::getPrice() const { return this->price; }
+
 std::ostream& operator<<(std::ostream &os, const Card *c) {
     if(c->isVisible) {
         os << c->title << ": price=" << c->price;

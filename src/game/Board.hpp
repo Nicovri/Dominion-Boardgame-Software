@@ -1,5 +1,6 @@
 #include "Player.hpp"
 #include "Card.hpp"
+#include "../cardTypes/Victory.hpp"
 #include <vector>
 #include <iostream>
 
@@ -7,6 +8,7 @@ class Board {
     std::vector<Player*> players;
     int currentPlayer;
     std::vector<Pile> piles;
+    int provincePileIndex;
     Pile trash;
 
 public:

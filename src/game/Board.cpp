@@ -38,6 +38,14 @@ bool Board::initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles
         this->piles.push_back(p);
     }
     this->currentPlayer = 0;
+    this->provincePileIndex = -1;
+    for(int i = 0; i < int(this->piles.size()); i++) {
+        if(!this->piles.at(i).isEmpty() && this->piles.at(i).getCard(0)->isVictoryCard() && dynamic_cast<Victory*>(this->piles.at(i).getCard(0))->getNumberPoints() == 6) {
+            provincePileIndex = i;
+            break;
+        }
+    }
+    std::cout << provincePileIndex << std::endl;
     return true;
 }
 
@@ -50,22 +58,36 @@ void Board::playRound() {
         while(p->getCard(cardIndex)->isActionCard() || cardIndex < -1 || cardIndex > p->getNbCardsInHand()-1) {
             std::cout << "Which card would you like to play?: ";
             std::cin >> cardIndex;
+
+            if(std::cin.fail()) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                cardIndex = -2;
+            }
         }
         if(cardIndex != -1) {
             p->playCard(cardIndex);
         }
     }
+
     for(int i = 0; i < p->getNbCardsInHand(); i++) {
         if(p->getCard(i)->isTreasureCard()) {
             p->playCard(i);
         }
     }
+    
     while(p->getNbBuys() > 0) {
-        signed int pileIndex = -2;
-        while(pileIndex < -1 || pileIndex > this->getNbPiles()-1) {
-            // Error don't have enough coins
+        int pileIndex = -2;
+        while(pileIndex < -1 || pileIndex > this->getNbPiles()-1 ||
+            (0 <= pileIndex  && pileIndex <= this->getNbPiles()-1 && piles.at(pileIndex).getCard(0)->getPrice() > p->getNbCoins())) {
             std::cout << "Which card would you like to buy (you currently have " << p->getNbCoins() << " coins)?: ";
             std::cin >> pileIndex;
+
+            if(std::cin.fail()) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                pileIndex = -2;
+            }
         }
         if(pileIndex != -1) {
             p->getNewCard(this->piles.at(pileIndex).getCards(1).at(0));
@@ -89,10 +111,13 @@ void Board::showResults() {
 }
 
 bool Board::gameIsOver() {
+    if(provincePileIndex != -1 && this->piles.at(provincePileIndex).isEmpty()) {
+        return true;
+    }
+
     int emptyPiles = 0;
-    for(const auto& p : this->piles) {
-        // How to find the Province pile specifically?
-        if(p.isEmpty()) {
+    for(int i = 0; i < int(this->piles.size()); i++) {
+        if(i != provincePileIndex && piles.at(i).isEmpty()) {
             emptyPiles++;
         }
     }

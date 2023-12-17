@@ -6,6 +6,7 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <set>
 #include <algorithm>
 // #include <SFML/Graphics.hpp>
 
@@ -15,17 +16,30 @@
 */
 int main(int argc, char* argv[]) {
     int nbPlayers = 0;
+    std::set<std::string> usedUsernames;
     std::vector<Player*> players;
 
     while(nbPlayers < 2 || nbPlayers > 4) {
         std::cout << "How many players are you? (2 to 4): ";
         std::cin >> nbPlayers;
+
+        if(std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            nbPlayers = 0;
+        }
     }
 
     for(int i = 1; i <= nbPlayers; i++) {
-        std::string username;
-        std::cout << "What is your username, player " << i << "?: ";
-        std::cin >> username;
+        std::string username = "";
+        bool isNewUsername = false;
+
+        while(!isNewUsername) {
+            std::cout << "What is your username, player " << i << "?: ";
+            std::cin >> username;
+            isNewUsername = usedUsernames.insert(username).second;
+        }
+        
         players.push_back(new Player{username});
     }
 
