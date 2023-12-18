@@ -17,11 +17,14 @@ public:
     Board(Player &p1, Player &p2, Player &p3);
     Board(Player &p1, Player &p2, Player &p3, Player &p4);
     ~Board();
+    int getCurrentPlayerIndex() const;
+
     int getNbPlayers() const;
     int getNbPiles() const;
     Player* getCurrentPlayer() const;
-    int getCurrentPlayerIndex() const;
     bool initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles);
+    Card* chooseCard(int allowedPrice, bool isCardEffect);
+    void playActionCard();
     void playRound();
     void showResults();
     bool gameIsOver();

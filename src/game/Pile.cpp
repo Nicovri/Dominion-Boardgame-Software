@@ -28,9 +28,11 @@ Pile& Pile::operator=(const Pile &p) {
 void Pile::assignToGame(Board &b) { this->game = &b; }
 
 void Pile::setTotalVictoryPoints() const {
-    for(const auto& card : cardStack) {
-        if(card->isVictoryCard()) {
-            card->play(*game);
+    if(!this->isEmpty()) {
+        for(const auto& card : cardStack) {
+            if(card->isVictoryCard()) {
+                card->play(*game);
+            }
         }
     }
 }
@@ -65,7 +67,13 @@ std::vector<Card*> Pile::getCards(int number) {
     return cards;
 }
 
-Card* Pile::getCard(int cardIndex) const {
+Card* Pile::getCard(int cardIndex) {
+    Card *c = this->cardStack.at(cardIndex);
+    this->cardStack.erase(cardStack.begin() + cardIndex);
+    return c;
+}
+
+Card* Pile::showCard(int cardIndex) const {
     Card *c = this->cardStack.at(cardIndex);
     return c;
 }

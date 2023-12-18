@@ -33,11 +33,13 @@ void Player::addVictoryPoints(int nb) { this->nbVictory += nb; }
 
 void Player::addCoins(int nb) { this->nbCoins += nb; }
 
+void Player::addBuys(int nb) { this->nbBuys += nb; }
+
 int Player::getNbCardsInHand() const { return this->hand.getNbCards(); }
 
-Card* Player::getCard(int indexInHand) const {
+Card* Player::showCard(int indexInHand) const {
     if(indexInHand <= this->getNbCardsInHand()-1 && indexInHand >= 0) {
-        return this->hand.getCard(indexInHand);
+        return this->hand.showCard(indexInHand);
     }
     return NULL;
 }
@@ -54,9 +56,11 @@ void Player::setBaseDeck(std::vector<Card*> baseDeck) {
     this->deck.shuffle();
 }
 
-void Player::getNewCard(Card *card) {
+void Player::getNewCard(Card *card, bool isCardEffect) {
     this->discard.addCard(card);
-    this->nbBuys--;
+    if(!isCardEffect) {
+        this->nbBuys--;
+    }
 }
 
 void Player::getDeckFromDiscard() {
@@ -94,7 +98,7 @@ void Player::setTotalVictoryPoints() {
 
 bool Player::hasActionCards() {
     for(int i = 0; i < hand.getNbCards(); i++) {
-        if(hand.getCard(i)->isActionCard()) {
+        if(hand.showCard(i)->isActionCard()) {
             return true;
         }
     }
@@ -103,7 +107,7 @@ bool Player::hasActionCards() {
 
 bool Player::hasTreasureCards() {
     for(int i = 0; i < hand.getNbCards(); i++) {
-        if(hand.getCard(i)->isTreasureCard()) {
+        if(hand.showCard(i)->isTreasureCard()) {
             return true;
         }
     }
@@ -118,6 +122,7 @@ void Player::beginRound() {
 void Player::playCard(int indexInHand) {
     Card *c = this->hand.getCard(indexInHand);
     if(c->isActionCard()) {
+        this->nbActions--;
         dynamic_cast<Action*>(c)->useEffect(*game);
     }
     if(c->isTreasureCard()) {
@@ -142,7 +147,7 @@ bool operator<(const Player& l, const Player& r) {
 std::ostream& operator<<(std::ostream &os, const Player *p) {
     os << p->username << " : [nbActions=" << p->nbActions << " nbBuys=" << p->nbBuys << " nbCoins=" << p->nbCoins << " nbVictory=" << p->nbVictory << "]" << std::endl;
     for(int i = 0; i < int(p->hand.getNbCards()); i++) {
-        os << i << ": " << p->hand.getCard(i) << std::endl;
+        os << i << ": " << p->hand.showCard(i) << std::endl;
     }
     os << std::endl << "Deck: " << p->deck << std::endl;
     return os;

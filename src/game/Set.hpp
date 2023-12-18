@@ -12,17 +12,19 @@
 #include "../cards/Estate.hpp"
 #include "../cards/Duchy.hpp"
 #include "../cards/Province.hpp"
+#include "../cards/Workshop.hpp"
+#include "../cards/Woodcutter.hpp"
 
 class Set {
 public:
-    static Pile createActionCardPile(ActionCardName cardName);
-    static bool allNamesAreUniques(std::vector<ActionCardName> cardNames);
+    static Pile createKingdomCardPile(KingdomCardName cardName);
+    static bool allNamesAreUniques(std::vector<KingdomCardName> cardNames);
     static std::vector<Card*> getBaseDeck();
     static std::vector<Pile> getSetCards(int nbPlayers);
     static std::vector<Pile> getSetCards(int nbPlayers, SetName setName);
     static std::vector<Pile> getSetCards(int nbPlayers,
-        ActionCardName cardName1, ActionCardName cardName2, ActionCardName cardName3,
-        ActionCardName cardName4, ActionCardName cardName5, ActionCardName cardName6,
-        ActionCardName cardName7, ActionCardName cardName8, ActionCardName cardName9,
-        ActionCardName cardName10);
+        KingdomCardName cardName1, KingdomCardName cardName2, KingdomCardName cardName3,
+        KingdomCardName cardName4, KingdomCardName cardName5, KingdomCardName cardName6,
+        KingdomCardName cardName7, KingdomCardName cardName8, KingdomCardName cardName9,
+        KingdomCardName cardName10);
 };

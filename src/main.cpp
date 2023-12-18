@@ -52,15 +52,12 @@ int main(int argc, char* argv[]) {
 
     std::cout << b << std::endl;
 
-    b.playRound();
-    std::cout << b << std::endl;
+    while(!b.gameIsOver()) {
+        b.playRound();
+        std::cout << b << std::endl;
+    }
 
-    // while(!b.gameIsOver()) {
-    //     b.playRound();
-    //     std::cout << b << std::endl;
-    // }
-
-    // b.showResults();
+    b.showResults();
 
 
     if(argc == 2 && strcmp(argv[1], "1")) {

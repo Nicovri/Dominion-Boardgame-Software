@@ -1,14 +1,21 @@
 #include "Set.hpp"
 
-Pile Set::createActionCardPile(ActionCardName cardName) {
+Pile Set::createKingdomCardPile(KingdomCardName cardName) {
     switch(cardName) {
+        case KingdomCardName::Workshop:
+            return Pile(new Workshop(), 10);
+            break;
+        case KingdomCardName::Woodcutter:
+            return Pile(new Woodcutter(), 10);
+            break;
         default:
             return Pile();
+            break;
     }
 }
 
-bool Set::allNamesAreUniques(std::vector<ActionCardName> cardNames) {
-    std::set<ActionCardName> uniqueNames;
+bool Set::allNamesAreUniques(std::vector<KingdomCardName> cardNames) {
+    std::set<KingdomCardName> uniqueNames;
 
     for(const auto& cardName : cardNames) {
         if(!uniqueNames.insert(cardName).second) {
@@ -50,6 +57,8 @@ std::vector<Pile> Set::getSetCards(int nbPlayers, SetName setName) {
     setFromName.push_back(Pile(new Province(), nbPlayers == 2 ? 8 : 12));
     switch(setName) {
         case SetName::Base:
+            setFromName.push_back(Pile(new Workshop(), 10));
+            setFromName.push_back(Pile(new Woodcutter(), 10));
             break;
         default:
             break;
@@ -58,10 +67,10 @@ std::vector<Pile> Set::getSetCards(int nbPlayers, SetName setName) {
 }
 
 std::vector<Pile> getSetCards(int nbPlayers,
-        ActionCardName cardName1, ActionCardName cardName2, ActionCardName cardName3,
-        ActionCardName cardName4, ActionCardName cardName5, ActionCardName cardName6,
-        ActionCardName cardName7, ActionCardName cardName8, ActionCardName cardName9,
-        ActionCardName cardName10) {
+        KingdomCardName cardName1, KingdomCardName cardName2, KingdomCardName cardName3,
+        KingdomCardName cardName4, KingdomCardName cardName5, KingdomCardName cardName6,
+        KingdomCardName cardName7, KingdomCardName cardName8, KingdomCardName cardName9,
+        KingdomCardName cardName10) {
     std::vector<Pile> setFromCards;
     setFromCards.push_back(Pile(new Copper(), 60 - 7*nbPlayers));
     setFromCards.push_back(Pile(new Silver(), 40));
@@ -71,19 +80,19 @@ std::vector<Pile> getSetCards(int nbPlayers,
     setFromCards.push_back(Pile(new Duchy(), nbPlayers == 2 ? 8 : 12));
     setFromCards.push_back(Pile(new Province(), nbPlayers == 2 ? 8 : 12));
 
-    std::vector<ActionCardName> cardNames = {cardName1, cardName2, cardName3, cardName4, cardName5, cardName6, cardName7, cardName8, cardName9, cardName10};
+    std::vector<KingdomCardName> cardNames = {cardName1, cardName2, cardName3, cardName4, cardName5, cardName6, cardName7, cardName8, cardName9, cardName10};
 
     if(Set::allNamesAreUniques(cardNames)) {
-        setFromCards.push_back(Set::createActionCardPile(cardName1));
-        setFromCards.push_back(Set::createActionCardPile(cardName2));
-        setFromCards.push_back(Set::createActionCardPile(cardName3));
-        setFromCards.push_back(Set::createActionCardPile(cardName4));
-        setFromCards.push_back(Set::createActionCardPile(cardName5));
-        setFromCards.push_back(Set::createActionCardPile(cardName6));
-        setFromCards.push_back(Set::createActionCardPile(cardName7));
-        setFromCards.push_back(Set::createActionCardPile(cardName8));
-        setFromCards.push_back(Set::createActionCardPile(cardName9));
-        setFromCards.push_back(Set::createActionCardPile(cardName10));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName1));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName2));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName3));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName4));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName5));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName6));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName7));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName8));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName9));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName10));
     } // Else throw error
     
     return setFromCards;

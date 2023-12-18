@@ -32,14 +32,15 @@ public:
     int getNbBuys() const;
     int getNbCoins() const;
     int getTotalVictoryPoints() const;
+
     void addVictoryPoints(int nb);
     void addCoins(int nb);
+    void addBuys(int nb);
     int getNbCardsInHand() const;
-    Card* getCard(int indexInHand) const;
-
+    Card* showCard(int indexInHand) const;
     void assignToGame(Board &b);
     void setBaseDeck(std::vector<Card*> baseDeck);
-    void getNewCard(Card *card);
+    void getNewCard(Card *card, bool isCardEffect);
     void getDeckFromDiscard();
     void getHandFromDeck();
     void getNewCardFromDeck();

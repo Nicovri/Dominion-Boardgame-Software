@@ -18,19 +18,22 @@ Board::Board(Player &p1, Player &p2, Player &p3, Player &p4) { this->players.pus
 
 Board::~Board() {}
 
+int Board::getCurrentPlayerIndex() const { return this->currentPlayer; }
+
 int Board::getNbPlayers() const { return this->players.size(); }
 
 int Board::getNbPiles() const { return this->piles.size(); }
 
 Player* Board::getCurrentPlayer() const { return this->players.at(currentPlayer); }
 
-int Board::getCurrentPlayerIndex() const { return this->currentPlayer; }
-
 bool Board::initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles) {
+    this->currentPlayer = 0;
     for(const auto &p : this->players) {
         p->assignToGame(*this);
         p->setBaseDeck(baseDeck);
         p->getHandFromDeck();
+        p->setTotalVictoryPoints();
+        this->currentPlayer++;
     }
     for(Pile &p : piles) {
         p.assignToGame(*this);
@@ -40,7 +43,7 @@ bool Board::initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles
     this->currentPlayer = 0;
     this->provincePileIndex = -1;
     for(int i = 0; i < int(this->piles.size()); i++) {
-        if(!this->piles.at(i).isEmpty() && this->piles.at(i).getCard(0)->isVictoryCard() && dynamic_cast<Victory*>(this->piles.at(i).getCard(0))->getNumberPoints() == 6) {
+        if(!this->piles.at(i).isEmpty() && this->piles.at(i).showCard(0)->isVictoryCard() && dynamic_cast<Victory*>(this->piles.at(i).showCard(0))->getNumberPoints() == 6) {
             provincePileIndex = i;
             break;
         }
@@ -49,14 +52,39 @@ bool Board::initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles
     return true;
 }
 
-void Board::playRound() {
+Card* Board::chooseCard(int allowedPrice, bool isCardEffect) {
+    int pileIndex = -2;
     Player *p = this->players.at(currentPlayer);
-    p->beginRound();
-    while(p->hasActionCards() || p->getNbActions() > 0) {
-        if(!p->hasActionCards()) { break; }
+    while(pileIndex < -1 || pileIndex > this->getNbPiles()-1 ||
+        (0 <= pileIndex  && pileIndex <= this->getNbPiles()-1 && piles.at(pileIndex).showCard(0)->getPrice() > allowedPrice)) {
+        std::cout << p << std::endl;
+        if(isCardEffect) {
+            std::cout << p->getUsername() << ", which card would you like to choose (the maximum allowed price is " << allowedPrice << " coins)?: ";
+        } else {
+            std::cout << p->getUsername() << ", which card would you like to buy (you currently have " << allowedPrice << " coins)?: ";
+        }
+        std::cin >> pileIndex;
+
+        if(std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            pileIndex = -2;
+        }
+    }
+    if(pileIndex != -1) {        
+        return piles.at(pileIndex).getCards(1).at(0);
+    }
+    return NULL;
+}
+
+void Board::playActionCard() {
+    Player *p = this->players.at(currentPlayer);
+    while(p->hasActionCards() && p->getNbActions() > 0) {
         int cardIndex = -2;
-        while(p->getCard(cardIndex)->isActionCard() || cardIndex < -1 || cardIndex > p->getNbCardsInHand()-1) {
-            std::cout << "Which card would you like to play?: ";
+        while((0 <= cardIndex && cardIndex <= p->getNbCardsInHand()-1 && !p->showCard(cardIndex)->isActionCard()) ||
+                cardIndex < -1 || cardIndex > p->getNbCardsInHand()-1) {
+            std::cout << p << std::endl;
+            std::cout << p->getUsername() << ", which card would you like to play?: ";
             std::cin >> cardIndex;
 
             if(std::cin.fail()) {
@@ -69,31 +97,33 @@ void Board::playRound() {
             p->playCard(cardIndex);
         }
     }
+}
 
-    for(int i = 0; i < p->getNbCardsInHand(); i++) {
-        if(p->getCard(i)->isTreasureCard()) {
-            p->playCard(i);
+void Board::playRound() {
+    Player *p = this->players.at(currentPlayer);
+    p->beginRound();
+
+    this->playActionCard();
+
+    std::vector<int> treasuresInHand = {};
+    for(int i = p->getNbCardsInHand()-1; i >= 0; i--) {
+        if(p->showCard(i)->isTreasureCard()) {
+            treasuresInHand.push_back(i);
         }
+    }
+    for(int i : treasuresInHand) {
+        p->playCard(i);
     }
     
     while(p->getNbBuys() > 0) {
-        int pileIndex = -2;
-        while(pileIndex < -1 || pileIndex > this->getNbPiles()-1 ||
-            (0 <= pileIndex  && pileIndex <= this->getNbPiles()-1 && piles.at(pileIndex).getCard(0)->getPrice() > p->getNbCoins())) {
-            std::cout << "Which card would you like to buy (you currently have " << p->getNbCoins() << " coins)?: ";
-            std::cin >> pileIndex;
-
-            if(std::cin.fail()) {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                pileIndex = -2;
-            }
-        }
-        if(pileIndex != -1) {
-            p->getNewCard(this->piles.at(pileIndex).getCards(1).at(0));
+        Card *c = this->chooseCard(p->getNbCoins(), false);
+        if(c != NULL) {
+            p->getNewCard(c, false);
         }
     }
+
     p->finishRound();
+    
     if(currentPlayer == int(this->players.size())-1) {
         currentPlayer = 0;
     } else {

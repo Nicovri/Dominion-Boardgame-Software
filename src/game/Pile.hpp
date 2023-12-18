@@ -21,6 +21,7 @@ public:
     ~Pile();
     Pile(const Pile &p);
     Pile& operator=(const Pile& p);
+    
     void assignToGame(Board &b);
     void setTotalVictoryPoints() const;
     void shuffle();
@@ -28,7 +29,8 @@ public:
     void clear();
     int getNbCards() const;
     std::vector<Card*> getCards(int number); // Error check if enough cards
-    Card* getCard(int cardIndex) const;
+    Card* getCard(int cardIndex);
+    Card* showCard(int cardIndex) const;
     void addCard(Card *c);
     void addCards(std::vector<Card*> cards);
 
