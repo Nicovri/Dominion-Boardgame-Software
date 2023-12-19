@@ -1,4 +1,5 @@
 #include "Player.hpp"
+#include "Board.hpp"
 
 Player::Player(std::string username): username(username), nbActions(0), nbBuys(0), nbCoins(0) {}
 
@@ -33,6 +34,8 @@ void Player::addVictoryPoints(int nb) { this->nbVictory += nb; }
 
 void Player::addCoins(int nb) { this->nbCoins += nb; }
 
+void Player::addActions(int nb) { this->nbActions += nb; }
+
 void Player::addBuys(int nb) { this->nbBuys += nb; }
 
 int Player::getNbCardsInHand() const { return this->hand.getNbCards(); }
@@ -56,8 +59,12 @@ void Player::setBaseDeck(std::vector<Card*> baseDeck) {
     this->deck.shuffle();
 }
 
-void Player::getNewCard(Card *card, bool isCardEffect) {
-    this->discard.addCard(card);
+void Player::getNewCard(Card *card, bool isCardEffect, bool goesDirectlyInHand) {
+    if(goesDirectlyInHand) {
+        this->hand.addCard(card);
+    } else {
+        this->discard.addCard(card);
+    }
     if(!isCardEffect) {
         this->nbBuys--;
     }
@@ -65,20 +72,20 @@ void Player::getNewCard(Card *card, bool isCardEffect) {
 
 void Player::getDeckFromDiscard() {
     if(this->deck.isEmpty()) {
-        this->deck.addCards(this->discard.getCards(discard.getNbCards()));
-        discard.clear();
+        std::vector<Card*> cards = this->discard.getCards(discard.getNbCards());
+        this->deck.addCards(cards);
         this->deck.shuffle();
     }
 }
 
 void Player::getHandFromDeck() {
     if(hand.isEmpty()) {
-        this->hand = this->deck.getCards(5);
+        this->hand.addCards(this->deck.getCards(5));
     }
     int cardToGet = 5 - hand.getNbCards();
     if(hand.getNbCards() < 5) {
         this->getDeckFromDiscard();
-        this->hand = this->deck.getCards(cardToGet);
+        this->hand.addCards(this->deck.getCards(cardToGet));
     }
 }
 
@@ -87,6 +94,12 @@ void Player::getNewCardFromDeck() {
         this->getDeckFromDiscard();
     }
     this->hand.addCard(this->deck.getCards(1).at(0));
+}
+
+void Player::getNewCardsFromDeck(int nb) {
+    for(int i = 0; i < nb; i++) {
+        this->getNewCardFromDeck();
+    }
 }
 
 void Player::setTotalVictoryPoints() {
@@ -119,8 +132,9 @@ void Player::beginRound() {
     this->nbBuys = 1;
 }
 
-void Player::playCard(int indexInHand) {
+bool Player::playCard(int indexInHand) {
     Card *c = this->hand.getCard(indexInHand);
+    if(c == NULL) { return false; }
     if(c->isActionCard()) {
         this->nbActions--;
         dynamic_cast<Action*>(c)->useEffect(*game);
@@ -128,11 +142,26 @@ void Player::playCard(int indexInHand) {
     if(c->isTreasureCard()) {
         c->play(*game);
     }
+    this->discard.addCard(c);
+    return true;
+}
+
+bool Player::discardCard(int indexInHand) {
+    Card *c = this->hand.getCard(indexInHand);
+    if(c == NULL) { return false; }
+    this->discard.addCard(c);
+    return true;
+}
+
+bool Player::trashCard(int indexInHand) {
+    Card *c = this->hand.getCard(indexInHand);
+    if(c == NULL) { return false; }
+    return this->game->trashCard(c);
 }
 
 void Player::finishRound() {
-    this->discard.addCards(this->hand.getCards(hand.getNbCards()));
-    this->hand.clear();
+    std::vector<Card*> cards = this->hand.getCards(hand.getNbCards());
+    this->discard.addCards(cards);
     this->getHandFromDeck();
     this->setTotalVictoryPoints();
     this->nbActions = 0;
@@ -149,6 +178,8 @@ std::ostream& operator<<(std::ostream &os, const Player *p) {
     for(int i = 0; i < int(p->hand.getNbCards()); i++) {
         os << i << ": " << p->hand.showCard(i) << std::endl;
     }
+    os << std::endl << "nbCardsInHand: " << p->getNbCardsInHand() << std::endl;
     os << std::endl << "Deck: " << p->deck << std::endl;
+    os << std::endl << "Discard: " << p->discard << std::endl;
     return os;
 }

@@ -20,6 +20,8 @@ Board::~Board() {}
 
 int Board::getCurrentPlayerIndex() const { return this->currentPlayer; }
 
+std::vector<Player*> Board::getPlayers() const { return this->players; }
+
 int Board::getNbPlayers() const { return this->players.size(); }
 
 int Board::getNbPiles() const { return this->piles.size(); }
@@ -48,7 +50,6 @@ bool Board::initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles
             break;
         }
     }
-    std::cout << provincePileIndex << std::endl;
     return true;
 }
 
@@ -77,6 +78,21 @@ Card* Board::chooseCard(int allowedPrice, bool isCardEffect) {
     return NULL;
 }
 
+Card* Board::chooseCard(std::string cardName) {
+    Card *c = NULL;
+    for(Pile p : this->piles) {
+        if(!p.isEmpty() && p.showCard(0)->getTitle() == cardName) {
+            c = p.getCards(1).at(0);
+        }
+    }
+    return c;
+}
+
+bool Board::trashCard(Card *c) {
+    this->trash.addCard(c);
+    return true;
+}
+
 void Board::playActionCard() {
     Player *p = this->players.at(currentPlayer);
     while(p->hasActionCards() && p->getNbActions() > 0) {
@@ -95,6 +111,8 @@ void Board::playActionCard() {
         }
         if(cardIndex != -1) {
             p->playCard(cardIndex);
+        } else {
+            break;
         }
     }
 }
@@ -112,13 +130,17 @@ void Board::playRound() {
         }
     }
     for(int i : treasuresInHand) {
+        std::cout << "Played " << p->showCard(i) << std::endl;
         p->playCard(i);
     }
+    std::cout << std::endl;
     
     while(p->getNbBuys() > 0) {
         Card *c = this->chooseCard(p->getNbCoins(), false);
         if(c != NULL) {
             p->getNewCard(c, false);
+        } else {
+            break;
         }
     }
 
@@ -154,14 +176,29 @@ bool Board::gameIsOver() {
     return emptyPiles >= 3;
 }
 
+void Board::displayFilteredPiles(std::function<bool(const Pile)> predicate) {
+    std::cout << "============================================================" << std::endl << std::endl;
+    int i = 0;
+    for(const Pile &p : this->piles) {
+        if(predicate(p)) {
+            std::cout << i << ": " << p << std::endl;
+        }
+        i++;
+    }
+    std::cout << "============================================================" << std::endl << std::endl;
+}
+
 std::ostream& operator<<(std::ostream &os, const Board &b) {
     os << "============================================================" << std::endl << std::endl;
     for(const auto &p : b.players) {
         os << p << std::endl;
     }
+    int i = 0;
     for(const Pile &p : b.piles) {
-        os << p << std::endl;
+        os << i << ": " << p << std::endl;
+        i++;
     }
+    os << "Trash: " << b.trash << std::endl;
     os << "============================================================" << std::endl;
     return os;
 }

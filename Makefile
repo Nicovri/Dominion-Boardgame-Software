@@ -5,10 +5,13 @@ SRCDIR=./src
 BUILDDIR=./build
 CARDSDIR=$(BUILDDIR)/cards
 
-# compile:
-# 	$(CXX) -Isfml/include -c ./src/main.cpp
-# 	$(CXX) ./build/main.o -o sfml-app -Lsfml/lib -lsfml-graphics -lsfml-window -lsfml-system
-# # ???
+MAIN := $(BUILDDIR)/main.o
+ENUMS := $(BUILDDIR)/enums.o
+GAME := $(BUILDDIR)/Board.o $(BUILDDIR)/Set.o $(BUILDDIR)/Player.o $(BUILDDIR)/Card.o $(BUILDDIR)/Pile.o $(BUILDDIR)/Point.o
+CARDTYPES := $(BUILDDIR)/Victory.o $(BUILDDIR)/Treasure.o $(BUILDDIR)/Action.o
+VICTORY_CARDS := $(CARDSDIR)/Curse.o $(CARDSDIR)/Estate.o $(CARDSDIR)/Duchy.o $(CARDSDIR)/Province.o
+TREASURE_CARDS := $(CARDSDIR)/Copper.o $(CARDSDIR)/Silver.o $(CARDSDIR)/Gold.o
+ACTION_CARDS := $(CARDSDIR)/Workshop.o $(CARDSDIR)/Woodcutter.o $(CARDSDIR)/Cellar.o $(CARDSDIR)/Chapel.o $(CARDSDIR)/Smithy.o $(CARDSDIR)/Market.o $(CARDSDIR)/Mine.o $(CARDSDIR)/Remodel.o $(CARDSDIR)/Witch.o $(CARDSDIR)/Village.o
 
 $(BUILDDIR)/%.o: $(SRCDIR)/game/%.cpp | $(BUILDDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
@@ -19,11 +22,14 @@ $(BUILDDIR)/%.o: $(SRCDIR)/cardTypes/%.cpp | $(BUILDDIR)
 $(BUILDDIR)/cards/%.o: $(SRCDIR)/cards/%.cpp | $(CARDSDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+# $(BUILDDIR)/main.o: $(SRCDIR)/main.cpp | $(BUILDDIR)
+# 	$(CXX) $(CXXFLAGS) -I/usr/include/SFML -c $< -o $@
+
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | $(BUILDDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BUILDDIR)/dominion-game: $(BUILDDIR)/main.o $(BUILDDIR)/enums.o $(BUILDDIR)/Board.o $(BUILDDIR)/Set.o $(BUILDDIR)/Player.o $(BUILDDIR)/Card.o $(BUILDDIR)/Pile.o $(BUILDDIR)/Point.o $(BUILDDIR)/Victory.o $(BUILDDIR)/Treasure.o $(BUILDDIR)/Action.o $(CARDSDIR)/Curse.o $(CARDSDIR)/Estate.o $(CARDSDIR)/Duchy.o $(CARDSDIR)/Province.o $(CARDSDIR)/Copper.o $(CARDSDIR)/Silver.o $(CARDSDIR)/Gold.o $(CARDSDIR)/Workshop.o $(CARDSDIR)/Woodcutter.o
-	$(CXX) $^ -o $@
+$(BUILDDIR)/dominion-game: $(MAIN) $(ENUMS) $(GAME) $(CARDTYPES) $(VICTORY_CARDS) $(TREASURE_CARDS) $(ACTION_CARDS)
+	$(CXX) $^ -o $@ -lsfml-graphics -lsfml-window -lsfml-system
 
 .PHONY: run clean
 

@@ -35,20 +35,24 @@ public:
 
     void addVictoryPoints(int nb);
     void addCoins(int nb);
+    void addActions(int nb);
     void addBuys(int nb);
     int getNbCardsInHand() const;
     Card* showCard(int indexInHand) const;
     void assignToGame(Board &b);
     void setBaseDeck(std::vector<Card*> baseDeck);
-    void getNewCard(Card *card, bool isCardEffect);
+    void getNewCard(Card *card, bool isCardEffect, bool goesDirectlyInHand=false);
     void getDeckFromDiscard();
     void getHandFromDeck();
     void getNewCardFromDeck();
+    void getNewCardsFromDeck(int nb);
     void setTotalVictoryPoints();
     bool hasActionCards();
     bool hasTreasureCards();
     void beginRound();
-    void playCard(int indexInHand);
+    bool playCard(int indexInHand);
+    bool discardCard(int indexInHand);
+    bool trashCard(int indexInHand);
     void finishRound();
 
     friend bool operator<(const Player& l, const Player& r);

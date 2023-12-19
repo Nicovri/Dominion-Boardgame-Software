@@ -15,6 +15,25 @@
     argv[1] : 0 for CLI and 1 for GUI
 */
 int main(int argc, char* argv[]) {
+
+    // sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    // sf::CircleShape shape(100.f);
+    // shape.setFillColor(sf::Color::Green);
+
+    // while (window.isOpen())
+    // {
+    //     sf::Event event;
+    //     while (window.pollEvent(event))
+    //     {
+    //         if (event.type == sf::Event::Closed)
+    //             window.close();
+    //     }
+
+    //     window.clear();
+    //     window.draw(shape);
+    //     window.display();
+    // }
+
     int nbPlayers = 0;
     std::set<std::string> usedUsernames;
     std::vector<Player*> players;

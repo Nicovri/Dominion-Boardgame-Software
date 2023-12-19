@@ -68,9 +68,13 @@ std::vector<Card*> Pile::getCards(int number) {
 }
 
 Card* Pile::getCard(int cardIndex) {
-    Card *c = this->cardStack.at(cardIndex);
-    this->cardStack.erase(cardStack.begin() + cardIndex);
-    return c;
+    if(0 <= cardIndex && cardIndex <= int(cardStack.size())-1) {
+        Card *c = this->cardStack.at(cardIndex);
+        this->cardStack.erase(cardStack.begin() + cardIndex);
+        return c;
+    } else {
+        return NULL;
+    }
 }
 
 Card* Pile::showCard(int cardIndex) const {

@@ -14,6 +14,7 @@ public:
     Card(int price, std::string title, bool isVisible);
     virtual ~Card() = default;
     virtual int getPrice() const;
+    virtual std::string getTitle() const;
     virtual bool isActionCard() = 0;
     virtual bool isTreasureCard() = 0;
     virtual bool isVictoryCard() = 0;

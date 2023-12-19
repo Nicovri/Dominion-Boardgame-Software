@@ -3,6 +3,7 @@
 #include "../cardTypes/Victory.hpp"
 #include <vector>
 #include <iostream>
+#include <functional>
 
 class Board {
     std::vector<Player*> players;
@@ -18,16 +19,20 @@ public:
     Board(Player &p1, Player &p2, Player &p3, Player &p4);
     ~Board();
     int getCurrentPlayerIndex() const;
+    std::vector<Player*> getPlayers() const;
 
     int getNbPlayers() const;
     int getNbPiles() const;
     Player* getCurrentPlayer() const;
     bool initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles);
     Card* chooseCard(int allowedPrice, bool isCardEffect);
+    Card* chooseCard(std::string cardName);
+    bool trashCard(Card* c);
     void playActionCard();
     void playRound();
     void showResults();
     bool gameIsOver();
+    void displayFilteredPiles(std::function<bool(const Pile)> predicate);
 
     friend std::ostream& operator<<(std::ostream &os, const Board &b);
 };

@@ -1,14 +1,14 @@
 enum class KingdomCardName {
     Workshop,
     Woodcutter,
-    Cellar, // TODO
-    Chapel, // TODO
-    Smithy, // TODO
-    Market, // TODO
-    Mine, // TODO
-    Remodel, // TODO
-    Witch, // TODO
-    Village // TODO
+    Cellar,
+    Chapel,
+    Smithy,
+    Market,
+    Mine,
+    Remodel,
+    Witch,
+    Village
 };
 
 enum class OtherCardName {

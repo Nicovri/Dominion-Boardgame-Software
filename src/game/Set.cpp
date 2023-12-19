@@ -8,6 +8,30 @@ Pile Set::createKingdomCardPile(KingdomCardName cardName) {
         case KingdomCardName::Woodcutter:
             return Pile(new Woodcutter(), 10);
             break;
+        case KingdomCardName::Cellar:
+            return Pile(new Cellar(), 10);
+            break;
+        case KingdomCardName::Chapel:
+            return Pile(new Chapel(), 10);
+            break;
+        case KingdomCardName::Smithy:
+            return Pile(new Smithy(), 10);
+            break;
+        case KingdomCardName::Market:
+            return Pile(new Market(), 10);
+            break;
+        case KingdomCardName::Mine:
+            return Pile(new Mine(), 10);
+            break;
+        case KingdomCardName::Remodel:
+            return Pile(new Remodel(), 10);
+            break;
+        case KingdomCardName::Witch:
+            return Pile(new Witch(), 10);
+            break;
+        case KingdomCardName::Village:
+            return Pile(new Village(), 10);
+            break;
         default:
             return Pile();
             break;
@@ -59,6 +83,14 @@ std::vector<Pile> Set::getSetCards(int nbPlayers, SetName setName) {
         case SetName::Base:
             setFromName.push_back(Pile(new Workshop(), 10));
             setFromName.push_back(Pile(new Woodcutter(), 10));
+            setFromName.push_back(Pile(new Cellar(), 10));
+            setFromName.push_back(Pile(new Chapel(), 10));
+            setFromName.push_back(Pile(new Smithy(), 10));
+            setFromName.push_back(Pile(new Market(), 10));
+            setFromName.push_back(Pile(new Mine(), 10));
+            setFromName.push_back(Pile(new Remodel(), 10));
+            setFromName.push_back(Pile(new Witch(), 10));
+            setFromName.push_back(Pile(new Village(), 10));
             break;
         default:
             break;

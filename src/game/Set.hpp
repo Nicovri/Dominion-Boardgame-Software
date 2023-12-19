@@ -14,6 +14,14 @@
 #include "../cards/Province.hpp"
 #include "../cards/Workshop.hpp"
 #include "../cards/Woodcutter.hpp"
+#include "../cards/Cellar.hpp"
+#include "../cards/Chapel.hpp"
+#include "../cards/Smithy.hpp"
+#include "../cards/Market.hpp"
+#include "../cards/Mine.hpp"
+#include "../cards/Remodel.hpp"
+#include "../cards/Witch.hpp"
+#include "../cards/Village.hpp"
 
 class Set {
 public:
