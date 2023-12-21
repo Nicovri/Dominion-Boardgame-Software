@@ -1,6 +1,12 @@
 #include "Pile.hpp"
 
-Pile::Pile() {}
+Pile::Pile() {
+    // for(Card *c : cardStack) {
+    //     if(c != NULL) {
+    //         delete &c;
+    //     }
+    // }
+}
 
 Pile::Pile(Card *c, int num) {
     for(int i = 0; i < num; i++) {

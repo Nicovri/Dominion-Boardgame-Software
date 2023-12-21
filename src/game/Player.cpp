@@ -3,7 +3,11 @@
 
 Player::Player(std::string username): username(username), nbActions(0), nbBuys(0), nbCoins(0) {}
 
-Player::~Player() {}
+Player::~Player() {
+    // delete &deck;
+    // delete &discard;
+    // delete &hand;
+}
 
 Player::Player(const Player &p): username(p.username), nbActions(p.nbActions), nbBuys(p.nbBuys), nbCoins(p.nbCoins), deck(p.deck), discard(p.discard), hand(p.hand) {}
 
@@ -67,6 +71,7 @@ void Player::getNewCard(Card *card, bool isCardEffect, bool goesDirectlyInHand) 
     }
     if(!isCardEffect) {
         this->nbBuys--;
+        this->nbCoins -= card->getPrice();
     }
 }
 

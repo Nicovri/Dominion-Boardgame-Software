@@ -4,9 +4,11 @@ CXXFLAGS=-Wall -Wextra -Werror -std=c++11
 SRCDIR=./src
 BUILDDIR=./build
 CARDSDIR=$(BUILDDIR)/cards
+SFMLDIR=$(BUILDDIR)/components
 
 MAIN := $(BUILDDIR)/main.o
 ENUMS := $(BUILDDIR)/enums.o
+COMPONENTS := $(SFMLDIR)/Button.o $(SFMLDIR)/ButtonGroup.o $(SFMLDIR)/TextInputField.o
 GAME := $(BUILDDIR)/Board.o $(BUILDDIR)/Set.o $(BUILDDIR)/Player.o $(BUILDDIR)/Card.o $(BUILDDIR)/Pile.o $(BUILDDIR)/Point.o
 CARDTYPES := $(BUILDDIR)/Victory.o $(BUILDDIR)/Treasure.o $(BUILDDIR)/Action.o
 VICTORY_CARDS := $(CARDSDIR)/Curse.o $(CARDSDIR)/Estate.o $(CARDSDIR)/Duchy.o $(CARDSDIR)/Province.o
@@ -22,13 +24,16 @@ $(BUILDDIR)/%.o: $(SRCDIR)/cardTypes/%.cpp | $(BUILDDIR)
 $(BUILDDIR)/cards/%.o: $(SRCDIR)/cards/%.cpp | $(CARDSDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# $(BUILDDIR)/main.o: $(SRCDIR)/main.cpp | $(BUILDDIR)
-# 	$(CXX) $(CXXFLAGS) -I/usr/include/SFML -c $< -o $@
+$(BUILDDIR)/main.o: $(SRCDIR)/main.cpp | $(BUILDDIR)
+	$(CXX) $(CXXFLAGS) -I/usr/include/SFML -c $< -o $@
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | $(BUILDDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BUILDDIR)/dominion-game: $(MAIN) $(ENUMS) $(GAME) $(CARDTYPES) $(VICTORY_CARDS) $(TREASURE_CARDS) $(ACTION_CARDS)
+$(BUILDDIR)/components/%.o: $(SRCDIR)/components/%.cpp | $(SFMLDIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(BUILDDIR)/dominion-game: $(MAIN) $(ENUMS) $(COMPONENTS) $(GAME) $(CARDTYPES) $(VICTORY_CARDS) $(TREASURE_CARDS) $(ACTION_CARDS)
 	$(CXX) $^ -o $@ -lsfml-graphics -lsfml-window -lsfml-system
 
 .PHONY: run clean
@@ -44,3 +49,6 @@ $(BUILDDIR):
 
 $(CARDSDIR):
 	mkdir build/cards
+
+$(SFMLDIR):
+	mkdir build/components

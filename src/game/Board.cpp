@@ -16,7 +16,15 @@ Board::Board(Player &p1, Player &p2, Player &p3) { this->players.push_back(&p1);
 
 Board::Board(Player &p1, Player &p2, Player &p3, Player &p4) { this->players.push_back(&p1); this->players.push_back(&p2); this->players.push_back(&p3); this->players.push_back(&p4); }
 
-Board::~Board() {}
+Board::~Board() {
+    // for(Pile p : piles) {
+    //     delete &p;
+    // }
+    // delete &trash;
+    // for(Player *p : players) {
+    //     delete &p;
+    // }
+}
 
 int Board::getCurrentPlayerIndex() const { return this->currentPlayer; }
 
@@ -56,6 +64,9 @@ bool Board::initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles
 Card* Board::chooseCard(int allowedPrice, bool isCardEffect) {
     int pileIndex = -2;
     Player *p = this->players.at(currentPlayer);
+
+    displayFilteredPiles([allowedPrice](const Pile p) { return !p.isEmpty() && p.showCard(0)->getPrice() <= allowedPrice; });
+
     while(pileIndex < -1 || pileIndex > this->getNbPiles()-1 ||
         (0 <= pileIndex  && pileIndex <= this->getNbPiles()-1 && piles.at(pileIndex).showCard(0)->getPrice() > allowedPrice)) {
         std::cout << p << std::endl;
@@ -154,7 +165,9 @@ void Board::playRound() {
 }
 
 void Board::showResults() {
-    std::sort(players.rbegin(), players.rend());
+    std::sort(players.begin(), players.end(), [](const Player* l, const Player* r) {
+        return l->getTotalVictoryPoints() < r->getTotalVictoryPoints();
+    });
     std::cout << "Game is over! Here are the results." << std::endl;
     for(int i = 1; i <= int(players.size()); i++) {
         std::cout << i << ": " << players.at(i-1)->getUsername() << " with " << players.at(i-1)->getTotalVictoryPoints() << " VP" << std::endl;
@@ -190,9 +203,9 @@ void Board::displayFilteredPiles(std::function<bool(const Pile)> predicate) {
 
 std::ostream& operator<<(std::ostream &os, const Board &b) {
     os << "============================================================" << std::endl << std::endl;
-    for(const auto &p : b.players) {
-        os << p << std::endl;
-    }
+    // for(const auto &p : b.players) {
+    //     os << p << std::endl;
+    // }
     int i = 0;
     for(const Pile &p : b.piles) {
         os << i << ": " << p << std::endl;
