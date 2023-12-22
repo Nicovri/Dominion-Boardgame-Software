@@ -3,16 +3,16 @@
 #include <SFML/Graphics.hpp>
 
 class Button {
-    sf::RectangleShape shape;
-    sf::Text text;
-    sf::Font& font;
     bool isSelected;
+    int value;
 
 public:
-    Button(float relativeX, float relativeY, float width, float height, const std::string& label, sf::Font& font, sf::RenderWindow& window);
-    void draw(sf::RenderWindow& window);
-    void setSelected(bool selected);
-    bool contains(const sf::Vector2f& point) const;
+    Button(int value);
     bool getSelected() const;
-    void setPositionRelativeToWindow(float relativeX, float relativeY, sf::RenderWindow& window);
+    int getValue() const;
+    virtual void draw(sf::RenderWindow& window) = 0;
+    virtual void setValue(int value);
+    virtual void setSelected(bool selected);
+    virtual bool contains(const sf::Vector2f& point) const = 0;
+    virtual void setPositionRelativeToWindow(float relativeX, float relativeY, sf::RenderWindow& window) = 0;
 };

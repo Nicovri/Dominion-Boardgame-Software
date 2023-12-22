@@ -8,7 +8,7 @@ SFMLDIR=$(BUILDDIR)/components
 
 MAIN := $(BUILDDIR)/main.o
 ENUMS := $(BUILDDIR)/enums.o
-COMPONENTS := $(SFMLDIR)/Button.o $(SFMLDIR)/ButtonGroup.o $(SFMLDIR)/TextInputField.o
+COMPONENTS := $(SFMLDIR)/Button.o $(SFMLDIR)/TextButton.o $(SFMLDIR)/ImageButton.o $(SFMLDIR)/ButtonGroup.o $(SFMLDIR)/TextInputField.o
 GAME := $(BUILDDIR)/Board.o $(BUILDDIR)/Set.o $(BUILDDIR)/Player.o $(BUILDDIR)/Card.o $(BUILDDIR)/Pile.o $(BUILDDIR)/Point.o
 CARDTYPES := $(BUILDDIR)/Victory.o $(BUILDDIR)/Treasure.o $(BUILDDIR)/Action.o
 VICTORY_CARDS := $(CARDSDIR)/Curse.o $(CARDSDIR)/Estate.o $(CARDSDIR)/Duchy.o $(CARDSDIR)/Province.o

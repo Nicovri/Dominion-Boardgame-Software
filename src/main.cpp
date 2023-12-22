@@ -3,6 +3,7 @@
 #include "game/Pile.hpp"
 #include "game/Set.hpp"
 #include "components/Button.hpp"
+#include "components/TextButton.hpp"
 #include "components/ButtonGroup.hpp"
 #include "components/TextInputField.hpp"
 #include <iostream>
@@ -22,7 +23,7 @@ int main(int argc, char* argv[]) {
     std::set<std::string> usedUsernames;
     std::vector<Player*> players;
 
-    sf::RenderWindow window(sf::VideoMode(1224, 846), "Dominion Board Game");
+    sf::RenderWindow window(sf::VideoMode(1472, 960), "Dominion Board Game");
     window.setVerticalSyncEnabled(true);
 
     sf::Texture texture;
@@ -46,19 +47,23 @@ int main(int argc, char* argv[]) {
 
     GameState gameState = Initial;
 
-    ButtonGroup selectNbPlayers;
-    selectNbPlayers.addButton(0.1f, 0.1f, 150.f, 50.f, "2 players", font, window, 2);
-    selectNbPlayers.addButton(0.25f, 0.1f, 150.f, 50.f, "3 players", font, window, 3);
-    selectNbPlayers.addButton(0.4f, 0.1f, 150.f, 50.f, "4 players", font, window, 4);
+    bool boardGenerated = false;
 
-    Button playButton = Button(0.5f, 0.5f, 150.f, 50.f, "Play", font, window);
-    Button nextButton = Button(0.5f, 0.5f, 150.f, 50.f, "Next", font, window);
+    ButtonGroup selectNbPlayers;
+    selectNbPlayers.addButton(2, 0.35f, 0.1f, 150.f, 50.f, "2 players", font, window);
+    selectNbPlayers.addButton(3, 0.5f, 0.1f, 150.f, 50.f, "3 players", font, window);
+    selectNbPlayers.addButton(4, 0.65f, 0.1f, 150.f, 50.f, "4 players", font, window);
+
+    TextButton playButton = TextButton(0, 0.5f, 0.5f, 150.f, 50.f, "Play", font, window);
+    TextButton nextButton = TextButton(0, 0.5f, 0.5f, 150.f, 50.f, "Next", font, window);
 
     TextInputField userInputField(0.5f, 0.3f, font, window);
     sf::Text usernameText;
     usernameText.setFont(font);
     usernameText.setFillColor(sf::Color::Black);
     int currentPlayer = 1;
+
+    ButtonGroup pilesButtonGroup;
 
     while (window.isOpen())
     {
@@ -69,8 +74,8 @@ int main(int argc, char* argv[]) {
                 window.close();
             
             else if (event.type == sf::Event::Resized) {
-                window.setSize(sf::Vector2u(1224, 846));
-                sf::FloatRect visibleArea(0, 0, 1224, 846);
+                window.setSize(sf::Vector2u(1472, 960));
+                sf::FloatRect visibleArea(0, 0, 1472, 960);
                 window.setView(sf::View(visibleArea));
             }
 
@@ -120,6 +125,7 @@ int main(int argc, char* argv[]) {
             }
 
             selectNbPlayers.handleEvent(event, window);
+            pilesButtonGroup.handleEvent(event, window);
         }
 
 
@@ -168,61 +174,75 @@ int main(int argc, char* argv[]) {
         }
 
         if(gameState == NewBoard) {
-            for(const auto& p : players) {
-                std::cout << p << std::endl;
+            if(!boardGenerated) {
+                Board b {players};
+                std::vector<Card*> baseDeck = Set::getBaseDeck();
+                std::vector<Pile> piles = Set::getSetCards(nbPlayers, SetName::Base);
+                b.initializeBoard(baseDeck, piles);
+                int i = 0;
+                float x = 0.2f;
+                float y = 0.1f;
+                for(Pile p : piles) {
+                    if(!p.isEmpty()) {
+                        pilesButtonGroup.addButton(i, x, y, 0.1f, "assets/" + p.showCard(0)->getTitle() + ".jpg", window);
+                    }
+                    i++;
+                    if(i % 6 == 0) { x = 0.1f; y += 0.22f; }
+                    x += 0.1f;
+                }
+                boardGenerated = true;
             }
+            pilesButtonGroup.draw(window);
         }
 
         window.display();
 
     }
 
-    while(nbPlayers < 2 || nbPlayers > 4) {
-        std::cout << "How many players are you? (2 to 4): ";
-        std::cin >> nbPlayers;
-
-        if(std::cin.fail()) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            nbPlayers = 0;
-        }
-    }
-
-    for(int i = 1; i <= nbPlayers; i++) {
-        std::string username = "";
-        bool isNewUsername = false;
-
-        while(!isNewUsername) {
-            std::cout << "What is your username, player " << i << "?: ";
-            std::cin >> username;
-            isNewUsername = usedUsernames.insert(username).second;
-        }
-        
-        players.push_back(new Player{username});
-    }
-
-    Board b {players};
-
-    std::vector<Card*> baseDeck = Set::getBaseDeck();
-    std::vector<Pile> piles = Set::getSetCards(nbPlayers, SetName::Base);
-
-    b.initializeBoard(baseDeck, piles);
-
-    system("clear");
-
-    while(!b.gameIsOver()) {
-        std::cout << b << std::endl;
-        b.playRound();
-        system("clear");
-    }
-
-    b.showResults();
-
-
     if(argc == 2 && strcmp(argv[1], "1")) {
-        
+        // GUI
     } else {
+        // CLI
+        while(nbPlayers < 2 || nbPlayers > 4) {
+            std::cout << "How many players are you? (2 to 4): ";
+            std::cin >> nbPlayers;
 
+            if(std::cin.fail()) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                nbPlayers = 0;
+            }
+        }
+
+        for(int i = 1; i <= nbPlayers; i++) {
+            std::string username = "";
+            bool isNewUsername = false;
+
+            while(!isNewUsername) {
+                std::cout << "What is your username, player " << i << "?: ";
+                std::cin >> username;
+                isNewUsername = usedUsernames.insert(username).second;
+            }
+        
+            players.push_back(new Player{username});
+        }
+
+        Board b {players};
+
+        std::vector<Card*> baseDeck = Set::getBaseDeck();
+        std::vector<Pile> piles = Set::getSetCards(nbPlayers, SetName::Base);
+
+        b.initializeBoard(baseDeck, piles);
+
+        system("clear");
+
+        while(!b.gameIsOver()) {
+            std::cout << b << std::endl;
+            b.playRound();
+            system("clear");
+        }
+
+        b.showResults();
     }
 
     return 0;
