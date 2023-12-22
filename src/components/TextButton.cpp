@@ -2,7 +2,6 @@
 
 TextButton::TextButton(int value, float relativeX, float relativeY, float width, float height, const std::string& label, sf::Font& font, sf::RenderWindow& window): Button(value) {
     shape.setSize(sf::Vector2f(width, height));
-    setPositionRelativeToWindow(relativeX, relativeY, window);
     shape.setOutlineThickness(2.f);
     shape.setOutlineColor(sf::Color::Black);
 
@@ -11,10 +10,8 @@ TextButton::TextButton(int value, float relativeX, float relativeY, float width,
     text.setString(label);
     text.setFont(font);
     text.setCharacterSize(24);
-
-    sf::FloatRect textBounds = text.getLocalBounds();
-    text.setOrigin(textBounds.left + textBounds.width / 2.f, textBounds.top + textBounds.height / 2.f);
-    text.setPosition(shape.getPosition() + sf::Vector2f(width / 2.f, height / 2.f));
+    
+    setPositionRelativeToWindow(relativeX, relativeY, window);
 }
 
 void TextButton::draw(sf::RenderWindow& window) {
@@ -40,4 +37,9 @@ bool TextButton::contains(const sf::Vector2f& point) const {
 void TextButton::setPositionRelativeToWindow(float relativeX, float relativeY, sf::RenderWindow& window) {
     sf::Vector2u windowSize = window.getSize();
     shape.setPosition(windowSize.x * relativeX - shape.getSize().x / 2.f, windowSize.y * relativeY - shape.getSize().y / 2.f);
+
+    sf::FloatRect textBounds = text.getLocalBounds();
+    sf::FloatRect shapeBounds = shape.getLocalBounds();
+    text.setOrigin(textBounds.left + textBounds.width / 2.f, textBounds.top + textBounds.height / 2.f);
+    text.setPosition(shape.getPosition() + sf::Vector2f(shapeBounds.width / 2.f, shapeBounds.height / 2.f));
 }

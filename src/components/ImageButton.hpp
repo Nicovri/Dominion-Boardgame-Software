@@ -8,7 +8,7 @@ class ImageButton: public Button {
     sf::Texture texture;
 
 public:
-    ImageButton(int value, float relativeX, float relativeY, float scale, const std::string& imagePath, sf::RenderWindow& window);
+    ImageButton(int value, float relativeX, float relativeY, float scale, sf::Texture& texture, sf::RenderWindow& window);
     void draw(sf::RenderWindow& window);
     void setSelected(bool selected);
     bool contains(const sf::Vector2f& point) const;

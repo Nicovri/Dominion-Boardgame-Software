@@ -10,7 +10,7 @@ class ButtonGroup {
 
 public:
     void addButton(int value, float relativeX, float relativeY, float width, float height, const std::string& label, sf::Font& font, sf::RenderWindow& window);
-    void addButton(int value, float relativeX, float relativeY, float scale, const std::string& imagePath, sf::RenderWindow& window);
+    void addButton(int value, float relativeX, float relativeY, float scale, sf::Texture& texture, sf::RenderWindow& window);
     void draw(sf::RenderWindow& window);
     int getSelectedValue() const;
     void handleEvent(const sf::Event& event, sf::RenderWindow& window);

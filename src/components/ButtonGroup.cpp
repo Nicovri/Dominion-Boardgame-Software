@@ -9,8 +9,8 @@ void ButtonGroup::addButton(int value, float relativeX, float relativeY, float w
     }
 }
 
-void ButtonGroup::addButton(int value, float relativeX, float relativeY, float scale, const std::string& imagePath, sf::RenderWindow& window) {
-    Button *button = new ImageButton(value, relativeX, relativeY, scale, imagePath, window);
+void ButtonGroup::addButton(int value, float relativeX, float relativeY, float scale, sf::Texture& texture, sf::RenderWindow& window) {
+    Button *button = new ImageButton(value, relativeX, relativeY, scale, texture, window);
     buttons.push_back(button);
 
     if(buttons.size() > 1) {

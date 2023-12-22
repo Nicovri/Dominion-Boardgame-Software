@@ -1,10 +1,6 @@
 #include "ImageButton.hpp"
 
-ImageButton::ImageButton(int value, float relativeX, float relativeY, float scale, const std::string& imagePath, sf::RenderWindow& window) : Button(value) {
-    if (!texture.loadFromFile(imagePath)) {
-        // Handle error loading texture
-    }
-
+ImageButton::ImageButton(int value, float relativeX, float relativeY, float scale, sf::Texture& texture, sf::RenderWindow& window) : Button(value) {
     this->setSelected(this->getSelected());
 
     sprite.setTexture(texture);
