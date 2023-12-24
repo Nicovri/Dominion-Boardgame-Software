@@ -2,9 +2,10 @@
 
 #include <vector>
 #include <set>
+#include <cstdlib>
 #include "Pile.hpp"
 #include "../cardTypes/Action.hpp"
-#include "../enums.cpp"
+#include "../enums.hpp"
 #include "../cards/Copper.hpp"
 #include "../cards/Silver.hpp"
 #include "../cards/Gold.hpp"

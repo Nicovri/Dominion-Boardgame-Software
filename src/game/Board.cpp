@@ -1,5 +1,7 @@
 #include "Board.hpp"
 
+Board::Board() {}
+
 Board::Board(std::vector<Player*> ps) {
     if(ps.size() < 2 || ps.size() > 4) {
         // Error
@@ -68,7 +70,7 @@ Card* Board::chooseCard(int allowedPrice, bool isCardEffect) {
     displayFilteredPiles([allowedPrice](const Pile p) { return !p.isEmpty() && p.showCard(0)->getPrice() <= allowedPrice; });
 
     while(pileIndex < -1 || pileIndex > this->getNbPiles()-1 ||
-        (0 <= pileIndex  && pileIndex <= this->getNbPiles()-1 && piles.at(pileIndex).showCard(0)->getPrice() > allowedPrice)) {
+        (0 <= pileIndex  && pileIndex <= this->getNbPiles()-1 && (piles.at(pileIndex).isEmpty() || piles.at(pileIndex).showCard(0)->getPrice() > allowedPrice))) {
         std::cout << p << std::endl;
         if(isCardEffect) {
             std::cout << p->getUsername() << ", which card would you like to choose (the maximum allowed price is " << allowedPrice << " coins)?: ";
@@ -83,7 +85,14 @@ Card* Board::chooseCard(int allowedPrice, bool isCardEffect) {
             pileIndex = -2;
         }
     }
-    if(pileIndex != -1) {        
+    if(pileIndex != -1) {
+        return piles.at(pileIndex).getCards(1).at(0);
+    }
+    return NULL;
+}
+
+Card* Board::chooseCard(int allowedPrice, int pileIndex) {
+    if(pileIndex >= 0 && pileIndex <= getNbPiles()-1 && !piles.at(pileIndex).isEmpty() && piles.at(pileIndex).showCard(0)->getPrice() <= allowedPrice) {
         return piles.at(pileIndex).getCards(1).at(0);
     }
     return NULL;
@@ -128,6 +137,14 @@ void Board::playActionCard() {
     }
 }
 
+void Board::nextPlayerRound() {
+    if(currentPlayer == int(this->players.size())-1) {
+        currentPlayer = 0;
+    } else {
+        currentPlayer++;
+    }
+}
+
 void Board::playRound() {
     Player *p = this->players.at(currentPlayer);
     p->beginRound();
@@ -157,11 +174,7 @@ void Board::playRound() {
 
     p->finishRound();
     
-    if(currentPlayer == int(this->players.size())-1) {
-        currentPlayer = 0;
-    } else {
-        currentPlayer++;
-    }
+    this->nextPlayerRound();
 }
 
 void Board::showResults() {

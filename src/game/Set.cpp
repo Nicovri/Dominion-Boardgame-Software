@@ -65,7 +65,19 @@ std::vector<Pile> Set::getSetCards(int nbPlayers) {
     randomSet.push_back(Pile(new Duchy(), nbPlayers == 2 ? 8 : 12));
     randomSet.push_back(Pile(new Province(), nbPlayers == 2 ? 8 : 12));
 
-    // Choose 10 random action names and create the associated piles
+    srand(time(NULL));
+    int c = 0;
+    while(c < 10) {
+        KingdomCardName randomCard = static_cast<KingdomCardName>(std::rand() % static_cast<int>(KingdomCardName::COUNT));
+        auto it = std::find_if(randomSet.begin(), randomSet.end(),
+                                [randomCard](const Pile& pile) {
+                                    return pile.showCard(0)->getTitle() == kEnumToString(randomCard);
+                                });
+        if(it == randomSet.end()) {
+            randomSet.push_back(Set::createKingdomCardPile(randomCard));
+            c++;
+        }
+    }
 
     return randomSet;
 }
@@ -98,7 +110,7 @@ std::vector<Pile> Set::getSetCards(int nbPlayers, SetName setName) {
     return setFromName;
 }
 
-std::vector<Pile> getSetCards(int nbPlayers,
+std::vector<Pile> Set::getSetCards(int nbPlayers,
         KingdomCardName cardName1, KingdomCardName cardName2, KingdomCardName cardName3,
         KingdomCardName cardName4, KingdomCardName cardName5, KingdomCardName cardName6,
         KingdomCardName cardName7, KingdomCardName cardName8, KingdomCardName cardName9,
@@ -125,7 +137,9 @@ std::vector<Pile> getSetCards(int nbPlayers,
         setFromCards.push_back(Set::createKingdomCardPile(cardName8));
         setFromCards.push_back(Set::createKingdomCardPile(cardName9));
         setFromCards.push_back(Set::createKingdomCardPile(cardName10));
-    } // Else throw error
+    } else {
+        return {};
+    }
     
     return setFromCards;
 }

@@ -18,6 +18,16 @@ void ButtonGroup::addButton(int value, float relativeX, float relativeY, float s
     }
 }
 
+void ButtonGroup::removeButton(int index) {
+    if(index >= 0 && index <= int(buttons.size()-1)) {
+        buttons.erase(buttons.begin() + index);
+    }
+}
+
+void ButtonGroup::clear() {
+    buttons.clear();
+}
+
 void ButtonGroup::draw(sf::RenderWindow& window) {
     for (Button *button : buttons) {
         button->draw(window);

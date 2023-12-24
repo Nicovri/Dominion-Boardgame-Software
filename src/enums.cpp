@@ -1,26 +1,37 @@
-enum class KingdomCardName {
-    Workshop,
-    Woodcutter,
-    Cellar,
-    Chapel,
-    Smithy,
-    Market,
-    Mine,
-    Remodel,
-    Witch,
-    Village
-};
+#include "enums.hpp"
 
-enum class OtherCardName {
-    Curse,
-    Estate,
-    Duchy,
-    Province,
-    Copper,
-    Silver,
-    Gold
-};
+const std::string kEnumToString(KingdomCardName value) {
+    switch (value) {
+        case KingdomCardName::Workshop: return "Workshop";
+        case KingdomCardName::Woodcutter: return "Woodcutter";
+        case KingdomCardName::Cellar: return "Cellar";
+        case KingdomCardName::Chapel: return "Chapel";
+        case KingdomCardName::Smithy: return "Smithy";
+        case KingdomCardName::Market: return "Market";
+        case KingdomCardName::Mine: return "Mine";
+        case KingdomCardName::Remodel: return "Remodel";
+        case KingdomCardName::Witch: return "Witch";
+        case KingdomCardName::Village: return "Village";
+        default: return "";
+    }
+}
 
-enum class SetName {
-    Base // Workshop, Woodcutter, Cellar, Chapel, Smithy, Market, Mine, Remodel, Witch, Village
-};
+const std::string oEnumToString(OtherCardName value) {
+    switch (value) {
+        case OtherCardName::Curse: return "Curse";
+        case OtherCardName::Estate: return "Estate";
+        case OtherCardName::Duchy: return "Duchy";
+        case OtherCardName::Province: return "Province";
+        case OtherCardName::Copper: return "Copper";
+        case OtherCardName::Silver: return "Silver";
+        case OtherCardName::Gold: return "Gold";
+        default: return "";
+    }
+}
+
+const std::string sEnumToString(SetName value) {
+    switch (value) {
+        case SetName::Base: return "Base";
+        default: return "";
+    }
+}

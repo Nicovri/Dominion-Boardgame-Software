@@ -13,6 +13,7 @@ class Board {
     Pile trash;
 
 public:
+    Board();
     Board(std::vector<Player*> ps);
     Board(Player &p1, Player &p2);
     Board(Player &p1, Player &p2, Player &p3);
@@ -29,10 +30,13 @@ public:
     Card* chooseCard(std::string cardName);
     bool trashCard(Card* c);
     void playActionCard();
+    void nextPlayerRound();
     void playRound();
     void showResults();
     bool gameIsOver();
     void displayFilteredPiles(std::function<bool(const Pile)> predicate);
 
     friend std::ostream& operator<<(std::ostream &os, const Board &b);
+
+    Card* chooseCard(int allowedPrice, int pileIndex);
 };

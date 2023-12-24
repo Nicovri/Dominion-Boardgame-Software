@@ -135,6 +135,7 @@ bool Player::hasTreasureCards() {
 void Player::beginRound() {
     this->nbActions = 1;
     this->nbBuys = 1;
+    this->nbCoins = 0;
 }
 
 bool Player::playCard(int indexInHand) {
