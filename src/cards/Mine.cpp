@@ -1,7 +1,7 @@
 #include "Mine.hpp"
 #include "../game/Board.hpp"
 
-Mine::Mine(): Action(5, "Mine", true) {}
+Mine::Mine(): Action(5, "Mine", true, "Which Treasure card would you like to trash and which Treasure card would you like to get (up to 3 coins more)?") {}
 
 void Mine::play(Board &b) {
     Player *p = b.getCurrentPlayer();
@@ -36,7 +36,7 @@ void Mine::play(Board &b) {
         }
 
     
-        b.displayFilteredPiles([allowedPrice](const Pile p) { return !p.isEmpty() && p.showCard(0)->isTreasureCard() && p.showCard(0)->getPrice() <= allowedPrice; });
+        // b.displayFilteredPiles([allowedPrice](const Pile p) { return !p.isEmpty() && p.showCard(0)->isTreasureCard() && p.showCard(0)->getPrice() <= allowedPrice; });
 
         Card *c = b.chooseCard(allowedPrice, true);
         while(!c->isTreasureCard()) {
@@ -44,4 +44,21 @@ void Mine::play(Board &b) {
         }
         p->getNewCard(c, true, true);
     }
+}
+
+bool Mine::useEffect(Board &b, int repetitiveActionCounter, int pileIndex, int cardIndexInHand) {
+    if(repetitiveActionCounter == 1) {
+        if(b.getCurrentPlayer()->showCard(cardIndexInHand)->isTreasureCard()) {
+            int allowedPrice = b.getCurrentPlayer()->showCard(cardIndexInHand)->getPrice() + 3;
+            if(!b.getCurrentPlayer()->trashCard(cardIndexInHand)) {
+                allowedPrice = -1;
+            }
+            Card * c = b.chooseCard(allowedPrice, pileIndex);
+            if(c != NULL) {
+                b.getCurrentPlayer()->getNewCard(c, true);
+            }
+            return true;
+        }
+    }
+    return false;
 }

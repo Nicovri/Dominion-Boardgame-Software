@@ -12,3 +12,11 @@ void Witch::play(Board &b) {
         }
     }
 }
+
+bool Witch::useEffect(Board &b, int repetitiveActionCounter, int pileIndex, int cardIndexInHand) {
+    this->play(b);
+    repetitiveActionCounter = repetitiveActionCounter;
+    pileIndex = pileIndex;
+    cardIndexInHand = cardIndexInHand;
+    return true;
+}

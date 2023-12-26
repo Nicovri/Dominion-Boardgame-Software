@@ -32,6 +32,8 @@ int Board::getCurrentPlayerIndex() const { return this->currentPlayer; }
 
 std::vector<Player*> Board::getPlayers() const { return this->players; }
 
+std::vector<Pile> Board::getPiles() const { return this->piles; }
+
 int Board::getNbPlayers() const { return this->players.size(); }
 
 int Board::getNbPiles() const { return this->piles.size(); }
@@ -178,7 +180,7 @@ void Board::playRound() {
 }
 
 void Board::showResults() {
-    std::sort(players.begin(), players.end(), [](const Player* l, const Player* r) {
+    std::sort(players.rbegin(), players.rend(), [](const Player* l, const Player* r) {
         return l->getTotalVictoryPoints() < r->getTotalVictoryPoints();
     });
     std::cout << "Game is over! Here are the results." << std::endl;

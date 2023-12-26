@@ -30,6 +30,10 @@ void TextButton::setSelected(bool selected) {
     }
 }
 
+void TextButton::setString(std::string string) {
+    text.setString(string);
+}
+
 bool TextButton::contains(const sf::Vector2f& point) const {
     return shape.getGlobalBounds().contains(point);
 }

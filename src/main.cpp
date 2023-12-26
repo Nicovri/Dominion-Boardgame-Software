@@ -24,8 +24,10 @@
 int main(int argc, char* argv[]) {
     int nbPlayers = 0;
     int setInitOption = -1;
+    std::vector<KingdomCardName> chosenCards = {};
     std::set<std::string> usedUsernames;
     std::vector<Player*> players;
+    std::vector<Pile> piles;
     Board b = Board();
 
     if(argc == 2 && strcmp(argv[1], "1") == 0) {
@@ -51,6 +53,7 @@ int main(int argc, char* argv[]) {
             UsernameInput2,
             UsernameInput3,
             UsernameInput4,
+            SetGeneration,
             Loading,
             NewBoard,
             RoundPlayer,
@@ -66,6 +69,11 @@ int main(int argc, char* argv[]) {
         selectNbPlayers.addButton(3, 0.5f, 0.1f, 150.f, 50.f, "3 players", font, window);
         selectNbPlayers.addButton(4, 0.65f, 0.1f, 150.f, 50.f, "4 players", font, window);
 
+        ButtonGroup selectSetInitMode;
+        selectSetInitMode.addButton(0, 0.3f, 0.3f, 180.f, 50.f, "random set", font, window);
+        selectSetInitMode.addButton(1, 0.5f, 0.3f, 180.f, 50.f, "predefined set", font, window);
+        selectSetInitMode.addButton(2, 0.7f, 0.3f, 180.f, 50.f, "choose 10 cards", font, window);
+
         TextButton playButton = TextButton(0, 0.5f, 0.5f, 150.f, 50.f, "Play", font, window);
         TextButton nextButton = TextButton(0, 0.5f, 0.5f, 150.f, 50.f, "Next", font, window);
 
@@ -75,27 +83,56 @@ int main(int argc, char* argv[]) {
         usernameText.setFillColor(sf::Color::Black);
         int currentPlayer = 1;
 
+        ButtonGroup selectSetName;
+        float xS = 0.1f;
+        float yS = 0.1f;
+        for(int i = 0; i < static_cast<int>(SetName::COUNT); i++) {
+            selectSetName.addButton(i, xS, yS, 150.f, 50.f, sEnumToString(static_cast<SetName>(i)), font, window);
+            xS += 0.11f;
+            if(i % 7 == 0 && i != 0) { xS = 0.1f; yS += 0.1f; }
+        }
+        xS = 0.1f;
+        yS = 0.1f;
+        ButtonGroup selectCardNames;
+        for(int i = 0; i < static_cast<int>(KingdomCardName::COUNT); i++) {
+            selectCardNames.addButton(i, xS, yS, 150.f, 50.f, kEnumToString(static_cast<KingdomCardName>(i)), font, window);
+            xS += 0.11f;
+            if(i % 7 == 0 && i != 0) { xS = 0.1f; yS += 0.1f; }
+        }
+        sf::Text cardName;
+        cardName.setFont(font);
+        cardName.setFillColor(sf::Color::Black);
+        int cardChosen = 0;
+
         sf::Text loadingText;
         loadingText.setFont(font);
         loadingText.setFillColor(sf::Color::Black);
         loadingText.setString("Loading...");
-        float xPos = 0.5f * (window.getSize().x - loadingText.getLocalBounds().width);
-        float yPos = 0.4f * window.getSize().y;
+        sf::FloatRect rectLoading = loadingText.getLocalBounds();
+        loadingText.setOrigin(rectLoading.width/2, rectLoading.height/2);
+        float xPos = 0.5f * window.getSize().x;
+        float yPos = 0.5f * window.getSize().y;
         loadingText.setPosition(xPos, yPos);
 
         ButtonGroup pilesButtonGroup;
+        ButtonGroup cardsLeftInPiles;
         ButtonGroup cardsInHand;
 
         enum RoundState {
             BeginRound,
             ShowHand,
             ActionPhase,
+            CardEffect,
             TreasurePhase,
             BuyPhase,
             NextPlayerTurn
         };
 
         RoundState roundState = BeginRound;
+
+        int playedActionCard = -1;
+        int cardEffectPhase = -1;
+        bool effectIsOver = false;
 
         TextButton chooseCardButton = TextButton(0, 0.8f, 0.5f, 150.f, 50.f, "Choose card", font, window);
         TextButton passButton = TextButton(0, 0.8f, 0.6f, 150.f, 50.f, "Pass", font, window);
@@ -107,8 +144,13 @@ int main(int argc, char* argv[]) {
         actionText.setFont(font);
         actionText.setFillColor(sf::Color::Black);
         actionText.setString("Which card would you like to play?");
-        float xPosRound = 0.5f * (window.getSize().x - actionText.getLocalBounds().width);
+        float xPosRound = 0.2f * window.getSize().x;
         actionText.setPosition(xPosRound, yPosRound);
+        sf::Text cardEffectText;
+        cardEffectText.setFont(font);
+        cardEffectText.setFillColor(sf::Color::Black);
+        cardEffectText.setString("Please follow console instructions to use this card's effect.");
+        cardEffectText.setPosition(xPosRound, yPosRound);
         sf::Text buyText;
         buyText.setFont(font);
         buyText.setFillColor(sf::Color::Black);
@@ -117,9 +159,11 @@ int main(int argc, char* argv[]) {
         gameOverText.setFont(font);
         gameOverText.setFillColor(sf::Color::Black);
         gameOverText.setString("Game is over! Here are the results.");
-        xPosRound = 0.5f * (window.getSize().x - gameOverText.getLocalBounds().width);
-        yPosRound = 0.3f * window.getSize().y;
-        gameOverText.setPosition(xPosRound, yPosRound);
+        sf::FloatRect rectFinal = gameOverText.getLocalBounds();
+        gameOverText.setOrigin(rectFinal.width/2, rectFinal.height/2);
+        float xFinal = 0.5f * window.getSize().x;
+        float yFinal = 0.3f * window.getSize().y; 
+        gameOverText.setPosition(xFinal, yFinal);
         sf::Text playerFinalRankText;
         playerFinalRankText.setFont(font);
         playerFinalRankText.setFillColor(sf::Color::Black);
@@ -127,9 +171,10 @@ int main(int argc, char* argv[]) {
         wellDoneText.setFont(font);
         wellDoneText.setFillColor(sf::Color::Black);
         wellDoneText.setString("Well done!");
-        xPosRound = 0.5f * (window.getSize().x - wellDoneText.getLocalBounds().width);
-        yPosRound = 0.8f * window.getSize().y;
-        wellDoneText.setPosition(xPosRound, yPosRound);
+        rectFinal = wellDoneText.getLocalBounds();
+        wellDoneText.setOrigin(rectFinal.width/2, rectFinal.height/2);
+        yFinal = 0.8f * window.getSize().y;
+        wellDoneText.setPosition(xFinal, yFinal);
         TextButton backToHomeScreenButton = TextButton(0, 0.5f, 0.9f, 400.f, 50.f, "Go back to home screen", font, window);
 
         while (window.isOpen())
@@ -162,30 +207,81 @@ int main(int argc, char* argv[]) {
                             }
                         }
 
-                        if(nextButton.contains(mousePos) && (gameState == UsernameInput1 || gameState == UsernameInput2 || gameState == UsernameInput3 || gameState == UsernameInput4)) {
-                            if(userInputField.getContent() != "" && usedUsernames.insert(userInputField.getContent()).second) {
-                                players.push_back(new Player{userInputField.getContent()});
-                                userInputField.clear();
-                                currentPlayer++;
-                            } else {
-                                // display error message for some time?
-                            }
-                            usernameText.setString("What is your username, player " + std::to_string(currentPlayer) + "?: ");
-                            if(currentPlayer == 2) {
-                                gameState = UsernameInput2;
-                            } else if(currentPlayer == 3) {
-                                gameState = UsernameInput3;
-                            } else if(currentPlayer == 4) {
-                                gameState = UsernameInput4;
-                            }
-                            if(currentPlayer > nbPlayers) {
-                                gameState = Loading;
+                        if(nextButton.contains(mousePos)) {
+                            if(gameState == UsernameInput1 || gameState == UsernameInput2 || gameState == UsernameInput3 || gameState == UsernameInput4) {
+                                if(userInputField.getContent() != "" && usedUsernames.insert(userInputField.getContent()).second) {
+                                    players.push_back(new Player{userInputField.getContent()});
+                                    userInputField.clear();
+                                    currentPlayer++;
+                                } else {
+                                    // display error message for some time?
+                                }
+                                usernameText.setString("What is your username, player " + std::to_string(currentPlayer) + "?: ");
+                                if(currentPlayer == 2) {
+                                    gameState = UsernameInput2;
+                                } else if(currentPlayer == 3) {
+                                    gameState = UsernameInput3;
+                                } else if(currentPlayer == 4) {
+                                    gameState = UsernameInput4;
+                                }
+                                if(currentPlayer > nbPlayers) {
+                                    gameState = SetGeneration;
+                                }
+                            } else if(gameState == SetGeneration) {
+                                int setInitMode = selectSetInitMode.getSelectedValue();
+                                if(setInitMode == 0) {
+                                } else if(setInitMode == 1) {
+                                    piles = Set::getSetCards(nbPlayers, static_cast<SetName>(selectSetName.getSelectedValue()));
+                                    gameState = Loading;
+                                } else if(setInitMode == 2) {
+                                    if(cardChosen < 10) {
+                                        chosenCards.push_back(static_cast<KingdomCardName>(selectCardNames.getSelectedValue()));
+                                        if(cardName.getString().toAnsiString() == "") {
+                                            cardName.setString(kEnumToString(static_cast<KingdomCardName>(selectCardNames.getSelectedValue())));
+                                        } else {
+                                            cardName.setString(cardName.getString().toAnsiString() + " - " + kEnumToString(static_cast<KingdomCardName>(selectCardNames.getSelectedValue())));
+                                        }
+                                        sf::FloatRect rect = cardName.getLocalBounds();
+                                        cardName.setOrigin(rect.width/2, rect.height/2);
+                                        float y = 0.6f * window.getSize().y;
+                                        float x = 0.5f * window.getSize().x;
+                                        cardName.setPosition(x, y);
+                                    }
+                                    cardChosen++;
+                                    if(cardChosen == 10) {
+                                        piles = Set::getSetCards(nbPlayers, chosenCards.at(0), chosenCards.at(1), chosenCards.at(2),
+                                                                chosenCards.at(3), chosenCards.at(4), chosenCards.at(5),
+                                                                chosenCards.at(6), chosenCards.at(7), chosenCards.at(8), chosenCards.at(9));
+                                        if(piles.empty()) {
+                                            chosenCards = {};
+                                            cardChosen = 0;
+                                            cardName.setString("");
+                                        } else {
+                                            gameState = Loading;
+                                        }
+                                    }
+                                } else {
+                                    piles = Set::getSetCards(nbPlayers, SetName::Base);
+                                    gameState = Loading;
+                                }
                             }
                         }
 
                         if(chooseCardButton.contains(mousePos)) {
                             if(roundState == ActionPhase) {
-                                b.getCurrentPlayer()->playCard(cardsInHand.getSelectedValue());
+                                if(b.getCurrentPlayer()->showCard(cardsInHand.getSelectedValue())->isActionCard()) {
+                                    playedActionCard = playedActionCard;
+                                    effectIsOver = effectIsOver;
+                                    cardEffectPhase++;
+                                    // playedActionCard = cardsInHand.getSelectedValue();
+                                    // roundState = CardEffect;
+                                }
+                            }
+                            if(roundState == CardEffect) {
+                                // if(b.getCurrentPlayer()->showCard(cardsInHand.getSelectedValue())->isActionCard()) {
+                                //     cardEffectPhase++;
+                                //     effectIsOver = b.getCurrentPlayer()->playActionCard(playedActionCard, cardEffectPhase, pilesButtonGroup.getSelectedValue(), cardsInHand.getSelectedValue());
+                                // }
                             }
                             if(roundState == BuyPhase) {
                                 Card *c = b.chooseCard(b.getCurrentPlayer()->getNbCoins(), pilesButtonGroup.getSelectedValue());
@@ -197,6 +293,7 @@ int main(int argc, char* argv[]) {
 
                         if(passButton.contains(mousePos)) {
                             if(roundState == ActionPhase) { roundState = TreasurePhase; }
+                            if(roundState == CardEffect) { /*cardEffectPhase++;*/ }
                             if(roundState == BuyPhase) { roundState = NextPlayerTurn; }
                         }
 
@@ -211,6 +308,9 @@ int main(int argc, char* argv[]) {
                 }
 
                 selectNbPlayers.handleEvent(event, window);
+                selectSetInitMode.handleEvent(event, window);
+                selectSetName.handleEvent(event, window);
+                selectCardNames.handleEvent(event, window);
                 pilesButtonGroup.handleEvent(event, window);
                 cardsInHand.handleEvent(event, window);
             }
@@ -222,6 +322,8 @@ int main(int argc, char* argv[]) {
             if(gameState == Initial) {
                 nbPlayers = 0;
                 setInitOption = -1;
+                cardChosen = 0;
+                chosenCards = {};
                 usedUsernames.clear();
                 players.clear();
                 b.getPlayers().clear();
@@ -229,8 +331,12 @@ int main(int argc, char* argv[]) {
                 boardGenerated = false;
                 currentPlayer = 1;
                 roundState = BeginRound;
+                playedActionCard = -1;
+                cardEffectPhase = -1;
+                effectIsOver = false;
                 playButton.draw(window);
                 selectNbPlayers.draw(window);
+                selectSetInitMode.draw(window);
             }
 
             if(gameState == UsernameInput1) {
@@ -269,13 +375,27 @@ int main(int argc, char* argv[]) {
                 userInputField.draw(window);
             }
 
+            if(gameState == SetGeneration) {
+                int setInitMode = selectSetInitMode.getSelectedValue();
+                if(setInitMode == 0) {
+                    piles = Set::getSetCards(nbPlayers);
+                    gameState = Loading;
+                } else if(setInitMode == 1) {
+                    selectSetName.draw(window);
+                } else if(setInitMode == 2) {
+                    selectCardNames.draw(window);
+                    window.draw(cardName);
+                } else {
+                }
+                if(setInitMode != 0) { nextButton.draw(window); }
+            }
+
             if(gameState == NewBoard) {
                 int t;
                 if(!boardGenerated) {
                     t = 0;
                     b = Board(players);
                     std::vector<Card*> baseDeck = Set::getBaseDeck();
-                    std::vector<Pile> piles = Set::getSetCards(nbPlayers, SetName::Base);
                     b.initializeBoard(baseDeck, piles);
                     int i = 0;
                     float x = 0.05f;
@@ -286,6 +406,7 @@ int main(int argc, char* argv[]) {
                             cardTexture.loadFromFile("assets/" + p.showCard(0)->getTitle() + ".jpg");
                             cardsTextureMap.insert(std::make_pair(p.showCard(0)->getTitle(), cardTexture));
                             pilesButtonGroup.addButton(i, x, y, 0.1f, cardsTextureMap.at(p.showCard(0)->getTitle()), window);
+                            cardsLeftInPiles.addButton(i, x, y, 40.f, 40.f, std::to_string(p.getNbCards()), font, window);
                         }
                         i++;
                         x += 0.1f;
@@ -316,17 +437,32 @@ int main(int argc, char* argv[]) {
                 xPosRound = 0.85f * (window.getSize().x - turnPlayer.getLocalBounds().width);
                 turnPlayer.setPosition(xPosRound, yPosRoundName);
 
-                float x = 0.05f;
-                for(int i = 0; i < p->getNbCardsInHand(); i++) {
-                    cardsInHand.addButton(i, x, 0.75f, 0.1f, cardsTextureMap.at(p->showCard(i)->getTitle()), window);
-                    x += 0.1f;
+                // Find a better way (somewhat bugged for Action Phase)
+                if(roundState != ActionPhase && roundState != CardEffect && roundState != ShowHand && roundState != TreasurePhase) {
+                    cardsInHand.clear();
+                    float x = 0.05f;
+                    for(int i = 0; i < p->getNbCardsInHand(); i++) {
+                        cardsInHand.addButton(i, x, 0.75f, 0.1f, cardsTextureMap.at(p->showCard(i)->getTitle()), window);
+                        x += 0.1f;
+                    }
+                    cardsInHand.draw(window);
+                } else {
+                    cardsInHand.draw(window);
                 }
 
-                // Same problem here, when pile is empty, it is still drawn
+                // When pile is empty, it is still drawn
                 pilesButtonGroup.draw(window);
+                int i = 0;
+                float x2 = 0.05f;
+                float y2 = 0.05f;
+                for(Pile p : b.getPiles()) {
+                    cardsLeftInPiles.addButton(i, x2, y2, 40.f, 40.f, std::to_string(p.getNbCards()), font, window);
+                    i++;
+                    x2 += 0.1f;
+                    if(i % 6 == 0) { x2 = 0.05f; y2 += 0.22f; }
+                }
+                cardsLeftInPiles.draw(window);
                 window.draw(turnPlayer);
-                // Hand card discarded are still visible and when cards move they don't change place but redraw.
-                cardsInHand.draw(window);
 
                 if(roundState == BeginRound) {
                     p->beginRound();
@@ -347,11 +483,43 @@ int main(int argc, char* argv[]) {
                 }
 
                 if(roundState == ActionPhase) {
-                    if(p->hasActionCards() && p->getNbActions() > 0) {
-                        window.draw(actionText);
+                    if(cardEffectPhase >= 0) {
+                        window.draw(cardEffectText);
+                        cardEffectPhase = -2;
+                    } else if(cardEffectPhase < -1) {
+                        bool cardPlayed = b.getCurrentPlayer()->playCard(cardsInHand.getSelectedValue());
+                        if(cardPlayed) {
+                            cardsInHand.clear();
+                            float x = 0.05f;
+                            for(int i = 0; i < p->getNbCardsInHand(); i++) {
+                                cardsInHand.addButton(i, x, 0.75f, 0.1f, cardsTextureMap.at(p->showCard(i)->getTitle()), window);
+                                x += 0.1f;
+                            }
+                            cardPlayed = false;
+                        }
+                        cardsInHand.removeButton(cardsInHand.getSelectedValue());
+                        cardEffectPhase = -1;
                     } else {
-                        roundState = TreasurePhase;
+                        if(p->hasActionCards() && p->getNbActions() > 0) {
+                            window.draw(actionText);
+                        } else {
+                            roundState = TreasurePhase;
+                        }
+                        cardEffectPhase = -1;
                     }
+                    playedActionCard = -1;
+                    effectIsOver = false;
+                }
+
+                if(roundState == CardEffect) {
+                    // if(p->showCard(playedActionCard)->isActionCard()) {
+                    //     cardEffectText.setString(dynamic_cast<Action*>(p->showCard(playedActionCard))->getEffectText());
+                    //     float x = 0.5f * (window.getSize().x - actionText.getLocalBounds().width);
+                    //     float y = 0.7f * window.getSize().y;
+                    //     cardEffectText.setPosition(x, y);
+                    // }
+                    // window.draw(cardEffectText);
+                    // if(effectIsOver) { roundState = ActionPhase; }
                 }
 
                 if(roundState == TreasurePhase) {
@@ -368,7 +536,6 @@ int main(int argc, char* argv[]) {
                     for(int i : treasuresInHand) {
                         p->playCard(i);
                         cardsInHand.removeButton(i);
-                        cardsInHand.draw(window);
                     }
                     roundState = BuyPhase;
                 }
@@ -388,19 +555,20 @@ int main(int argc, char* argv[]) {
                 if(roundState == NextPlayerTurn) {
                     p->finishRound();
                     b.nextPlayerRound();
-                    cardsInHand.clear();
                     roundState = BeginRound;
                 }
             }
 
             if(gameState == Results) {
                 players = b.getPlayers();
-                std::sort(players.begin(), players.end(), [](const Player* l, const Player* r) {
+                std::sort(players.rbegin(), players.rend(), [](const Player* l, const Player* r) {
                     return l->getTotalVictoryPoints() < r->getTotalVictoryPoints();
                 });
                 for(int i = 1; i <= int(b.getPlayers().size()); i++) {
                     playerFinalRankText.setString(std::to_string(i) + ": " + b.getPlayers().at(i-1)->getUsername() + " with " + std::to_string(b.getPlayers().at(i-1)->getTotalVictoryPoints()) + " VP");
-                    float x = 0.5f * (window.getSize().x - playerFinalRankText.getLocalBounds().width);
+                    sf::FloatRect rectRanking = playerFinalRankText.getLocalBounds();
+                    playerFinalRankText.setOrigin(rectRanking.width/2, rectRanking.height/2);
+                    float x = 0.5f * window.getSize().x;
                     float y = 0.1 * (i + 3) * window.getSize().y;
                     playerFinalRankText.setPosition(x, y);
                     window.draw(playerFinalRankText);
@@ -471,7 +639,7 @@ int main(int argc, char* argv[]) {
         }
         if(setInitOption == 2) {
             while(piles.empty()) {
-                std::vector<KingdomCardName> chosenCards = {};
+                chosenCards = {};
                 for(int i = 0; i < 10; i++) {
                     setInitOption = -1;
                     while(setInitOption < 0 || setInitOption > static_cast<int>(KingdomCardName::COUNT)-1) {

@@ -57,4 +57,6 @@ public:
 
     friend bool operator<(const Player& l, const Player& r);
     friend std::ostream& operator<<(std::ostream &os, const Player *p);
+
+    bool playActionCard(int indexInHand, int repetitiveActionCounter, int pileIndex, int cardIndexInHand);
 };

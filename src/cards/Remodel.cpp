@@ -1,7 +1,7 @@
 #include "Remodel.hpp"
 #include "../game/Board.hpp"
 
-Remodel::Remodel(): Action(4, "Remodel", true) {}
+Remodel::Remodel(): Action(4, "Remodel", true, "Which card would you like to trash and which card would you like to get (up to 2 coins more)?") {}
 
 void Remodel::play(Board &b) {
     Player *p = b.getCurrentPlayer();
@@ -32,8 +32,23 @@ void Remodel::play(Board &b) {
     }
 
     
-    b.displayFilteredPiles([allowedPrice](const Pile p) { return !p.isEmpty() && p.showCard(0)->getPrice() <= allowedPrice; });
-
     Card *c = b.chooseCard(allowedPrice, true);
-    p->getNewCard(c, true);
+    if(c != NULL) {
+        p->getNewCard(c, true);
+    }
+}
+
+bool Remodel::useEffect(Board &b, int repetitiveActionCounter, int pileIndex, int cardIndexInHand) {
+    if(repetitiveActionCounter == 1) {
+        int allowedPrice = b.getCurrentPlayer()->showCard(cardIndexInHand)->getPrice() + 2;
+        if(!b.getCurrentPlayer()->trashCard(cardIndexInHand)) {
+            allowedPrice = -1;
+        }
+        Card * c = b.chooseCard(allowedPrice, pileIndex);
+        if(c != NULL) {
+            b.getCurrentPlayer()->getNewCard(c, true);
+        }
+        return true;
+    }
+    return false;
 }

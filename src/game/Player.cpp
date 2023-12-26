@@ -143,13 +143,24 @@ bool Player::playCard(int indexInHand) {
     if(c == NULL) { return false; }
     if(c->isActionCard()) {
         this->nbActions--;
-        dynamic_cast<Action*>(c)->useEffect(*game);
     }
-    if(c->isTreasureCard()) {
-        c->play(*game);
-    }
+    c->play(*game);
     this->discard.addCard(c);
     return true;
+}
+
+bool Player::playActionCard(int indexInHand, int repetitiveActionCounter, int pileIndex, int cardIndexInHand) {
+    Card *c = this->hand.getCard(indexInHand);
+    if(c == NULL) { return false; }
+    if(c->isActionCard()) {
+        this->nbActions--;
+        bool effectIsOver = dynamic_cast<Action*>(c)->useEffect(*game, repetitiveActionCounter, pileIndex, cardIndexInHand);
+        if(effectIsOver) {
+            this->discard.addCard(c);
+            return true;
+        }
+    }
+    return false;
 }
 
 bool Player::discardCard(int indexInHand) {

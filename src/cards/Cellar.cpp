@@ -1,7 +1,7 @@
 #include "Cellar.hpp"
 #include "../game/Board.hpp"
 
-Cellar::Cellar(): Action(2, "Cellar", true) {}
+Cellar::Cellar(): Action(2, "Cellar", true, "Which card would you like to discard?") {}
 
 void Cellar::play(Board &b) {
     Player *p = b.getCurrentPlayer();
@@ -34,4 +34,12 @@ void Cellar::play(Board &b) {
     }
     
     p->getNewCardsFromDeck(counterDiscarded);
+}
+
+bool Cellar::useEffect(Board &b, int repetitiveActionCounter, int pileIndex, int cardIndexInHand) {
+    this->play(b);
+    repetitiveActionCounter = repetitiveActionCounter;
+    pileIndex = pileIndex;
+    cardIndexInHand = cardIndexInHand;
+    return true;
 }

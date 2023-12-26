@@ -21,6 +21,7 @@ public:
     ~Board();
     int getCurrentPlayerIndex() const;
     std::vector<Player*> getPlayers() const;
+    std::vector<Pile> getPiles() const;
 
     int getNbPlayers() const;
     int getNbPiles() const;

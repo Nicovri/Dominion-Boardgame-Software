@@ -17,7 +17,7 @@ void ImageButton::setSelected(bool selected) {
     if(selected) {
         sprite.setColor(sf::Color::White);
     } else {
-        sprite.setColor(sf::Color(75, 75, 75));
+        sprite.setColor(sf::Color(100, 100, 100));
     }
 }
 

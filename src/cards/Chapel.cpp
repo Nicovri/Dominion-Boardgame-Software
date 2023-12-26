@@ -1,7 +1,7 @@
 #include "Chapel.hpp"
 #include "../game/Board.hpp"
 
-Chapel::Chapel(): Action(2, "Chapel", true) {}
+Chapel::Chapel(): Action(2, "Chapel", true, "Which card would you like to trash?") {}
 
 void Chapel::play(Board &b) {
     Player *p = b.getCurrentPlayer();
@@ -35,4 +35,17 @@ void Chapel::play(Board &b) {
         }
         cardIndex = -2;
     }
+}
+
+bool Chapel::useEffect(Board &b, int repetitiveActionCounter, int pileIndex, int cardIndexInHand) {
+    pileIndex = pileIndex;
+    if(repetitiveActionCounter > 0 && repetitiveActionCounter < 4) {
+        b.getCurrentPlayer()->trashCard(cardIndexInHand);
+        return false;
+    }
+    if(repetitiveActionCounter == 4) {
+        b.getCurrentPlayer()->trashCard(cardIndexInHand);
+        return true;
+    }
+    return false;
 }
