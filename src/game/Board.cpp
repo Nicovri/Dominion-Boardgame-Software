@@ -40,6 +40,10 @@ int Board::getNbPiles() const { return this->piles.size(); }
 
 Player* Board::getCurrentPlayer() const { return this->players.at(currentPlayer); }
 
+std::string Board::showTitleLastCardInTrash() const { return !trash.isEmpty() ? trash.showCard(0)->getTitle() : ""; }
+
+int Board::getNbCardsInTrash() const { return trash.getNbCards(); }
+
 bool Board::initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles) {
     this->currentPlayer = 0;
     for(const auto &p : this->players) {

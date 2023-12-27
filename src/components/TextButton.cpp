@@ -1,6 +1,6 @@
 #include "TextButton.hpp"
 
-TextButton::TextButton(int value, float relativeX, float relativeY, float width, float height, const std::string& label, sf::Font& font, sf::RenderWindow& window): Button(value) {
+TextButton::TextButton(int value, float relativeX, float relativeY, float width, float height, const std::string& label, sf::Font& font, int characterSize, sf::RenderWindow& window): Button(value) {
     shape.setSize(sf::Vector2f(width, height));
     shape.setOutlineThickness(2.f);
     shape.setOutlineColor(sf::Color::Black);
@@ -9,7 +9,7 @@ TextButton::TextButton(int value, float relativeX, float relativeY, float width,
 
     text.setString(label);
     text.setFont(font);
-    text.setCharacterSize(24);
+    text.setCharacterSize(characterSize);
     
     setPositionRelativeToWindow(relativeX, relativeY, window);
 }

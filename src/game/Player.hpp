@@ -59,4 +59,7 @@ public:
     friend std::ostream& operator<<(std::ostream &os, const Player *p);
 
     bool playActionCard(int indexInHand, int repetitiveActionCounter, int pileIndex, int cardIndexInHand);
+    std::string showTitleLastCardInDiscard() const;
+    int getNbCardsInDiscard() const;
+    int getNbCardsInDeck() const;
 };

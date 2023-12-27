@@ -6,6 +6,7 @@
 #include "enums.hpp"
 #include "components/Button.hpp"
 #include "components/TextButton.hpp"
+#include "components/ImageButton.hpp"
 #include "components/ButtonGroup.hpp"
 #include "components/TextInputField.hpp"
 #include <iostream>
@@ -29,6 +30,7 @@ int main(int argc, char* argv[]) {
     std::vector<Player*> players;
     std::vector<Pile> piles;
     Board b = Board();
+    Board bSave = Board();
 
     if(argc == 2 && strcmp(argv[1], "1") == 0) {
         //GUI
@@ -40,6 +42,11 @@ int main(int argc, char* argv[]) {
         sf::Sprite sprite;
         sprite.setTexture(texture);
 
+        sf::Texture CardBackTexture;
+        CardBackTexture.loadFromFile("assets/Card_back.jpg");
+        sf::Sprite backSprite;
+        backSprite.setTexture(CardBackTexture);
+
         std::map<std::string, sf::Texture> cardsTextureMap;
 
         sf::Font font;
@@ -49,6 +56,7 @@ int main(int argc, char* argv[]) {
 
         enum GameState {
             Initial,
+            Resume,
             UsernameInput1,
             UsernameInput2,
             UsernameInput3,
@@ -65,17 +73,18 @@ int main(int argc, char* argv[]) {
         bool boardGenerated = false;
 
         ButtonGroup selectNbPlayers;
-        selectNbPlayers.addButton(2, 0.35f, 0.1f, 150.f, 50.f, "2 players", font, window);
-        selectNbPlayers.addButton(3, 0.5f, 0.1f, 150.f, 50.f, "3 players", font, window);
-        selectNbPlayers.addButton(4, 0.65f, 0.1f, 150.f, 50.f, "4 players", font, window);
+        selectNbPlayers.addButton(2, 0.35f, 0.1f, 150.f, 50.f, "2 players", font, 24, window);
+        selectNbPlayers.addButton(3, 0.5f, 0.1f, 150.f, 50.f, "3 players", font, 24, window);
+        selectNbPlayers.addButton(4, 0.65f, 0.1f, 150.f, 50.f, "4 players", font, 24, window);
 
         ButtonGroup selectSetInitMode;
-        selectSetInitMode.addButton(0, 0.3f, 0.3f, 180.f, 50.f, "random set", font, window);
-        selectSetInitMode.addButton(1, 0.5f, 0.3f, 180.f, 50.f, "predefined set", font, window);
-        selectSetInitMode.addButton(2, 0.7f, 0.3f, 180.f, 50.f, "choose 10 cards", font, window);
+        selectSetInitMode.addButton(0, 0.3f, 0.3f, 180.f, 50.f, "random set", font, 24, window);
+        selectSetInitMode.addButton(1, 0.5f, 0.3f, 180.f, 50.f, "predefined set", font, 24, window);
+        selectSetInitMode.addButton(2, 0.7f, 0.3f, 180.f, 50.f, "choose 10 cards", font, 24, window);
 
-        TextButton playButton = TextButton(0, 0.5f, 0.5f, 150.f, 50.f, "Play", font, window);
-        TextButton nextButton = TextButton(0, 0.5f, 0.5f, 150.f, 50.f, "Next", font, window);
+        TextButton playButton = TextButton(0, 0.5f, 0.5f, 150.f, 50.f, "Play", font, 24, window);
+        TextButton resumeButton = TextButton(0, 0.5f, 0.7f, 150.f, 50.f, "Resume", font, 24, window);
+        TextButton nextButton = TextButton(0, 0.5f, 0.5f, 150.f, 50.f, "Next", font, 24, window);
 
         TextInputField userInputField(0.5f, 0.3f, font, window);
         sf::Text usernameText;
@@ -87,7 +96,7 @@ int main(int argc, char* argv[]) {
         float xS = 0.1f;
         float yS = 0.1f;
         for(int i = 0; i < static_cast<int>(SetName::COUNT); i++) {
-            selectSetName.addButton(i, xS, yS, 150.f, 50.f, sEnumToString(static_cast<SetName>(i)), font, window);
+            selectSetName.addButton(i, xS, yS, 150.f, 50.f, sEnumToString(static_cast<SetName>(i)), font, 24, window);
             xS += 0.11f;
             if(i % 7 == 0 && i != 0) { xS = 0.1f; yS += 0.1f; }
         }
@@ -95,7 +104,7 @@ int main(int argc, char* argv[]) {
         yS = 0.1f;
         ButtonGroup selectCardNames;
         for(int i = 0; i < static_cast<int>(KingdomCardName::COUNT); i++) {
-            selectCardNames.addButton(i, xS, yS, 150.f, 50.f, kEnumToString(static_cast<KingdomCardName>(i)), font, window);
+            selectCardNames.addButton(i, xS, yS, 150.f, 50.f, kEnumToString(static_cast<KingdomCardName>(i)), font, 24, window);
             xS += 0.11f;
             if(i % 7 == 0 && i != 0) { xS = 0.1f; yS += 0.1f; }
         }
@@ -118,6 +127,8 @@ int main(int argc, char* argv[]) {
         ButtonGroup cardsLeftInPiles;
         ButtonGroup cardsInHand;
 
+        ButtonGroup otherPiles;
+
         enum RoundState {
             BeginRound,
             ShowHand,
@@ -134,8 +145,9 @@ int main(int argc, char* argv[]) {
         int cardEffectPhase = -1;
         bool effectIsOver = false;
 
-        TextButton chooseCardButton = TextButton(0, 0.8f, 0.5f, 150.f, 50.f, "Choose card", font, window);
-        TextButton passButton = TextButton(0, 0.8f, 0.6f, 150.f, 50.f, "Pass", font, window);
+        TextButton exitGame = TextButton(0, 0.9f, 0.1f, 150.f, 50.f, "Quit and save", font, 24, window);
+        TextButton chooseCardButton = TextButton(0, 0.8f, 0.5f, 150.f, 50.f, "Choose card", font, 24, window);
+        TextButton passButton = TextButton(0, 0.8f, 0.6f, 150.f, 50.f, "Pass", font, 24, window);
         float yPosRound = 0.7f * window.getSize().y;
         sf::Text turnPlayer;
         turnPlayer.setFont(font);
@@ -175,7 +187,7 @@ int main(int argc, char* argv[]) {
         wellDoneText.setOrigin(rectFinal.width/2, rectFinal.height/2);
         yFinal = 0.8f * window.getSize().y;
         wellDoneText.setPosition(xFinal, yFinal);
-        TextButton backToHomeScreenButton = TextButton(0, 0.5f, 0.9f, 400.f, 50.f, "Go back to home screen", font, window);
+        TextButton backToHomeScreenButton = TextButton(0, 0.5f, 0.9f, 400.f, 50.f, "Go back to home screen", font, 24, window);
 
         while (window.isOpen())
         {
@@ -195,16 +207,39 @@ int main(int argc, char* argv[]) {
                     if (event.mouseButton.button == sf::Mouse::Left) {
                         sf::Vector2f mousePos = sf::Vector2f(static_cast<float>(sf::Mouse::getPosition(window).x), static_cast<float>(sf::Mouse::getPosition(window).y));
 
-                        if (playButton.contains(mousePos) && gameState == Initial) {
+                        if (playButton.contains(mousePos)) {
+                            if(gameState == Resume || gameState == Initial) {
+                                nbPlayers = 0;
+                                setInitOption = -1;
+                                cardChosen = 0;
+                                chosenCards = {};
+                                usedUsernames.clear();
+                                players.clear();
+                                b.getPlayers().clear();
+                                b = Board();
+                                boardGenerated = false;
+                                currentPlayer = 1;
+                                roundState = BeginRound;
+                                playedActionCard = -1;
+                                cardEffectPhase = -1;
+                                effectIsOver = false;
+                                pilesButtonGroup.clear();
+                                cardsLeftInPiles.clear();
 
-                            nbPlayers = selectNbPlayers.getSelectedValue();
-                            if (nbPlayers != -1) {
-                                std::cout << "Selected Value: " << nbPlayers << std::endl;
-                                usernameText.setString("What is your username, player " + std::to_string(currentPlayer) + "?: ");
-                                gameState = UsernameInput1;
-                            } else {
-                                std::cout << "No button selected." << std::endl;
+                                nbPlayers = selectNbPlayers.getSelectedValue();
+                                if (nbPlayers != -1) {
+                                    std::cout << "Selected Value: " << nbPlayers << std::endl;
+                                    usernameText.setString("What is your username, player " + std::to_string(currentPlayer) + "?: ");
+                                    gameState = UsernameInput1;
+                                } else {
+                                    std::cout << "No button selected." << std::endl;
+                                }
                             }
+                        }
+
+                        if(resumeButton.contains(mousePos)) {
+                            b = bSave;
+                            gameState = RoundPlayer;
                         }
 
                         if(nextButton.contains(mousePos)) {
@@ -227,9 +262,12 @@ int main(int argc, char* argv[]) {
                                 if(currentPlayer > nbPlayers) {
                                     gameState = SetGeneration;
                                 }
-                            } else if(gameState == SetGeneration) {
+                            }
+                            if(gameState == SetGeneration) {
                                 int setInitMode = selectSetInitMode.getSelectedValue();
                                 if(setInitMode == 0) {
+                                    piles = Set::getSetCards(nbPlayers);
+                                    gameState = Loading;
                                 } else if(setInitMode == 1) {
                                     piles = Set::getSetCards(nbPlayers, static_cast<SetName>(selectSetName.getSelectedValue()));
                                     gameState = Loading;
@@ -297,6 +335,11 @@ int main(int argc, char* argv[]) {
                             if(roundState == BuyPhase) { roundState = NextPlayerTurn; }
                         }
 
+                        if(exitGame.contains(mousePos)) {
+                            bSave = b;
+                            gameState = Resume;
+                        }
+
                         if(backToHomeScreenButton.contains(mousePos) && gameState == Results) {
                             gameState = Initial;
                         }
@@ -320,21 +363,14 @@ int main(int argc, char* argv[]) {
             window.draw(sprite);
 
             if(gameState == Initial) {
-                nbPlayers = 0;
-                setInitOption = -1;
-                cardChosen = 0;
-                chosenCards = {};
-                usedUsernames.clear();
-                players.clear();
-                b.getPlayers().clear();
-                b = Board();
-                boardGenerated = false;
-                currentPlayer = 1;
-                roundState = BeginRound;
-                playedActionCard = -1;
-                cardEffectPhase = -1;
-                effectIsOver = false;
                 playButton.draw(window);
+                selectNbPlayers.draw(window);
+                selectSetInitMode.draw(window);
+            }
+
+            if(gameState == Resume) {
+                playButton.draw(window);
+                resumeButton.draw(window);
                 selectNbPlayers.draw(window);
                 selectSetInitMode.draw(window);
             }
@@ -378,8 +414,6 @@ int main(int argc, char* argv[]) {
             if(gameState == SetGeneration) {
                 int setInitMode = selectSetInitMode.getSelectedValue();
                 if(setInitMode == 0) {
-                    piles = Set::getSetCards(nbPlayers);
-                    gameState = Loading;
                 } else if(setInitMode == 1) {
                     selectSetName.draw(window);
                 } else if(setInitMode == 2) {
@@ -406,7 +440,7 @@ int main(int argc, char* argv[]) {
                             cardTexture.loadFromFile("assets/" + p.showCard(0)->getTitle() + ".jpg");
                             cardsTextureMap.insert(std::make_pair(p.showCard(0)->getTitle(), cardTexture));
                             pilesButtonGroup.addButton(i, x, y, 0.1f, cardsTextureMap.at(p.showCard(0)->getTitle()), window);
-                            cardsLeftInPiles.addButton(i, x, y, 40.f, 40.f, std::to_string(p.getNbCards()), font, window);
+                            cardsLeftInPiles.addButton(i, x+0.015f, y+0.023f, 40.f, 40.f, std::to_string(p.getNbCards()), font, 24, window);
                         }
                         i++;
                         x += 0.1f;
@@ -450,19 +484,36 @@ int main(int argc, char* argv[]) {
                     cardsInHand.draw(window);
                 }
 
-                // When pile is empty, it is still drawn
-                pilesButtonGroup.draw(window);
+                // When pile is empty, it is still drawn + draw only once per turn (like in NewBoard)
                 int i = 0;
                 float x2 = 0.05f;
                 float y2 = 0.05f;
+                cardsLeftInPiles.clear();
                 for(Pile p : b.getPiles()) {
-                    cardsLeftInPiles.addButton(i, x2, y2, 40.f, 40.f, std::to_string(p.getNbCards()), font, window);
+                    cardsLeftInPiles.addButton(i, x2+0.015f, y2+0.023f, 40.f, 40.f, std::to_string(p.getNbCards()), font, 24, window);
                     i++;
                     x2 += 0.1f;
                     if(i % 6 == 0) { x2 = 0.05f; y2 += 0.22f; }
                 }
-                cardsLeftInPiles.draw(window);
+
+                otherPiles.clear();
+                if(p->getNbCardsInDeck() > 0) {
+                    otherPiles.addButton(0, 0.8f, 0.78f, 0.52f, CardBackTexture, window); // deck
+                    otherPiles.addButton(1, 0.8431f, 0.803f, 127.f, 40.f, "Deck: " + std::to_string(p->getNbCardsInDeck()), font, 22, window);
+                }
+                if(p->getNbCardsInDiscard() > 0) {
+                    otherPiles.addButton(2, 0.9f, 0.78f, 0.1f, cardsTextureMap.at(p->showTitleLastCardInDiscard()), window); // discard
+                    otherPiles.addButton(3, 0.9425f, 0.803f, 120.f, 40.f, "Discard: " + std::to_string(p->getNbCardsInDiscard()), font, 22, window);
+                }
+                if(b.getNbCardsInTrash() > 0) {
+                    otherPiles.addButton(4, 0.55f, 0.49f, 0.1f, cardsTextureMap.at(b.showTitleLastCardInTrash()), window); // trash
+                    otherPiles.addButton(5, 0.5925f, 0.513f, 120.f, 40.f, "Trash: " + std::to_string(b.getNbCardsInTrash()), font, 22, window);
+                }
+
+                pilesButtonGroup.draw(window);
                 window.draw(turnPlayer);
+                cardsLeftInPiles.draw(window);
+                otherPiles.draw(window); // will be modified during turn (change position in code)
 
                 if(roundState == BeginRound) {
                     p->beginRound();
@@ -480,8 +531,10 @@ int main(int argc, char* argv[]) {
                 if(tp >= 30) {
                     chooseCardButton.draw(window);
                     passButton.draw(window);
+                    exitGame.draw(window);
                 }
 
+                // When action card played, hand is moved to the left and it causes errors if we click on the empty 0-index space (segfault)
                 if(roundState == ActionPhase) {
                     if(cardEffectPhase >= 0) {
                         window.draw(cardEffectText);
@@ -490,10 +543,10 @@ int main(int argc, char* argv[]) {
                         bool cardPlayed = b.getCurrentPlayer()->playCard(cardsInHand.getSelectedValue());
                         if(cardPlayed) {
                             cardsInHand.clear();
-                            float x = 0.05f;
+                            float x3 = 0.05f;
                             for(int i = 0; i < p->getNbCardsInHand(); i++) {
-                                cardsInHand.addButton(i, x, 0.75f, 0.1f, cardsTextureMap.at(p->showCard(i)->getTitle()), window);
-                                x += 0.1f;
+                                cardsInHand.addButton(i, x3, 0.75f, 0.1f, cardsTextureMap.at(p->showCard(i)->getTitle()), window);
+                                x3 += 0.1f;
                             }
                             cardPlayed = false;
                         }

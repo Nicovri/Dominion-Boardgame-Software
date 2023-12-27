@@ -1,7 +1,7 @@
 #include "ButtonGroup.hpp"
 
-void ButtonGroup::addButton(int value, float relativeX, float relativeY, float width, float height, const std::string& label, sf::Font& font, sf::RenderWindow& window) {
-    Button *button = new TextButton(value, relativeX, relativeY, width, height, label, font, window);
+void ButtonGroup::addButton(int value, float relativeX, float relativeY, float width, float height, const std::string& label, sf::Font& font, int characterSize, sf::RenderWindow& window) {
+    Button *button = new TextButton(value, relativeX, relativeY, width, height, label, font, characterSize, window);
     buttons.push_back(button);
 
     if(buttons.size() > 1) {

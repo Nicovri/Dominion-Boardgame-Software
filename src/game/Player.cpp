@@ -44,6 +44,12 @@ void Player::addBuys(int nb) { this->nbBuys += nb; }
 
 int Player::getNbCardsInHand() const { return this->hand.getNbCards(); }
 
+std::string Player::showTitleLastCardInDiscard() const { return !discard.isEmpty() ? discard.showCard(0)->getTitle() : ""; }
+
+int Player::getNbCardsInDiscard() const { return discard.getNbCards(); }
+
+int Player::getNbCardsInDeck() const { return deck.getNbCards(); }
+
 Card* Player::showCard(int indexInHand) const {
     if(indexInHand <= this->getNbCardsInHand()-1 && indexInHand >= 0) {
         return this->hand.showCard(indexInHand);

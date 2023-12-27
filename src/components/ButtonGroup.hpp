@@ -9,7 +9,7 @@ class ButtonGroup {
     std::vector<Button*> buttons;
 
 public:
-    void addButton(int value, float relativeX, float relativeY, float width, float height, const std::string& label, sf::Font& font, sf::RenderWindow& window);
+    void addButton(int value, float relativeX, float relativeY, float width, float height, const std::string& label, sf::Font& font, int characterSize, sf::RenderWindow& window);
     void addButton(int value, float relativeX, float relativeY, float scale, sf::Texture& texture, sf::RenderWindow& window);
     void removeButton(int index);
     void clear();

@@ -8,7 +8,7 @@ class TextButton: public Button {
     sf::Text text;
 
 public:
-    TextButton(int value, float relativeX, float relativeY, float width, float height, const std::string& label, sf::Font& font, sf::RenderWindow& window);
+    TextButton(int value, float relativeX, float relativeY, float width, float height, const std::string& label, sf::Font& font, int characterSize, sf::RenderWindow& window);
     void draw(sf::RenderWindow& window);
     void setSelected(bool selected);
     void setString(std::string string);

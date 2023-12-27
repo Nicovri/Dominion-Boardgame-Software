@@ -40,4 +40,6 @@ public:
     friend std::ostream& operator<<(std::ostream &os, const Board &b);
 
     Card* chooseCard(int allowedPrice, int pileIndex);
+    std::string showTitleLastCardInTrash() const;
+    int getNbCardsInTrash() const;
 };
