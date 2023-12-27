@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Button.hpp"
 
+// Classe représentant un bouton textuel sur l'interface SFML.
 class TextButton: public Button {
     sf::RectangleShape shape;
     sf::Text text;

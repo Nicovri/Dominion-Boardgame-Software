@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
+// Classe abstraite représentant un bouton sur l'interface SFML.
 class Button {
     bool isSelected;
     int value;

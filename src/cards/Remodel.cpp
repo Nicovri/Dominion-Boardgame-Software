@@ -1,8 +1,12 @@
 #include "Remodel.hpp"
 #include "../game/Board.hpp"
 
-Remodel::Remodel(): Action(4, "Remodel", true, "Which card would you like to trash and which card would you like to get (up to 2 coins more)?") {}
+Remodel::Remodel(): Action(4, kEnumToString(KingdomCardName::Remodel), true, "Which card would you like to trash and which card would you like to get (up to 2 coins more)?") {}
 
+/*!
+//! Jouer la carte Rénovation: écarte une carte de la main, fait gagner une carte coûtant jusqu'à 2 pièces de plus.
+      \param b le plateau de jeu sur laquelle la carte est jouée.
+*/
 void Remodel::play(Board &b) {
     Player *p = b.getCurrentPlayer();
     int allowedPrice = -1;
@@ -11,7 +15,7 @@ void Remodel::play(Board &b) {
     while(cardIndex < -1 || cardIndex > p->getNbCardsInHand()-1) {
 
         std::cout << p << std::endl;
-        std::cout << p->getUsername() << ", which card would you like to trash (in exchange of another card costing up to 2Coins more)?: ";
+        std::cout << p->getUsername() << ", which card would you like to trash (in exchange of another card costing up to 2 Coins more)?: ";
         std::cin >> cardIndex;
 
         if(std::cin.fail()) {

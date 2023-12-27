@@ -1,13 +1,14 @@
 #pragma once
 
 #include "../cardTypes/Action.hpp"
+#include "../cards/Copper.hpp"
 #include "../enums.hpp"
 
-// Classe des cartes Marché, sous-classe de Action.
-class Market: public Action {
+// Classe des cartes Festival, sous-classe de Action.
+class Moneylender: public Action {
 
 public:
-    Market();
+    Moneylender();
     void play(Board &b);
     bool useEffect(Board &b, int repetitiveActionCounter, int pileIndex, int cardIndexInHand);
 };

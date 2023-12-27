@@ -1,7 +1,9 @@
 #pragma once
 
 #include "../cardTypes/Action.hpp"
+#include "../enums.hpp"
 
+// Classe des cartes Mine, sous-classe de Action.
 class Mine: public Action {
 
 public:

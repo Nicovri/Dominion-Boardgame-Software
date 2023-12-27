@@ -4,6 +4,7 @@
 #include "../game/Point.hpp"
 #include <string>
 
+// Classe des cartes Trésor, sous-classe de Card et de Point.
 class Treasure: public Card, public Point {
 
 public:

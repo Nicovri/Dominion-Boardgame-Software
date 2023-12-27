@@ -10,6 +10,7 @@
 
 class Board;
 
+// Classe de pile de cartes, tel que le deck, la défausse, le rebut, les piles du plateau et la main du joueur. Une pile doit être assignée à un plateau pour pouvoir l'utiliser correctement.
 class Pile {
     std::vector<Card*> cardStack;
     Board *game;

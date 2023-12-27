@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Button.hpp"
 
+// Classe représentant un bouton image sur l'interface SFML.
 class ImageButton: public Button {
     sf::Sprite sprite;
     sf::Texture texture;

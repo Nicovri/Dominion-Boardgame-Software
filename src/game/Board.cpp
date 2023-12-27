@@ -44,6 +44,12 @@ std::string Board::showTitleLastCardInTrash() const { return !trash.isEmpty() ? 
 
 int Board::getNbCardsInTrash() const { return trash.getNbCards(); }
 
+/*!
+//! Initialise le plateau de jeu. Assigne des joueurs, des piles et récupère l'index de la pile des cartes Province pour l'observation de la fin de partie.
+    \param baseDeck le deck de base des joueurs au début de la partie.
+    \param piles les piles utilisées sur le plateau de jeu.
+    \return false si l'initialisation s'est mal passée, true si elle s'est bien passée.
+*/
 bool Board::initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles) {
     this->currentPlayer = 0;
     for(const auto &p : this->players) {
@@ -69,6 +75,12 @@ bool Board::initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles
     return true;
 }
 
+/*!
+//! Laisse l'utilisateur choisir une carte d'une pile du plateau ayant un certain prix.
+    \param allowedPrice le prix maximum autorisé de la carte.
+    \param isCardEffect la carte est-elle choisie suite à l'effet d'une carte?
+    \return la carte choisie par le joueur.
+*/
 Card* Board::chooseCard(int allowedPrice, bool isCardEffect) {
     int pileIndex = -2;
     Player *p = this->players.at(currentPlayer);
@@ -97,6 +109,12 @@ Card* Board::chooseCard(int allowedPrice, bool isCardEffect) {
     return NULL;
 }
 
+/*!
+//! Choisit une carte d'une pile du plateau ayant un certain prix.
+    \param allowedPrice le prix maximum autorisé de la carte.
+    \param pileIndex l'index de la pile choisie.
+    \return la carte choisie.
+*/
 Card* Board::chooseCard(int allowedPrice, int pileIndex) {
     if(pileIndex >= 0 && pileIndex <= getNbPiles()-1 && !piles.at(pileIndex).isEmpty() && piles.at(pileIndex).showCard(0)->getPrice() <= allowedPrice) {
         return piles.at(pileIndex).getCards(1).at(0);
@@ -104,6 +122,11 @@ Card* Board::chooseCard(int allowedPrice, int pileIndex) {
     return NULL;
 }
 
+/*!
+//! Choisit une carte d'une pile du plateau selon le nom.
+    \param cardName le nom de la carte choisie.
+    \return la carte choisie.
+*/
 Card* Board::chooseCard(std::string cardName) {
     Card *c = NULL;
     for(Pile p : this->piles) {
@@ -114,11 +137,17 @@ Card* Board::chooseCard(std::string cardName) {
     return c;
 }
 
+/*!
+//! Ajoute une carte au rebut.
+    \param c la carte écartée.
+    \return false si l'opération n'a pas été effectuée, true si cela s'est bien passé.
+*/
 bool Board::trashCard(Card *c) {
     this->trash.addCard(c);
     return true;
 }
 
+// Joue la carte action demandée par le joueur courant.
 void Board::playActionCard() {
     Player *p = this->players.at(currentPlayer);
     while(p->hasActionCards() && p->getNbActions() > 0) {
@@ -143,6 +172,7 @@ void Board::playActionCard() {
     }
 }
 
+// Passe au tour du joueur suivant.
 void Board::nextPlayerRound() {
     if(currentPlayer == int(this->players.size())-1) {
         currentPlayer = 0;
@@ -151,6 +181,7 @@ void Board::nextPlayerRound() {
     }
 }
 
+// Joue le tour du joueur courant.
 void Board::playRound() {
     Player *p = this->players.at(currentPlayer);
     p->beginRound();
@@ -183,6 +214,7 @@ void Board::playRound() {
     this->nextPlayerRound();
 }
 
+// Affiche les résultats de fin de partie.
 void Board::showResults() {
     std::sort(players.rbegin(), players.rend(), [](const Player* l, const Player* r) {
         return l->getTotalVictoryPoints() < r->getTotalVictoryPoints();
@@ -194,6 +226,7 @@ void Board::showResults() {
     std::cout << "Well done!" << std::endl;
 }
 
+// Vérifie si la condition de fin de jeu est complétée.
 bool Board::gameIsOver() {
     if(provincePileIndex != -1 && this->piles.at(provincePileIndex).isEmpty()) {
         return true;

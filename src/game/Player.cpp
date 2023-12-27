@@ -50,6 +50,11 @@ int Player::getNbCardsInDiscard() const { return discard.getNbCards(); }
 
 int Player::getNbCardsInDeck() const { return deck.getNbCards(); }
 
+/*!
+//! Montre la carte choisie dans la main du joueur. Ne supprime pas la carte de la main.
+      \param indexInHand l'index de la carte choisie.
+      \return la carte choisie.
+*/
 Card* Player::showCard(int indexInHand) const {
     if(indexInHand <= this->getNbCardsInHand()-1 && indexInHand >= 0) {
         return this->hand.showCard(indexInHand);
@@ -57,6 +62,10 @@ Card* Player::showCard(int indexInHand) const {
     return NULL;
 }
 
+/*!
+//! Assigne un joueur à une nouvelle partie.
+      \param b le plateau de jeu de la nouvelle partie.
+*/
 void Player::assignToGame(Board &b) {
     this->game = &b;
     this->deck.assignToGame(*game);
@@ -64,11 +73,21 @@ void Player::assignToGame(Board &b) {
     this->hand.assignToGame(*game);
 }
 
+/*!
+//! Donne le deck de base au joueur.
+      \param baseDeck le deck de base au début de la partie.
+*/
 void Player::setBaseDeck(std::vector<Card*> baseDeck) {
     this->deck = Pile{baseDeck};
     this->deck.shuffle();
 }
 
+/*!
+//! Récupère une nouvelle carte des piles du plateau de jeu et l'ajoute à la défausse.
+      \param card la carte récupérée.
+      \param isCardEffect la récupération est-elle due à l'effet d'une carte Action?
+      \param goesDirectlyInHand la carte récupérée va-t-elle directement dans la main du joueur?
+*/
 void Player::getNewCard(Card *card, bool isCardEffect, bool goesDirectlyInHand) {
     if(goesDirectlyInHand) {
         this->hand.addCard(card);
@@ -81,6 +100,7 @@ void Player::getNewCard(Card *card, bool isCardEffect, bool goesDirectlyInHand) 
     }
 }
 
+// Reforme le deck du joueur en mélangeant la défausse lorsque celui-ci est vide.
 void Player::getDeckFromDiscard() {
     if(this->deck.isEmpty()) {
         std::vector<Card*> cards = this->discard.getCards(discard.getNbCards());
@@ -89,6 +109,7 @@ void Player::getDeckFromDiscard() {
     }
 }
 
+// Reforme la main de 5 cartes du joueur à la fin de son tour de jeu.
 void Player::getHandFromDeck() {
     if(hand.isEmpty()) {
         this->hand.addCards(this->deck.getCards(5));
@@ -100,6 +121,7 @@ void Player::getHandFromDeck() {
     }
 }
 
+// Pioche une carte du deck et l'ajoute à la main du joueur.
 void Player::getNewCardFromDeck() {
     if(this->deck.isEmpty()) {
         this->getDeckFromDiscard();
@@ -107,12 +129,17 @@ void Player::getNewCardFromDeck() {
     this->hand.addCard(this->deck.getCards(1).at(0));
 }
 
+/*!
+//! Pioche plusieurs cartes du deck et les ajoute à la main du joueur.
+      \param nb le nombre de cartes à piocher.
+*/
 void Player::getNewCardsFromDeck(int nb) {
     for(int i = 0; i < nb; i++) {
         this->getNewCardFromDeck();
     }
 }
 
+// Définit le nombre total de points de victoire du joueur.
 void Player::setTotalVictoryPoints() {
     this->nbVictory = 0;
     this->discard.setTotalVictoryPoints();
@@ -120,6 +147,7 @@ void Player::setTotalVictoryPoints() {
     this->hand.setTotalVictoryPoints();
 }
 
+// Le joueur a-t-il des cartes Action dans sa main ?
 bool Player::hasActionCards() {
     for(int i = 0; i < hand.getNbCards(); i++) {
         if(hand.showCard(i)->isActionCard()) {
@@ -129,6 +157,7 @@ bool Player::hasActionCards() {
     return false;
 }
 
+// Le joueur a-t-il des cartes Trésor dans sa main ?
 bool Player::hasTreasureCards() {
     for(int i = 0; i < hand.getNbCards(); i++) {
         if(hand.showCard(i)->isTreasureCard()) {
@@ -138,12 +167,18 @@ bool Player::hasTreasureCards() {
     return false;
 }
 
+// Commence le tour d'un joueur en initialisant les différents paramètres.
 void Player::beginRound() {
     this->nbActions = 1;
     this->nbBuys = 1;
     this->nbCoins = 0;
 }
 
+/*!
+//! Joue une carte de la main du joueur et utilise son effet.
+      \param indexInHand l'index de la carte choisie.
+      \return false si la carte n'a pas pu être jouée, true si la carte a été jouée.
+*/
 bool Player::playCard(int indexInHand) {
     Card *c = this->hand.getCard(indexInHand);
     if(c == NULL) { return false; }
@@ -169,6 +204,11 @@ bool Player::playActionCard(int indexInHand, int repetitiveActionCounter, int pi
     return false;
 }
 
+/*!
+//! Défausse une carte de la main du joueur.
+      \param indexInHand l'index de la carte choisie.
+      \return false si la carte n'a pas pu être défaussée, true si la carte a été défaussée.
+*/
 bool Player::discardCard(int indexInHand) {
     Card *c = this->hand.getCard(indexInHand);
     if(c == NULL) { return false; }
@@ -176,12 +216,18 @@ bool Player::discardCard(int indexInHand) {
     return true;
 }
 
+/*!
+//! Ecarte une carte de la main du joueur.
+      \param indexInHand l'index de la carte choisie.
+      \return false si la carte n'a pas pu être écartée, true si la carte a été écartée.
+*/
 bool Player::trashCard(int indexInHand) {
     Card *c = this->hand.getCard(indexInHand);
     if(c == NULL) { return false; }
     return this->game->trashCard(c);
 }
 
+// Termine le tour d'un joueur en reformant sa main initiale de 5 cartes à partir du deck.
 void Player::finishRound() {
     std::vector<Card*> cards = this->hand.getCards(hand.getNbCards());
     this->discard.addCards(cards);

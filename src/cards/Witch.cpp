@@ -1,8 +1,12 @@
 #include "Witch.hpp"
 #include "../game/Board.hpp"
 
-Witch::Witch(): Action(5, "Witch", true) {}
+Witch::Witch(): Action(5, kEnumToString(KingdomCardName::Witch), true) {}
 
+/*!
+//! Jouer la carte Sorcière: +2 cartes, chaque autre joueur gagne une Malédiction.
+      \param b le plateau de jeu sur laquelle la carte est jouée.
+*/
 void Witch::play(Board &b) {
     Player *cp = b.getCurrentPlayer();
     cp->getNewCardsFromDeck(2);

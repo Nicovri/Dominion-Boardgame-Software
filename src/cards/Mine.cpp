@@ -1,8 +1,12 @@
 #include "Mine.hpp"
 #include "../game/Board.hpp"
 
-Mine::Mine(): Action(5, "Mine", true, "Which Treasure card would you like to trash and which Treasure card would you like to get (up to 3 coins more)?") {}
+Mine::Mine(): Action(5, kEnumToString(KingdomCardName::Mine), true, "Which Treasure card would you like to trash and which Treasure card would you like to get (up to 3 coins more)?") {}
 
+/*!
+//! Jouer la carte Mine: écarte une carte Trésor de la main, reçoit une carte Trésor dans la main coûtant jusqu'à 3 pièces de plus.
+      \param b le plateau de jeu sur laquelle la carte est jouée.
+*/
 void Mine::play(Board &b) {
     Player *p = b.getCurrentPlayer();
     int allowedPrice = -1;
@@ -13,7 +17,7 @@ void Mine::play(Board &b) {
                 (0 <= cardIndex  && cardIndex <= p->getNbCardsInHand()-1 && !p->showCard(cardIndex)->isTreasureCard())) {
 
             std::cout << p << std::endl;
-            std::cout << p->getUsername() << ", which Treasure card would you like to trash (in exchange of another Treasure card costing up to 3Coins more going directly into your hand)?: ";
+            std::cout << p->getUsername() << ", which Treasure card would you like to trash (in exchange of another Treasure card costing up to 3 Coins more going directly into your hand)?: ";
             std::cin >> cardIndex;
 
             if(std::cin.fail()) {

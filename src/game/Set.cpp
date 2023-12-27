@@ -1,43 +1,35 @@
 #include "Set.hpp"
 
+/*!
+//! Crée une pile de carte Royaume selon le nom de la carte. Utile pour les piles de taille différente (ex - Jardins), ou pour initialiser les piles aléatoirement.
+      \param cardName La valeur de l'énumération correspondant au nom de la carte Royaume.
+      \return la pile de cartes créée.
+*/
 Pile Set::createKingdomCardPile(KingdomCardName cardName) {
     switch(cardName) {
-        case KingdomCardName::Workshop:
-            return Pile(new Workshop(), 10);
-            break;
-        case KingdomCardName::Woodcutter:
-            return Pile(new Woodcutter(), 10);
-            break;
-        case KingdomCardName::Cellar:
-            return Pile(new Cellar(), 10);
-            break;
-        case KingdomCardName::Chapel:
-            return Pile(new Chapel(), 10);
-            break;
-        case KingdomCardName::Smithy:
-            return Pile(new Smithy(), 10);
-            break;
-        case KingdomCardName::Market:
-            return Pile(new Market(), 10);
-            break;
-        case KingdomCardName::Mine:
-            return Pile(new Mine(), 10);
-            break;
-        case KingdomCardName::Remodel:
-            return Pile(new Remodel(), 10);
-            break;
-        case KingdomCardName::Witch:
-            return Pile(new Witch(), 10);
-            break;
-        case KingdomCardName::Village:
-            return Pile(new Village(), 10);
-            break;
-        default:
-            return Pile();
-            break;
+        case KingdomCardName::Workshop: return Pile(new Workshop(), 10);
+        case KingdomCardName::Woodcutter: return Pile(new Woodcutter(), 10);
+        case KingdomCardName::Cellar: return Pile(new Cellar(), 10);
+        case KingdomCardName::Chapel: return Pile(new Chapel(), 10);
+        case KingdomCardName::Smithy: return Pile(new Smithy(), 10);
+        case KingdomCardName::Market: return Pile(new Market(), 10);
+        case KingdomCardName::Mine: return Pile(new Mine(), 10);
+        case KingdomCardName::Remodel: return Pile(new Remodel(), 10);
+        case KingdomCardName::Witch: return Pile(new Witch(), 10);
+        case KingdomCardName::Village: return Pile(new Village(), 10);
+        case KingdomCardName::Festival: return Pile(new Festival(), 10);
+        case KingdomCardName::Laboratory: return Pile(new Laboratory(), 10);
+        case KingdomCardName::Moneylender: return Pile(new Moneylender(), 10);
+        case KingdomCardName::CouncilRoom: return Pile(new CouncilRoom(), 10);
+        default: return Pile();
     }
 }
 
+/*!
+//! Vérifie que tous les noms de cartes d'une liste sont uniques.
+      \param cardNames la liste de noms de cartes.
+      \return false si certains noms sont identiques, true si tous les noms sont uniques.
+*/
 bool Set::allNamesAreUniques(std::vector<KingdomCardName> cardNames) {
     std::set<KingdomCardName> uniqueNames;
 
@@ -50,11 +42,20 @@ bool Set::allNamesAreUniques(std::vector<KingdomCardName> cardNames) {
     return true;
 }
 
+/*!
+//! Crée le deck de base d'un joueur.
+      \return le deck du joueur sous forme d'une liste de cartes.
+*/
 std::vector<Card*> Set::getBaseDeck() {
     std::vector<Card*> baseDeck = {new Copper(), new Copper(), new Copper(), new Copper(), new Copper(), new Copper(), new Copper(), new Estate(), new Estate(), new Estate()};
     return baseDeck;
 }
 
+/*!
+//! Crée une pile de cartes aléatoirement.
+      \param nbPlayers le nombre de joueurs d'une partie.
+      \return la liste des piles de cartes du plateau de jeu.
+*/
 std::vector<Pile> Set::getSetCards(int nbPlayers) {
     std::vector<Pile> randomSet;
     randomSet.push_back(Pile(new Copper(), 60 - 7*nbPlayers));
@@ -82,6 +83,12 @@ std::vector<Pile> Set::getSetCards(int nbPlayers) {
     return randomSet;
 }
 
+/*!
+//! Crée une pile de cartes à partir d'un nom de set.
+      \param nbPlayers le nombre de joueurs d'une partie.
+      \param setName le nom du set choisi
+      \return la liste des piles de cartes du plateau de jeu.
+*/
 std::vector<Pile> Set::getSetCards(int nbPlayers, SetName setName) {
     std::vector<Pile> setFromName;
     setFromName.push_back(Pile(new Copper(), 60 - 7*nbPlayers));
@@ -110,6 +117,12 @@ std::vector<Pile> Set::getSetCards(int nbPlayers, SetName setName) {
     return setFromName;
 }
 
+/*!
+//! Crée une pile de cartes à partir de 10 noms de cartes Royaume.
+      \param nbPlayers le nombre de joueurs d'une partie.
+      \param cardNamei le nom de la carte choisie.
+      \return la liste des piles de cartes du plateau de jeu.
+*/
 std::vector<Pile> Set::getSetCards(int nbPlayers,
         KingdomCardName cardName1, KingdomCardName cardName2, KingdomCardName cardName3,
         KingdomCardName cardName4, KingdomCardName cardName5, KingdomCardName cardName6,

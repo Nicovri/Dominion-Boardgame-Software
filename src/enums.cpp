@@ -12,6 +12,10 @@ const std::string kEnumToString(KingdomCardName value) {
         case KingdomCardName::Remodel: return "Remodel";
         case KingdomCardName::Witch: return "Witch";
         case KingdomCardName::Village: return "Village";
+        case KingdomCardName::Festival: return "Festival";
+        case KingdomCardName::Laboratory: return "Laboratory";
+        case KingdomCardName::Moneylender: return "Moneylender";
+        case KingdomCardName::CouncilRoom: return "CouncilRoom";
         default: return "";
     }
 }

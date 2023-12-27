@@ -1,8 +1,12 @@
 #include "Smithy.hpp"
 #include "../game/Board.hpp"
 
-Smithy::Smithy(): Action(4, "Smithy", true) {}
+Smithy::Smithy(): Action(4, kEnumToString(KingdomCardName::Smithy), true) {}
 
+/*!
+//! Jouer la carte Forgeron: +3 cartes.
+      \param b le plateau de jeu sur laquelle la carte est jouée.
+*/
 void Smithy::play(Board &b) {
     b.getCurrentPlayer()->getNewCardsFromDeck(3);
 }

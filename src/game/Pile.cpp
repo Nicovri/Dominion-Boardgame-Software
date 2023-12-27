@@ -1,12 +1,6 @@
 #include "Pile.hpp"
 
-Pile::Pile() {
-    // for(Card *c : cardStack) {
-    //     if(c != NULL) {
-    //         delete &c;
-    //     }
-    // }
-}
+Pile::Pile() {}
 
 Pile::Pile(Card *c, int num) {
     for(int i = 0; i < num; i++) {
@@ -20,7 +14,13 @@ Pile::Pile(std::vector<Card*> cards) {
     }
 }
 
-Pile::~Pile() {}
+Pile::~Pile() {
+    // for(Card *c : cardStack) {
+    //     if(c != NULL) {
+    //         delete &c;
+    //     }
+    // }
+}
 
 Pile::Pile(const Pile &p): cardStack(p.cardStack) {}
 
@@ -31,8 +31,13 @@ Pile& Pile::operator=(const Pile &p) {
     return *this;
 }
 
+/*!
+//! Assigne une pile à une nouvelle partie.
+      \param b le plateau de jeu de la nouvelle partie.
+*/
 void Pile::assignToGame(Board &b) { this->game = &b; }
 
+// Définit le nombre total de points de victoire d'une pile.
 void Pile::setTotalVictoryPoints() const {
     if(!this->isEmpty()) {
         for(const auto& card : cardStack) {
@@ -43,6 +48,7 @@ void Pile::setTotalVictoryPoints() const {
     }
 }
 
+// Mélange une pile aléatoirement.
 void Pile::shuffle() {
     if(!this->isEmpty()) {
         srand(time(NULL));
@@ -52,16 +58,24 @@ void Pile::shuffle() {
     }
 }
 
+// La pile est-elle vide?
 bool Pile::isEmpty() const { return cardStack.empty(); }
 
+// Vide la pile de toute carte qu'elle contient.
 void Pile::clear() {
     while(!this->isEmpty()) {
         cardStack.pop_back();
     }
 }
 
+// Donne le nombre de cartes contenues dans une pile.
 int Pile::getNbCards() const { return this->cardStack.size(); }
 
+/*!
+//! Pioche pusieurs cartes d'une pile. Le nombre de cartes retourné peut être plus petit si jamais la pile se vide avant.
+    \param number le nombre de cartes à récupérer.
+    \return les cartes piochées dans la pile.
+*/
 std::vector<Card*> Pile::getCards(int number) {
     std::vector<Card*> cards = {};
     for(int i = 0; i < number; i++) {
@@ -73,6 +87,11 @@ std::vector<Card*> Pile::getCards(int number) {
     return cards;
 }
 
+/*!
+//! Pioche une carte spécifique d'une pile, si cela est possible.
+    \param cardIndex l'index de la carte à piocher dans la pile.
+    \return la carte piochée dans la pile.
+*/
 Card* Pile::getCard(int cardIndex) {
     if(0 <= cardIndex && cardIndex <= int(cardStack.size())-1) {
         Card *c = this->cardStack.at(cardIndex);
@@ -83,15 +102,28 @@ Card* Pile::getCard(int cardIndex) {
     }
 }
 
+/*!
+//! Montre une carte d'une pile. Cette méthode ne supprime pas la carte de la pile.
+    \param cardIndex l'index de la carte à regarder dans la pile.
+    \return la carte à regarder dans la pile.
+*/
 Card* Pile::showCard(int cardIndex) const {
     Card *c = this->cardStack.at(cardIndex);
     return c;
 }
 
+/*!
+//! Ajoute une carte à une pile.
+    \param card la carte à ajouter.
+*/
 void Pile::addCard(Card *card) {
     this->cardStack.push_back(card);
 }
 
+/*!
+//! Ajoute plusieurs cartes à une pile.
+    \param cards la liste des cartes à ajouter.
+*/
 void Pile::addCards(std::vector<Card*> cards) {
     for(Card *card: cards) {
         this->cardStack.push_back(card);

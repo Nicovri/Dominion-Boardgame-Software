@@ -5,6 +5,7 @@
 #include <iostream>
 #include <functional>
 
+// Classe de plateau de jeu. Contient toutes les actions nécessaire pour le déroulement d'une partie de Dominion. Le refus d'effectuer une action est modélisé par la valeur -1 entrée par le joueur.
 class Board {
     std::vector<Player*> players;
     int currentPlayer;

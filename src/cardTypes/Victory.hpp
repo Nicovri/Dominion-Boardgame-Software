@@ -4,6 +4,7 @@
 #include "../game/Point.hpp"
 #include <string>
 
+// Classe des cartes Victoire, sous-classe de Card et de Point.
 class Victory: public Card, public Point {
 
 public:

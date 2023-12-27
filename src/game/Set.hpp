@@ -23,7 +23,12 @@
 #include "../cards/Remodel.hpp"
 #include "../cards/Witch.hpp"
 #include "../cards/Village.hpp"
+#include "../cards/Festival.hpp"
+#include "../cards/Laboratory.hpp"
+#include "../cards/Moneylender.hpp"
+#include "../cards/CouncilRoom.hpp"
 
+// Classe statique permettant l'instanciation des piles du plateau et des decks initiaux des joueurs.
 class Set {
 public:
     static Pile createKingdomCardPile(KingdomCardName cardName);

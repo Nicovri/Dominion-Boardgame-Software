@@ -11,6 +11,7 @@
 
 class Board;
 
+// Classe de joueur. Contient toutes les actions possibles qu'un joueur peut effectuer durant la partie. Un joueur doit être assigné à un plateau pour pouvoir jouer correctement.
 class Player {
     std::string username;
     int nbActions;

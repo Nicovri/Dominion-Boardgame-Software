@@ -4,6 +4,8 @@
 #include <iostream>
 
 class Board;
+
+// Classe abstraite d'une carte de jeu. Peut être jouée sur un plateau de jeu.
 class Card {
     int price;
     std::string title;

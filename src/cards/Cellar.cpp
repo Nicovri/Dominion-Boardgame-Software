@@ -1,8 +1,12 @@
 #include "Cellar.hpp"
 #include "../game/Board.hpp"
 
-Cellar::Cellar(): Action(2, "Cellar", true, "Which card would you like to discard?") {}
+Cellar::Cellar(): Action(2, kEnumToString(KingdomCardName::Cellar), true, "Which card would you like to discard?") {}
 
+/*!
+//! Jouer la carte Cave: +1 action, défausse autant de cartes de la main, +1 carte pour chaque carte défaussée.
+      \param b le plateau de jeu sur laquelle la carte est jouée.
+*/
 void Cellar::play(Board &b) {
     Player *p = b.getCurrentPlayer();
     p->addActions(1);

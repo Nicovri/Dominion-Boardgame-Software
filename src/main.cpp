@@ -307,7 +307,7 @@ int main(int argc, char* argv[]) {
 
                         if(chooseCardButton.contains(mousePos)) {
                             if(roundState == ActionPhase) {
-                                if(b.getCurrentPlayer()->showCard(cardsInHand.getSelectedValue())->isActionCard()) {
+                                if(b.getCurrentPlayer()->showCard(cardsInHand.getSelectedValue()) != NULL && b.getCurrentPlayer()->showCard(cardsInHand.getSelectedValue())->isActionCard()) {
                                     playedActionCard = playedActionCard;
                                     effectIsOver = effectIsOver;
                                     cardEffectPhase++;
@@ -513,7 +513,7 @@ int main(int argc, char* argv[]) {
                 pilesButtonGroup.draw(window);
                 window.draw(turnPlayer);
                 cardsLeftInPiles.draw(window);
-                otherPiles.draw(window); // will be modified during turn (change position in code)
+                otherPiles.draw(window);
 
                 if(roundState == BeginRound) {
                     p->beginRound();
@@ -534,7 +534,7 @@ int main(int argc, char* argv[]) {
                     exitGame.draw(window);
                 }
 
-                // When action card played, hand is moved to the left and it causes errors if we click on the empty 0-index space (segfault)
+                // When action card played, hand is moved to the left???
                 if(roundState == ActionPhase) {
                     if(cardEffectPhase >= 0) {
                         window.draw(cardEffectText);

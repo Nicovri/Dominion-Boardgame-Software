@@ -1,8 +1,10 @@
 #pragma once
 
 #include "../cardTypes/Action.hpp"
+#include "../enums.hpp"
 #include <iostream>
 
+// Classe des cartes Cave, sous-classe de Action.
 class Cellar: public Action {
 
 public:

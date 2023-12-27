@@ -1,8 +1,12 @@
 #include "Chapel.hpp"
 #include "../game/Board.hpp"
 
-Chapel::Chapel(): Action(2, "Chapel", true, "Which card would you like to trash?") {}
+Chapel::Chapel(): Action(2, kEnumToString(KingdomCardName::Chapel), true, "Which card would you like to trash?") {}
 
+/*!
+//! Jouer la carte Chapelle: écarte jusqu'à 4 cartes de la main.
+      \param b le plateau de jeu sur laquelle la carte est jouée.
+*/
 void Chapel::play(Board &b) {
     Player *p = b.getCurrentPlayer();
 

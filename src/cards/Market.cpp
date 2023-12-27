@@ -1,8 +1,12 @@
 #include "Market.hpp"
 #include "../game/Board.hpp"
 
-Market::Market(): Action(5, "Market", true) {}
+Market::Market(): Action(5, kEnumToString(KingdomCardName::Market), true) {}
 
+/*!
+//! Jouer la carte Marché: +1 carte, +1 action, +1 achat, +1 pièce.
+      \param b le plateau de jeu sur laquelle la carte est jouée.
+*/
 void Market::play(Board &b) {
     b.getCurrentPlayer()->getNewCardFromDeck();
     b.getCurrentPlayer()->addActions(1);

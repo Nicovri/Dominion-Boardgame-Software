@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 
+// Classe représentant un groupe de boutons sur l'interface SFML.
 class ButtonGroup {
     std::vector<Button*> buttons;
 

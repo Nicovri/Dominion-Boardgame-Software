@@ -13,7 +13,7 @@ GAME := $(BUILDDIR)/Board.o $(BUILDDIR)/Set.o $(BUILDDIR)/Player.o $(BUILDDIR)/C
 CARDTYPES := $(BUILDDIR)/Victory.o $(BUILDDIR)/Treasure.o $(BUILDDIR)/Action.o
 VICTORY_CARDS := $(CARDSDIR)/Curse.o $(CARDSDIR)/Estate.o $(CARDSDIR)/Duchy.o $(CARDSDIR)/Province.o
 TREASURE_CARDS := $(CARDSDIR)/Copper.o $(CARDSDIR)/Silver.o $(CARDSDIR)/Gold.o
-ACTION_CARDS := $(CARDSDIR)/Workshop.o $(CARDSDIR)/Woodcutter.o $(CARDSDIR)/Cellar.o $(CARDSDIR)/Chapel.o $(CARDSDIR)/Smithy.o $(CARDSDIR)/Market.o $(CARDSDIR)/Mine.o $(CARDSDIR)/Remodel.o $(CARDSDIR)/Witch.o $(CARDSDIR)/Village.o
+ACTION_CARDS := $(CARDSDIR)/Workshop.o $(CARDSDIR)/Woodcutter.o $(CARDSDIR)/Cellar.o $(CARDSDIR)/Chapel.o $(CARDSDIR)/Smithy.o $(CARDSDIR)/Market.o $(CARDSDIR)/Mine.o $(CARDSDIR)/Remodel.o $(CARDSDIR)/Witch.o $(CARDSDIR)/Village.o $(CARDSDIR)/Festival.o $(CARDSDIR)/Laboratory.o $(CARDSDIR)/Moneylender.o $(CARDSDIR)/CouncilRoom.o
 
 $(BUILDDIR)/%.o: $(SRCDIR)/game/%.cpp | $(BUILDDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@

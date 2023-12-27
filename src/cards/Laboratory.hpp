@@ -3,11 +3,11 @@
 #include "../cardTypes/Action.hpp"
 #include "../enums.hpp"
 
-// Classe des cartes Marché, sous-classe de Action.
-class Market: public Action {
+// Classe des cartes Festival, sous-classe de Action.
+class Laboratory: public Action {
 
 public:
-    Market();
+    Laboratory();
     void play(Board &b);
     bool useEffect(Board &b, int repetitiveActionCounter, int pileIndex, int cardIndexInHand);
 };

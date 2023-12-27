@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 
+// Classe représentant un champ de saisie sur l'interface SFML.
 class TextInputField {
 private:
     sf::RectangleShape inputField;
