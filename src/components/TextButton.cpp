@@ -14,11 +14,13 @@ TextButton::TextButton(int value, float relativeX, float relativeY, float width,
     setPositionRelativeToWindow(relativeX, relativeY, window);
 }
 
+// Dessine le bouton sur la fenêtre.
 void TextButton::draw(sf::RenderWindow& window) {
     window.draw(shape);
     window.draw(text);
 }
 
+// Modifie la valeur de selection de ce bouton. Modifie son design en fonction.
 void TextButton::setSelected(bool selected) {
     Button::setSelected(selected);
     if (selected) {
@@ -30,14 +32,17 @@ void TextButton::setSelected(bool selected) {
     }
 }
 
+// Modifie le texte du bouton.
 void TextButton::setString(std::string string) {
     text.setString(string);
 }
 
+// Le bouton contient-il un certain point de la fenêtre (notamment la position de la souris)?
 bool TextButton::contains(const sf::Vector2f& point) const {
     return shape.getGlobalBounds().contains(point);
 }
 
+// Modifie la position du bouton selon la taille de fenêtre.
 void TextButton::setPositionRelativeToWindow(float relativeX, float relativeY, sf::RenderWindow& window) {
     sf::Vector2u windowSize = window.getSize();
     shape.setPosition(windowSize.x * relativeX - shape.getSize().x / 2.f, windowSize.y * relativeY - shape.getSize().y / 2.f);

@@ -63,4 +63,11 @@ public:
     std::string showTitleLastCardInDiscard() const;
     int getNbCardsInDiscard() const;
     int getNbCardsInDeck() const;
+    int getNbCardsTotal() const;
+    bool trashCardsInDiscard(int nbCards);
+    bool trashCardsInDeck(int nbCards);
+    std::vector<Card*> showCardsInDeck(int nbCards) const;
+    std::vector<Card*> showCardsInDiscard(int nbCards) const;
+    void addCardsFromDeckToDiscard(int nbCards);
+    bool addCardFromHandToDeck(int indexInHand);
 };

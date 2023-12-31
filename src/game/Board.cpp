@@ -40,9 +40,19 @@ int Board::getNbPiles() const { return this->piles.size(); }
 
 Player* Board::getCurrentPlayer() const { return this->players.at(currentPlayer); }
 
-std::string Board::showTitleLastCardInTrash() const { return !trash.isEmpty() ? trash.showCard(0)->getTitle() : ""; }
+std::string Board::showTitleLastCardInTrash() const { return !trash.isEmpty() ? trash.showCard(trash.getNbCards()-1)->getTitle() : ""; }
 
 int Board::getNbCardsInTrash() const { return trash.getNbCards(); }
+
+int Board::getNbEmptyPiles() const {
+    int nb = 0;
+    for(Pile p : piles) {
+        if(p.isEmpty()) {
+            nb++;
+        }
+    }
+    return nb;
+}
 
 /*!
 //! Initialise le plateau de jeu. Assigne des joueurs, des piles et récupère l'index de la pile des cartes Province pour l'observation de la fin de partie.

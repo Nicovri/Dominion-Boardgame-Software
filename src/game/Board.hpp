@@ -43,4 +43,5 @@ public:
     Card* chooseCard(int allowedPrice, int pileIndex);
     std::string showTitleLastCardInTrash() const;
     int getNbCardsInTrash() const;
+    int getNbEmptyPiles() const;
 };

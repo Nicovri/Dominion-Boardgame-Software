@@ -29,7 +29,7 @@ public:
     bool isEmpty() const;
     void clear();
     int getNbCards() const;
-    std::vector<Card*> getCards(int number); // Error check if enough cards
+    std::vector<Card*> getCards(int number);
     Card* getCard(int cardIndex);
     Card* showCard(int cardIndex) const;
     void addCard(Card *c);

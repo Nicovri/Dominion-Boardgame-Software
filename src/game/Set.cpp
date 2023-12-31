@@ -5,7 +5,7 @@
       \param cardName La valeur de l'énumération correspondant au nom de la carte Royaume.
       \return la pile de cartes créée.
 */
-Pile Set::createKingdomCardPile(KingdomCardName cardName) {
+Pile Set::createKingdomCardPile(KingdomCardName cardName, int nbPlayers) {
     switch(cardName) {
         case KingdomCardName::Workshop: return Pile(new Workshop(), 10);
         case KingdomCardName::Woodcutter: return Pile(new Woodcutter(), 10);
@@ -21,6 +21,12 @@ Pile Set::createKingdomCardPile(KingdomCardName cardName) {
         case KingdomCardName::Laboratory: return Pile(new Laboratory(), 10);
         case KingdomCardName::Moneylender: return Pile(new Moneylender(), 10);
         case KingdomCardName::CouncilRoom: return Pile(new CouncilRoom(), 10);
+        case KingdomCardName:: Gardens: return Pile(new Gardens(), nbPlayers == 2 ? 8 : 12);
+        case KingdomCardName::Militia: return Pile(new Militia(), 10);
+        case KingdomCardName::Poacher: return Pile(new Poacher(), 10);
+        case KingdomCardName::Feast: return Pile(new Feast(), 10);
+        case KingdomCardName::Bandit: return Pile(new Bandit(), 10);
+        case KingdomCardName::Artisan: return Pile(new Artisan(), 10);
         default: return Pile();
     }
 }
@@ -75,7 +81,7 @@ std::vector<Pile> Set::getSetCards(int nbPlayers) {
                                     return pile.showCard(0)->getTitle() == kEnumToString(randomCard);
                                 });
         if(it == randomSet.end()) {
-            randomSet.push_back(Set::createKingdomCardPile(randomCard));
+            randomSet.push_back(Set::createKingdomCardPile(randomCard, nbPlayers));
             c++;
         }
     }
@@ -140,16 +146,16 @@ std::vector<Pile> Set::getSetCards(int nbPlayers,
     std::vector<KingdomCardName> cardNames = {cardName1, cardName2, cardName3, cardName4, cardName5, cardName6, cardName7, cardName8, cardName9, cardName10};
 
     if(Set::allNamesAreUniques(cardNames)) {
-        setFromCards.push_back(Set::createKingdomCardPile(cardName1));
-        setFromCards.push_back(Set::createKingdomCardPile(cardName2));
-        setFromCards.push_back(Set::createKingdomCardPile(cardName3));
-        setFromCards.push_back(Set::createKingdomCardPile(cardName4));
-        setFromCards.push_back(Set::createKingdomCardPile(cardName5));
-        setFromCards.push_back(Set::createKingdomCardPile(cardName6));
-        setFromCards.push_back(Set::createKingdomCardPile(cardName7));
-        setFromCards.push_back(Set::createKingdomCardPile(cardName8));
-        setFromCards.push_back(Set::createKingdomCardPile(cardName9));
-        setFromCards.push_back(Set::createKingdomCardPile(cardName10));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName1, nbPlayers));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName2, nbPlayers));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName3, nbPlayers));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName4, nbPlayers));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName5, nbPlayers));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName6, nbPlayers));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName7, nbPlayers));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName8, nbPlayers));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName9, nbPlayers));
+        setFromCards.push_back(Set::createKingdomCardPile(cardName10, nbPlayers));
     } else {
         return {};
     }

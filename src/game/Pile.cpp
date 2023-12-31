@@ -108,8 +108,12 @@ Card* Pile::getCard(int cardIndex) {
     \return la carte à regarder dans la pile.
 */
 Card* Pile::showCard(int cardIndex) const {
-    Card *c = this->cardStack.at(cardIndex);
-    return c;
+    if(0 <= cardIndex && cardIndex <= int(cardStack.size())-1) {
+        Card *c = this->cardStack.at(cardIndex);
+        return c;
+    } else {
+        return NULL;
+    }
 }
 
 /*!

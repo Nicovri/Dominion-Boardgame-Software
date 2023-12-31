@@ -27,11 +27,17 @@
 #include "../cards/Laboratory.hpp"
 #include "../cards/Moneylender.hpp"
 #include "../cards/CouncilRoom.hpp"
+#include "../cards/Gardens.hpp"
+#include "../cards/Militia.hpp"
+#include "../cards/Poacher.hpp"
+#include "../cards/Feast.hpp"
+#include "../cards/Bandit.hpp"
+#include "../cards/Artisan.hpp"
 
 // Classe statique permettant l'instanciation des piles du plateau et des decks initiaux des joueurs.
 class Set {
 public:
-    static Pile createKingdomCardPile(KingdomCardName cardName);
+    static Pile createKingdomCardPile(KingdomCardName cardName, int nbPlayers);
     static bool allNamesAreUniques(std::vector<KingdomCardName> cardNames);
     static std::vector<Card*> getBaseDeck();
     static std::vector<Pile> getSetCards(int nbPlayers);

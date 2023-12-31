@@ -44,11 +44,13 @@ void Player::addBuys(int nb) { this->nbBuys += nb; }
 
 int Player::getNbCardsInHand() const { return this->hand.getNbCards(); }
 
-std::string Player::showTitleLastCardInDiscard() const { return !discard.isEmpty() ? discard.showCard(0)->getTitle() : ""; }
+std::string Player::showTitleLastCardInDiscard() const { return !discard.isEmpty() ? discard.showCard(discard.getNbCards()-1)->getTitle() : ""; }
 
 int Player::getNbCardsInDiscard() const { return discard.getNbCards(); }
 
 int Player::getNbCardsInDeck() const { return deck.getNbCards(); }
+
+int Player::getNbCardsTotal() const { return (getNbCardsInHand() + getNbCardsInDeck() + getNbCardsInDiscard()); }
 
 /*!
 //! Montre la carte choisie dans la main du joueur. Ne supprime pas la carte de la main.
@@ -60,6 +62,33 @@ Card* Player::showCard(int indexInHand) const {
         return this->hand.showCard(indexInHand);
     }
     return NULL;
+}
+
+/*!
+//! Montre les cartes choisies du deck du joueur. Ne supprime pas ces cartes.
+      \param nbCards le nombre de cartes à montrer.
+*/
+std::vector<Card*> Player::showCardsInDeck(int nbCards) const {
+    std::vector<Card*> cards;
+    for(int i = 0; i < nbCards; i++) {
+        Card *c = deck.showCard(deck.getNbCards() - i - 1);
+        if(c != NULL) {
+            cards.push_back(c);
+        }
+    }
+    return cards;
+}
+
+/*!
+//! Montre les cartes choisies de la défausse du joueur. Ne supprime pas ces cartes.
+      \param nbCards le nombre de cartes à montrer.
+*/
+std::vector<Card*> Player::showCardsInDiscard(int nbCards) const {
+    std::vector<Card*> cards;
+    for(int i = 0; i < nbCards; i++) {
+        cards.push_back(discard.showCard(deck.getNbCards() - i - 1));
+    }
+    return cards;
 }
 
 /*!
@@ -139,6 +168,29 @@ void Player::getNewCardsFromDeck(int nb) {
     }
 }
 
+/*!
+//! Pioche plusieurs cartes du deck et les ajoute à la défausse du joueur.
+      \param nbCards le nombre de cartes à piocher.
+*/
+void Player::addCardsFromDeckToDiscard(int nbCards) {
+    std::vector<Card*> cards = deck.getCards(nbCards);
+    discard.addCards(cards);
+}
+
+/*!
+//! Place une carte de la main sur le deck du joueur.
+      \param indexInHand l'index de la carte choisie.
+      \return false si l'opération n'a pas été effectuée, true si elle l'a été.
+*/
+bool Player::addCardFromHandToDeck(int indexInHand) {
+    if(indexInHand <= this->getNbCardsInHand()-1 && indexInHand >= 0) {
+        Card *c = hand.getCard(indexInHand);
+        deck.addCard(c);
+        return true;
+    }
+    return false;
+}
+
 // Définit le nombre total de points de victoire du joueur.
 void Player::setTotalVictoryPoints() {
     this->nbVictory = 0;
@@ -172,6 +224,7 @@ void Player::beginRound() {
     this->nbActions = 1;
     this->nbBuys = 1;
     this->nbCoins = 0;
+    this->setTotalVictoryPoints();
 }
 
 /*!
@@ -185,8 +238,9 @@ bool Player::playCard(int indexInHand) {
     if(c->isActionCard()) {
         this->nbActions--;
     }
-    c->play(*game);
     this->discard.addCard(c);
+    c->play(*game);
+    this->setTotalVictoryPoints();
     return true;
 }
 
@@ -225,6 +279,32 @@ bool Player::trashCard(int indexInHand) {
     Card *c = this->hand.getCard(indexInHand);
     if(c == NULL) { return false; }
     return this->game->trashCard(c);
+}
+
+/*!
+//! Ecarte des cartes de la défausse du joueur.
+      \param nbCards le nombre de cartes à écarter.
+      \return false si la carte n'a pas pu être écartée, true si la carte a été écartée.
+*/
+bool Player::trashCardsInDiscard(int nbCards) {
+    std::vector<Card*> cards = this->discard.getCards(nbCards);
+    for(Card *c : cards) {
+        this->game->trashCard(c);
+    }
+    return true;
+}
+
+/*!
+//! Ecarte des cartes du deck du joueur.
+      \param nbCards le nombre de cartes à écarter.
+      \return false si la carte n'a pas pu être écartée, true si la carte a été écartée.
+*/
+bool Player::trashCardsInDeck(int nbCards) {
+    std::vector<Card*> cards = this->deck.getCards(nbCards);
+    for(Card *c : cards) {
+        this->game->trashCard(c);
+    }
+    return true;
 }
 
 // Termine le tour d'un joueur en reformant sa main initiale de 5 cartes à partir du deck.

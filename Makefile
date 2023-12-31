@@ -11,9 +11,9 @@ ENUMS := $(BUILDDIR)/enums.o
 COMPONENTS := $(SFMLDIR)/Button.o $(SFMLDIR)/TextButton.o $(SFMLDIR)/ImageButton.o $(SFMLDIR)/ButtonGroup.o $(SFMLDIR)/TextInputField.o
 GAME := $(BUILDDIR)/Board.o $(BUILDDIR)/Set.o $(BUILDDIR)/Player.o $(BUILDDIR)/Card.o $(BUILDDIR)/Pile.o $(BUILDDIR)/Point.o
 CARDTYPES := $(BUILDDIR)/Victory.o $(BUILDDIR)/Treasure.o $(BUILDDIR)/Action.o
-VICTORY_CARDS := $(CARDSDIR)/Curse.o $(CARDSDIR)/Estate.o $(CARDSDIR)/Duchy.o $(CARDSDIR)/Province.o
+VICTORY_CARDS := $(CARDSDIR)/Curse.o $(CARDSDIR)/Estate.o $(CARDSDIR)/Duchy.o $(CARDSDIR)/Province.o $(CARDSDIR)/Gardens.o
 TREASURE_CARDS := $(CARDSDIR)/Copper.o $(CARDSDIR)/Silver.o $(CARDSDIR)/Gold.o
-ACTION_CARDS := $(CARDSDIR)/Workshop.o $(CARDSDIR)/Woodcutter.o $(CARDSDIR)/Cellar.o $(CARDSDIR)/Chapel.o $(CARDSDIR)/Smithy.o $(CARDSDIR)/Market.o $(CARDSDIR)/Mine.o $(CARDSDIR)/Remodel.o $(CARDSDIR)/Witch.o $(CARDSDIR)/Village.o $(CARDSDIR)/Festival.o $(CARDSDIR)/Laboratory.o $(CARDSDIR)/Moneylender.o $(CARDSDIR)/CouncilRoom.o
+ACTION_CARDS := $(CARDSDIR)/Workshop.o $(CARDSDIR)/Woodcutter.o $(CARDSDIR)/Cellar.o $(CARDSDIR)/Chapel.o $(CARDSDIR)/Smithy.o $(CARDSDIR)/Market.o $(CARDSDIR)/Mine.o $(CARDSDIR)/Remodel.o $(CARDSDIR)/Witch.o $(CARDSDIR)/Village.o $(CARDSDIR)/Festival.o $(CARDSDIR)/Laboratory.o $(CARDSDIR)/Moneylender.o $(CARDSDIR)/CouncilRoom.o $(CARDSDIR)/Militia.o $(CARDSDIR)/Poacher.o $(CARDSDIR)/Feast.o $(CARDSDIR)/Bandit.o $(CARDSDIR)/Artisan.o
 
 $(BUILDDIR)/%.o: $(SRCDIR)/game/%.cpp | $(BUILDDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@

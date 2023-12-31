@@ -18,6 +18,12 @@ enum class KingdomCardName {
     Laboratory,
     Moneylender,
     CouncilRoom,
+    Gardens,
+    Militia,
+    Poacher,
+    Feast,
+    Bandit,
+    Artisan,
     COUNT
 };
 
