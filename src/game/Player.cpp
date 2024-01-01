@@ -86,7 +86,10 @@ std::vector<Card*> Player::showCardsInDeck(int nbCards) const {
 std::vector<Card*> Player::showCardsInDiscard(int nbCards) const {
     std::vector<Card*> cards;
     for(int i = 0; i < nbCards; i++) {
-        cards.push_back(discard.showCard(deck.getNbCards() - i - 1));
+        Card *c = discard.showCard(discard.getNbCards() - i - 1);
+        if(c != NULL) {
+            cards.push_back(c);
+        }
     }
     return cards;
 }
@@ -155,7 +158,9 @@ void Player::getNewCardFromDeck() {
     if(this->deck.isEmpty()) {
         this->getDeckFromDiscard();
     }
-    this->hand.addCard(this->deck.getCards(1).at(0));
+    if(!deck.isEmpty()) {
+        this->hand.addCard(this->deck.getCards(1).at(0));
+    }
 }
 
 /*!
@@ -185,6 +190,20 @@ void Player::addCardsFromDeckToDiscard(int nbCards) {
 bool Player::addCardFromHandToDeck(int indexInHand) {
     if(indexInHand <= this->getNbCardsInHand()-1 && indexInHand >= 0) {
         Card *c = hand.getCard(indexInHand);
+        deck.addCard(c);
+        return true;
+    }
+    return false;
+}
+
+/*!
+//! Place une carte de la défausse sur le deck du joueur.
+      \param indexInDiscard l'index de la carte choisie.
+      \return false si l'opération n'a pas été effectuée, true si elle l'a été.
+*/
+bool Player::addCardFromDiscardToDeck(int indexInDiscard) {
+    if(indexInDiscard <= this->getNbCardsInDiscard()-1 && indexInDiscard >= 0) {
+        Card *c = discard.getCard(discard.getNbCards() - indexInDiscard - 1);
         deck.addCard(c);
         return true;
     }

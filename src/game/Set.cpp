@@ -27,6 +27,12 @@ Pile Set::createKingdomCardPile(KingdomCardName cardName, int nbPlayers) {
         case KingdomCardName::Feast: return Pile(new Feast(), 10);
         case KingdomCardName::Bandit: return Pile(new Bandit(), 10);
         case KingdomCardName::Artisan: return Pile(new Artisan(), 10);
+        case KingdomCardName::Vassal: return Pile(new Vassal(), 10);
+        case KingdomCardName::Sentry: return Pile(new Sentry(), 10);
+        case KingdomCardName::Chancellor: return Pile(new Chancellor(), 10);
+        case KingdomCardName::Harbinger: return Pile(new Harbinger(), 10);
+        case KingdomCardName::Spy: return Pile(new Spy(), 10);
+        case KingdomCardName::Library: return Pile(new Library(), 10);
         default: return Pile();
     }
 }

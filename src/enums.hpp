@@ -24,6 +24,12 @@ enum class KingdomCardName {
     Feast,
     Bandit,
     Artisan,
+    Vassal,
+    Sentry,
+    Chancellor,
+    Harbinger,
+    Spy,
+    Library,
     COUNT
 };
 

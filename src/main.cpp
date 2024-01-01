@@ -11,6 +11,7 @@
 #include "components/TextInputField.hpp"
 #include <iostream>
 #include <cstring>
+#include <cmath>
 #include <string>
 #include <map>
 #include <vector>
@@ -167,6 +168,14 @@ int main(int argc, char* argv[]) {
         TextButton chooseCardButton = TextButton(0, 0.8f, 0.5f, 150.f, 50.f, "Choose card", font, 24, window);
         TextButton passButton = TextButton(0, 0.8f, 0.6f, 150.f, 50.f, "Pass", font, 24, window);
 
+        TextButton rightArrow = TextButton(0, 0.6f, 0.85f, 40.f, 180.f, ">", font, 24, window);
+        sf::Text intervals;
+        intervals.setFont(font);
+        intervals.setFillColor(sf::Color::Black);
+        int nbIntervals = 1;
+        int selectedInterval = 0;
+        bool intervalChanged = false;
+
         // Différents textes des phases de jeu (Action, Effet de carte, Achat)
         float yPosRound = 0.7f * window.getSize().y;
         sf::Text turnPlayer;
@@ -238,6 +247,7 @@ int main(int argc, char* argv[]) {
                                 nbPlayers = 0;
                                 setInitOption = -1;
                                 cardChosen = 0;
+                                cardName.setString("");
                                 chosenCards = {};
                                 usedUsernames.clear();
                                 players.clear();
@@ -251,8 +261,12 @@ int main(int argc, char* argv[]) {
                                 effectIsOver = false;
                                 pilesButtonGroup.clear();
                                 cardsLeftInPiles.clear();
+                                nbIntervals = 1;
+                                selectedInterval = 0;
 
                                 nbPlayers = selectNbPlayers.getSelectedValue();
+                                setInitOption = selectSetInitMode.getSelectedValue();
+                                std::cout << "Selected Set Value: " << setInitOption << std::endl;
                                 if (nbPlayers != -1) {
                                     std::cout << "Selected Value: " << nbPlayers << std::endl;
                                     usernameText.setString("What is your username, player " + std::to_string(currentPlayer) + "?: ");
@@ -282,20 +296,21 @@ int main(int argc, char* argv[]) {
                                 usernameText.setString("What is your username, player " + std::to_string(currentPlayer) + "?: ");
                                 if(currentPlayer > nbPlayers) {
                                     gameState = SetGeneration;
+                                    // Choix aléatoire des cartes
+                                    if(setInitOption == 0) {
+                                        piles = Set::getSetCards(nbPlayers);
+                                        gameState = Loading;
+                                    }
                                 }
                             }
-                            if(gameState == SetGeneration) {
-                                int setInitMode = selectSetInitMode.getSelectedValue();
-                                // Choix aléatoire des cartes
-                                if(setInitMode == 0) {
-                                    piles = Set::getSetCards(nbPlayers);
-                                    gameState = Loading;
+                            else if(gameState == SetGeneration) {
+                                if(setInitOption == 0) {
                                 // Choix du set de 10 cartes
-                                } else if(setInitMode == 1) {
+                                } else if(setInitOption == 1) {
                                     piles = Set::getSetCards(nbPlayers, static_cast<SetName>(selectSetName.getSelectedValue()));
                                     gameState = Loading;
                                 // Choix des 10 cartes par nom
-                                } else if(setInitMode == 2) {
+                                } else if(setInitOption == 2) {
                                     if(cardChosen < 10) {
                                         chosenCards.push_back(static_cast<KingdomCardName>(selectCardNames.getSelectedValue()));
                                         if(cardName.getString().toAnsiString() == "") {
@@ -330,6 +345,15 @@ int main(int argc, char* argv[]) {
                             }
                         }
 
+                        if(rightArrow.contains(mousePos) && gameState == RoundPlayer) {
+                            if(selectedInterval+1 >= nbIntervals) {
+                                selectedInterval = 0;
+                            } else {
+                                selectedInterval++;
+                            }
+                            intervalChanged = true;
+                        }
+
                         // Sur le bouton de choix de carte en jeu.
                         if(chooseCardButton.contains(mousePos)) {
                             // On vérifie que la carte sélectionnée est une carte Action et qu'elle existe avant de la jouer.
@@ -356,6 +380,7 @@ int main(int argc, char* argv[]) {
                                     b.getCurrentPlayer()->getNewCard(c, false);
                                 }
                             }
+                            selectedInterval = 0;
                         }
 
                         // Sur le bouton de passage de l'action. On passe directement à la phase de jeu suivante sans rien faire.
@@ -363,10 +388,11 @@ int main(int argc, char* argv[]) {
                             if(roundState == ActionPhase) { roundState = TreasurePhase; }
                             if(roundState == CardEffect) { /*cardEffectPhase++;*/ }
                             if(roundState == BuyPhase) { roundState = NextPlayerTurn; }
+                            selectedInterval = 0;
                         }
 
                         // Sur le bouton de sauvegarde : on revient à l'écran d'accueil.
-                        if(exitGame.contains(mousePos)) {
+                        if(exitGame.contains(mousePos) && gameState == RoundPlayer) {
                             bSave = b;
                             gameState = Resume;
                         }
@@ -419,16 +445,15 @@ int main(int argc, char* argv[]) {
             }
 
             if(gameState == SetGeneration) {
-                int setInitMode = selectSetInitMode.getSelectedValue();
-                if(setInitMode == 0) {
-                } else if(setInitMode == 1) {
+                if(setInitOption == 0) {
+                } else if(setInitOption == 1) {
                     selectSetName.draw(window);
-                } else if(setInitMode == 2) {
+                } else if(setInitOption == 2) {
                     selectCardNames.draw(window);
                     window.draw(cardName);
                 } else {
                 }
-                if(setInitMode != 0) { nextButton.draw(window); }
+                if(setInitOption != 0) { nextButton.draw(window); }
             }
 
             // Genère le plateau de jeu initialisé et l'affiche sur l'interface avec un temps d'attente pour permettre à tous les joueurs de l'observer avant le début de la partie.
@@ -482,14 +507,28 @@ int main(int argc, char* argv[]) {
                 xPosRound = 0.85f * (window.getSize().x - turnPlayer.getLocalBounds().width);
                 turnPlayer.setPosition(xPosRound, yPosRoundName);
 
-                if(roundState != ActionPhase) {
+                nbIntervals = p->getNbCardsInHand() / 5;
+                if(p->getNbCardsInHand() % 5 != 0) { nbIntervals++; }
+                int j = selectedInterval*5;
+                int k = selectedInterval+1 == nbIntervals ? p->getNbCardsInHand() : j+5;
+                // std::cout << "p: " << p->getNbCardsInHand() << " k: " << k << std::endl;
+                intervals.setString(std::to_string(selectedInterval+1) + "/" + std::to_string(nbIntervals));
+                sf::FloatRect rectInt = intervals.getLocalBounds();
+                intervals.setOrigin(rectInt.width/2, rectInt.height/2);
+                float yPosInt = 0.85f * window.getSize().y;
+                float xPosInt = 0.65f * window.getSize().x;
+                intervals.setPosition(xPosInt, yPosInt);
+
+
+                if(roundState != ActionPhase || (roundState == ActionPhase && intervalChanged)) {
                     cardsInHand.clear();
                     float x = 0.05f;
-                    for(int i = 0; i < p->getNbCardsInHand(); i++) {
+                    for(int i = j; i < k; i++) {
                         cardsInHand.addButton(i, x, 0.75f, 0.1f, cardsTextureMap.at(p->showCard(i)->getTitle()), window);
                         x += 0.1f;
                     }
                     cardsInHand.draw(window);
+                    intervalChanged = false;
                 } else {
                     cardsInHand.draw(window);
                 }
@@ -523,6 +562,8 @@ int main(int argc, char* argv[]) {
                 window.draw(turnPlayer);
                 cardsLeftInPiles.draw(window);
                 otherPiles.draw(window);
+                rightArrow.draw(window);
+                window.draw(intervals);
 
                 // Définition des comportements et des affichages supplémentaires selon les phases de jeu.
 
@@ -556,7 +597,7 @@ int main(int argc, char* argv[]) {
                         if(cardPlayed) {
                             cardsInHand.clear();
                             float x3 = 0.05f;
-                            for(int i = 0; i < p->getNbCardsInHand(); i++) {
+                            for(int i = j; i < k; i++) {
                                 cardsInHand.addButton(i, x3, 0.75f, 0.1f, cardsTextureMap.at(p->showCard(i)->getTitle()), window);
                                 x3 += 0.1f;
                             }

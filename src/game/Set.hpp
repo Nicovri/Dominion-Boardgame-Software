@@ -33,6 +33,12 @@
 #include "../cards/Feast.hpp"
 #include "../cards/Bandit.hpp"
 #include "../cards/Artisan.hpp"
+#include "../cards/Vassal.hpp"
+#include "../cards/Sentry.hpp"
+#include "../cards/Chancellor.hpp"
+#include "../cards/Harbinger.hpp"
+#include "../cards/Spy.hpp"
+#include "../cards/Library.hpp"
 
 // Classe statique permettant l'instanciation des piles du plateau et des decks initiaux des joueurs.
 class Set {

@@ -26,7 +26,7 @@ void Militia::play(Board &b) {
                     cardIndex = -2;
                 }
 
-                if(!p->trashCard(cardIndex)) {
+                if(!p->discardCard(cardIndex)) {
                     cardIndex = -2;
                 }
             }

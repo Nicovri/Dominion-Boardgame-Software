@@ -70,4 +70,5 @@ public:
     std::vector<Card*> showCardsInDiscard(int nbCards) const;
     void addCardsFromDeckToDiscard(int nbCards);
     bool addCardFromHandToDeck(int indexInHand);
+    bool addCardFromDiscardToDeck(int indexInDiscard);
 };
