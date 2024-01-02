@@ -1,7 +1,8 @@
 #include "Cellar.hpp"
 #include "../game/Board.hpp"
 
-Cellar::Cellar(): Action(2, kEnumToString(KingdomCardName::Cellar), true, "Which card would you like to discard?") {}
+Cellar::Cellar(): Card(2, kEnumToString(KingdomCardName::Cellar), true),
+                    Action(2, kEnumToString(KingdomCardName::Cellar), true, "Which card would you like to discard?") {}
 
 /*!
 //! Jouer la carte Cave: +1 action, défausse autant de cartes de la main, +1 carte pour chaque carte défaussée.

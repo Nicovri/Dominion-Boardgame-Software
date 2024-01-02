@@ -1,7 +1,8 @@
 #include "Chapel.hpp"
 #include "../game/Board.hpp"
 
-Chapel::Chapel(): Action(2, kEnumToString(KingdomCardName::Chapel), true, "Which card would you like to trash?") {}
+Chapel::Chapel(): Card(2, kEnumToString(KingdomCardName::Chapel), true),
+                    Action(2, kEnumToString(KingdomCardName::Chapel), true, "Which card would you like to trash?") {}
 
 /*!
 //! Jouer la carte Chapelle: écarte jusqu'à 4 cartes de la main.
@@ -18,7 +19,7 @@ void Chapel::play(Board &b) {
         }
 
         if(counterTrashed == 4) {
-            break;
+            return;
         }
 
         std::cout << p << std::endl;

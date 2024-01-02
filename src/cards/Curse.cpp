@@ -1,7 +1,8 @@
 #include "Curse.hpp"
 #include "../game/Board.hpp"
 
-Curse::Curse(): Victory(0, oEnumToString(OtherCardName::Curse), true, -1) {}
+Curse::Curse(): Card(0, oEnumToString(OtherCardName::Curse), true),
+                Victory(0, oEnumToString(OtherCardName::Curse), true, -1) {}
 
 /*!
 //! Jouer la carte Malédiction: -1 point de victoire.

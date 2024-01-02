@@ -1,7 +1,8 @@
 #include "Copper.hpp"
 #include "../game/Board.hpp"
 
-Copper::Copper(): Treasure(0, oEnumToString(OtherCardName::Copper), true, 1) {}
+Copper::Copper(): Card(0, oEnumToString(OtherCardName::Copper), true),
+                    Treasure(0, oEnumToString(OtherCardName::Copper), true, 1) {}
 
 /*!
 //! Jouer la carte Cuivre: +1 pièce.

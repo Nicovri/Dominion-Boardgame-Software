@@ -1,7 +1,8 @@
 #include "Silver.hpp"
 #include "../game/Board.hpp"
 
-Silver::Silver(): Treasure(3, oEnumToString(OtherCardName::Silver), true, 2) {}
+Silver::Silver(): Card(3, oEnumToString(OtherCardName::Silver), true),
+                    Treasure(3, oEnumToString(OtherCardName::Silver), true, 2) {}
 
 /*!
 //! Jouer la carte Argent: +2 point de victoire.

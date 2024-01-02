@@ -139,10 +139,12 @@ Card* Board::chooseCard(int allowedPrice, int pileIndex) {
 */
 Card* Board::chooseCard(std::string cardName) {
     Card *c = NULL;
+    int i = 0;
     for(Pile p : this->piles) {
         if(!p.isEmpty() && p.showCard(0)->getTitle() == cardName) {
-            c = p.getCards(1).at(0);
+            c = piles.at(i).getCards(1).at(0);
         }
+        i++;
     }
     return c;
 }

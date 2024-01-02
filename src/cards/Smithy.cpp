@@ -1,7 +1,8 @@
 #include "Smithy.hpp"
 #include "../game/Board.hpp"
 
-Smithy::Smithy(): Action(4, kEnumToString(KingdomCardName::Smithy), true) {}
+Smithy::Smithy(): Card(4, kEnumToString(KingdomCardName::Smithy), true),
+                    Action(4, kEnumToString(KingdomCardName::Smithy), true) {}
 
 /*!
 //! Jouer la carte Forgeron: +3 cartes.

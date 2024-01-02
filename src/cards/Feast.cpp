@@ -1,7 +1,8 @@
 #include "Feast.hpp"
 #include "../game/Board.hpp"
 
-Feast::Feast(): Action(4, kEnumToString(KingdomCardName::Feast), true) {}
+Feast::Feast(): Card(4, kEnumToString(KingdomCardName::Feast), true),
+                Action(4, kEnumToString(KingdomCardName::Feast), true) {}
 
 /*!
 //! Jouer la carte Festin: écarte cette carte, fait gagner une carte coûtant jusqu'à 5 pièces.

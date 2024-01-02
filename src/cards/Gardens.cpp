@@ -1,7 +1,8 @@
 #include "Gardens.hpp"
 #include "../game/Board.hpp"
 
-Gardens::Gardens(): Victory(4, kEnumToString(KingdomCardName::Gardens), true, 1) {}
+Gardens::Gardens(): Card(4, kEnumToString(KingdomCardName::Gardens), true),
+                    Victory(4, kEnumToString(KingdomCardName::Gardens), true, 1) {}
 
 /*!
 //! Jouer la carte Jardins: +1 points de victoire par tranche de 10 cartes.

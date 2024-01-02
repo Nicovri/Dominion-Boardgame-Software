@@ -1,7 +1,8 @@
 #include "Woodcutter.hpp"
 #include "../game/Board.hpp"
 
-Woodcutter::Woodcutter(): Action(3, kEnumToString(KingdomCardName::Woodcutter), true) {}
+Woodcutter::Woodcutter(): Card(3, kEnumToString(KingdomCardName::Woodcutter), true),
+                            Action(3, kEnumToString(KingdomCardName::Woodcutter), true) {}
 
 /*!
 //! Jouer la carte Bûcheron: +1 achat, +2 pièces.

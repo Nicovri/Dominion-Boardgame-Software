@@ -30,6 +30,11 @@ enum class KingdomCardName {
     Harbinger,
     Spy,
     Library,
+    Moat,
+    Bureaucrat,
+    Merchant,
+    ThroneRoom,
+    Adventurer,
     COUNT
 };
 
@@ -62,6 +67,12 @@ const std::string oEnumToString(OtherCardName value);
 // Enumération des noms de set disponibles en jeu.
 enum class SetName {
     Base, // Workshop, Woodcutter, Cellar, Chapel, Smithy, Market, Mine, Remodel, Witch, Village
+    FirstGame, // Cellar, Market, Merchant, Militia, Mine, Moat, Remodel, Smithy, Village, Workshop
+    SizeDistortion, // Artisan, Bandit, Bureaucrat, Chapel, Festival, Gardens, Sentry, ThroneRoom, Witch, Workshop
+    DeckTop, // Artisan, Bureaucrat, CouncilRoom, Festival, Harbinger, Laboratory, Moneylender, Sentry, Vassal, Village
+    SleightOfHand, // Cellar, CouncilRoom, Festival, Gardens, Library, Harbinger, Militia, Poacher, Smithy, ThroneRoom
+    Improvements, // Artisan, Cellar, Market, Merchant, Mine, Moat, Moneylender, Poacher, Remodel, Witch
+    SilverAndGold, // Bandit, Bureaucrat, Chapel, Harbinger, Laboratory, Merchant, Mine, Moneylender, ThroneRoom, Vassal
     COUNT
 };
 

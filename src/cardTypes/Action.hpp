@@ -4,7 +4,7 @@
 #include <string>
 
 // Classe des cartes Action, sous-classe de Card.
-class Action: public Card {
+class Action: public virtual Card {
     std::string effectText;
 
 public:
@@ -15,6 +15,8 @@ public:
     bool isActionCard();
     bool isTreasureCard();
     bool isVictoryCard();
+    bool isAttackCard();
+    bool isReactionCard();
     virtual void play(Board &b) = 0;
     
     /*!

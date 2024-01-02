@@ -1,7 +1,8 @@
 #include "Festival.hpp"
 #include "../game/Board.hpp"
 
-Festival::Festival(): Action(5, kEnumToString(KingdomCardName::Festival), true) {}
+Festival::Festival(): Card(5, kEnumToString(KingdomCardName::Festival), true),
+                        Action(5, kEnumToString(KingdomCardName::Festival), true) {}
 
 /*!
 //! Jouer la carte Festival: +2 actions, +1 achat, +2 pièces.

@@ -1,10 +1,12 @@
 #include "Bandit.hpp"
 #include "../game/Board.hpp"
 
-Bandit::Bandit(): Action(5, kEnumToString(KingdomCardName::Bandit), true) {}
+Bandit::Bandit(): Card(5, kEnumToString(KingdomCardName::Bandit), true),
+                    Action(5, kEnumToString(KingdomCardName::Bandit), true),
+                    Attack(5, kEnumToString(KingdomCardName::Bandit), true) {}
 
 /*!
-//! Jouer la carte Brigant: gagne un Or, tous les autres joueurs révèlent les 2 premières cartes de leur deck, écartent un Trèsor autre que Cuivre et défaussent le reste.
+//! Jouer la carte Brigant: gagne un Or, attaque.
       \param b le plateau de jeu sur laquelle la carte est jouée.
 */
 void Bandit::play(Board &b) {
@@ -16,74 +18,90 @@ void Bandit::play(Board &b) {
         cp->getNewCard(c, true);
     }
 
+    this->attack(b);
+}
+
+/*!
+//! Attaquer avec la carte Brigant: tous les autres joueurs révèlent les 2 premières cartes de leur deck, écartent un Trèsor autre que Cuivre et défaussent le reste.
+      \param b le plateau de jeu sur laquelle la carte est jouée.
+*/
+void Bandit::attack(Board &b) {
+    Player *cp = b.getCurrentPlayer();
+
     for(Player *p : b.getPlayers()) {
         if(p != cp) {
-            std::vector<Card*> cardsToCheck = p->showCardsInDeck(2);
-            bool mustChoose = false;
+            bool hasReacted = useReactionToAttack(b, p);
+            bool hasCounter = useCounterAttack(p);
+            if((hasCounter && !hasReacted) || !hasCounter) {
 
-            for(Card *c : cardsToCheck) {
-                std::cout << "Shown " << c << std::endl;
-            }
+                std::vector<Card*> cardsToCheck = p->showCardsInDeck(2);
+                bool mustChoose = false;
 
-            if(cardsToCheck.size() == 1) {
-                if(cardsToCheck.at(0)->isTreasureCard() && cardsToCheck.at(0)->getTitle() != oEnumToString(OtherCardName::Copper)) {
-                    p->trashCardsInDeck(1);
-                } else {
-                    p->addCardsFromDeckToDiscard(1);
+                for(Card *c : cardsToCheck) {
+                    std::cout << "Shown " << c << std::endl;
                 }
-            }
 
-            if(cardsToCheck.size() == 2) {
-                if(cardsToCheck.at(0)->isTreasureCard() && cardsToCheck.at(0)->getTitle() != oEnumToString(OtherCardName::Copper)) {
-                    if(cardsToCheck.at(1)->isTreasureCard() && cardsToCheck.at(1)->getTitle() != oEnumToString(OtherCardName::Copper)) {
-                        if(cardsToCheck.at(0)->getTitle() == cardsToCheck.at(1)->getTitle()) {
+                if(cardsToCheck.size() == 1) {
+                    if(cardsToCheck.at(0)->isTreasureCard() && cardsToCheck.at(0)->getTitle() != oEnumToString(OtherCardName::Copper)) {
+                        p->trashCardsInDeck(1);
+                    } else {
+                        p->addCardsFromDeckToDiscard(1);
+                    }
+                }
+
+                if(cardsToCheck.size() == 2) {
+                    if(cardsToCheck.at(0)->isTreasureCard() && cardsToCheck.at(0)->getTitle() != oEnumToString(OtherCardName::Copper)) {
+                        if(cardsToCheck.at(1)->isTreasureCard() && cardsToCheck.at(1)->getTitle() != oEnumToString(OtherCardName::Copper)) {
+                            if(cardsToCheck.at(0)->getTitle() == cardsToCheck.at(1)->getTitle()) {
+                                p->trashCardsInDeck(1);
+                                p->addCardsFromDeckToDiscard(1);
+                            } else {
+                                mustChoose = true;
+                            }
+                        } else {
                             p->trashCardsInDeck(1);
                             p->addCardsFromDeckToDiscard(1);
-                        } else {
-                            mustChoose = true;
                         }
                     } else {
-                        p->trashCardsInDeck(1);
-                        p->addCardsFromDeckToDiscard(1);
-                    }
-                } else {
-                    if(cardsToCheck.at(1)->isTreasureCard() && cardsToCheck.at(1)->getTitle() != oEnumToString(OtherCardName::Copper)) {
-                        p->addCardsFromDeckToDiscard(1);
-                        p->trashCardsInDeck(1);
-                    } else {
-                        p->addCardsFromDeckToDiscard(2);
+                        if(cardsToCheck.at(1)->isTreasureCard() && cardsToCheck.at(1)->getTitle() != oEnumToString(OtherCardName::Copper)) {
+                            p->addCardsFromDeckToDiscard(1);
+                            p->trashCardsInDeck(1);
+                        } else {
+                            p->addCardsFromDeckToDiscard(2);
+                        }
                     }
                 }
-            }
 
-            if(mustChoose) {
-                int cardIndex = -2;
-                while (cardIndex < 0 || cardIndex > int(cardsToCheck.size())-1)
-                {
-                    int i = 0;
-                    for(Card *c : cardsToCheck) {
-                        std::cout << i << ": " << c << std::endl;
-                        i++;
-                    }
-                    std::cout << p->getUsername() << ", which Treasure card other than Copper would you like to trash from those deck cards?: ";
-                    std::cin >> cardIndex;
+                if(mustChoose) {
+                    int cardIndex = -2;
+                    while (cardIndex < 0 || cardIndex > int(cardsToCheck.size())-1)
+                    {
+                        int i = 0;
+                        for(Card *c : cardsToCheck) {
+                            std::cout << i << ": " << c << std::endl;
+                            i++;
+                        }
+                        std::cout << p->getUsername() << ", which Treasure card other than Copper would you like to trash from those deck cards?: ";
+                        std::cin >> cardIndex;
 
-                    if(std::cin.fail()) {
-                        std::cin.clear();
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        cardIndex = -2;
-                    }
+                        if(std::cin.fail()) {
+                            std::cin.clear();
+                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                            cardIndex = -2;
+                        }
 
-                    if(cardIndex == 0) {
-                        p->trashCardsInDeck(1);
-                        p->addCardsFromDeckToDiscard(1);
-                    } else if(cardIndex == 1) {
-                        p->addCardsFromDeckToDiscard(1);
-                        p->trashCardsInDeck(1);
-                    } else {
-                        cardIndex = -2;
+                        if(cardIndex == 0) {
+                            p->trashCardsInDeck(1);
+                            p->addCardsFromDeckToDiscard(1);
+                        } else if(cardIndex == 1) {
+                            p->addCardsFromDeckToDiscard(1);
+                            p->trashCardsInDeck(1);
+                        } else {
+                            cardIndex = -2;
+                        }
                     }
                 }
+
             }
         }
     }

@@ -1,10 +1,12 @@
 #include "Militia.hpp"
 #include "../game/Board.hpp"
 
-Militia::Militia(): Action(4, kEnumToString(KingdomCardName::Militia), true, "Which card would you like to discard from your hand (down to 3 cards)?") {}
+Militia::Militia(): Card(4, kEnumToString(KingdomCardName::Militia), true),
+                    Action(4, kEnumToString(KingdomCardName::Militia), true),
+                    Attack(4, kEnumToString(KingdomCardName::Militia), true) {}
 
 /*!
-//! Jouer la carte Milice: +2 pièces, tous les autres joueurs défaussent jusqu'à avoir 3 cartes en main.
+//! Jouer la carte Milice: +2 pièces, attaque.
       \param b le plateau de jeu sur laquelle la carte est jouée.
 */
 void Militia::play(Board &b) {
@@ -12,23 +14,39 @@ void Militia::play(Board &b) {
     
     cp->addCoins(2);
 
+    this->attack(b);
+}
+
+/*!
+//! Attaquer avec la carte Milice: tous les autres joueurs défaussent jusqu'à avoir 3 cartes en main.
+      \param b le plateau de jeu sur laquelle la carte est jouée.
+*/
+void Militia::attack(Board &b) {
+    Player *cp = b.getCurrentPlayer();
+    
     for(Player *p : b.getPlayers()) {
         if(p != cp) {
-            while(p->getNbCardsInHand() > 3) {
-                int cardIndex = -2;
-                std::cout << p << std::endl;
-                std::cout << p->getUsername() << ", which card would you like to discard from your hand (down to 3 cards)?: ";
-                std::cin >> cardIndex;
+            bool hasReacted = useReactionToAttack(b, p);
+            bool hasCounter = useCounterAttack(p);
+            if((hasCounter && !hasReacted) || !hasCounter) {
 
-                if(std::cin.fail()) {
-                    std::cin.clear();
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    cardIndex = -2;
+                while(p->getNbCardsInHand() > 3) {
+                    int cardIndex = -2;
+                    std::cout << p << std::endl;
+                    std::cout << p->getUsername() << ", which card would you like to discard from your hand (down to 3 cards)?: ";
+                    std::cin >> cardIndex;
+
+                    if(std::cin.fail()) {
+                        std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        cardIndex = -2;
+                    }
+
+                    if(!p->discardCard(cardIndex)) {
+                        cardIndex = -2;
+                    }
                 }
 
-                if(!p->discardCard(cardIndex)) {
-                    cardIndex = -2;
-                }
             }
         }
     }

@@ -1,7 +1,8 @@
 #include "Village.hpp"
 #include "../game/Board.hpp"
 
-Village::Village(): Action(3, kEnumToString(KingdomCardName::Village), true) {}
+Village::Village(): Card(3, kEnumToString(KingdomCardName::Village), true),
+                    Action(3, kEnumToString(KingdomCardName::Village), true) {}
 
 /*!
 //! Jouer la carte Village: +1 carte, +2 actions.

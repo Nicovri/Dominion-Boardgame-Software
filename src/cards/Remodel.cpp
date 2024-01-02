@@ -1,7 +1,8 @@
 #include "Remodel.hpp"
 #include "../game/Board.hpp"
 
-Remodel::Remodel(): Action(4, kEnumToString(KingdomCardName::Remodel), true, "Which card would you like to trash and which card would you like to get (up to 2 coins more)?") {}
+Remodel::Remodel(): Card(4, kEnumToString(KingdomCardName::Remodel), true),
+                    Action(4, kEnumToString(KingdomCardName::Remodel), true, "Which card would you like to trash and which card would you like to get (up to 2 coins more)?") {}
 
 /*!
 //! Jouer la carte Rénovation: écarte une carte de la main, fait gagner une carte coûtant jusqu'à 2 pièces de plus.
@@ -24,13 +25,17 @@ void Remodel::play(Board &b) {
             cardIndex = -2;
         }
         if(cardIndex == -1) {
-            break;
+            return;
         } else {
-            allowedPrice = p->showCard(cardIndex)->getPrice() + 2;
-            if(!p->trashCard(cardIndex)) {
-                allowedPrice = -1;
+            Card *c = p->showCard(cardIndex);
+            if(c != NULL) {
+                allowedPrice = c->getPrice() + 2;
+                if(!p->trashCard(cardIndex)) {
+                    allowedPrice = -1;
+                } else {
+                    break;
+                }
             }
-            break;
         }
         cardIndex = -2;
     }

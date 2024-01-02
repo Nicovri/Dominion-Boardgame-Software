@@ -1,7 +1,8 @@
 #include "Workshop.hpp"
 #include "../game/Board.hpp"
 
-Workshop::Workshop(): Action(3, kEnumToString(KingdomCardName::Workshop), true, "Which card would you like to choose?") {}
+Workshop::Workshop(): Card(3, kEnumToString(KingdomCardName::Workshop), true),
+                        Action(3, kEnumToString(KingdomCardName::Workshop), true, "Which card would you like to choose?") {}
 
 /*!
 //! Jouer la carte Atelier: fait gagner une carte coûtant jusqu'à 4 pièces.

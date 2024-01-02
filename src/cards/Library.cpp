@@ -1,7 +1,8 @@
 #include "Library.hpp"
 #include "../game/Board.hpp"
 
-Library::Library(): Action(5, kEnumToString(KingdomCardName::Library), true) {}
+Library::Library(): Card(5, kEnumToString(KingdomCardName::Library), true),
+                    Action(5, kEnumToString(KingdomCardName::Library), true) {}
 
 /*!
 //! Jouer la carte Bibliothèque: pioche jusqu'à avoir 7 cartes dans la main. Chaque carte action piochée peut être mise de côté et défaussée.
@@ -10,7 +11,6 @@ Library::Library(): Action(5, kEnumToString(KingdomCardName::Library), true) {}
 void Library::play(Board &b) {
     Player *p = b.getCurrentPlayer();
 
-    // TODO défausser les cartes Action en dernier.
     std::vector<Card*> actionsToDiscardAfterwards = {};
 
     while(p->getNbCardsInHand() < 7 || (p->getNbCardsInDeck() == 0 && p->getNbCardsInDiscard() == 0)) {
@@ -31,7 +31,10 @@ void Library::play(Board &b) {
                 if(choice == "Y") {
                     p->getNewCardFromDeck();
                 } else {
-                    p->addCardsFromDeckToDiscard(1);
+                    Card *c = p->getTopCardFromDeck();
+                    if(c != NULL) {
+                        actionsToDiscardAfterwards.push_back(c);
+                    }
                 }
             } else {
                 p->getNewCardFromDeck();
@@ -39,6 +42,10 @@ void Library::play(Board &b) {
         } else {
             p->getDeckFromDiscard();
         }
+    }
+
+    for(Card *c : actionsToDiscardAfterwards) {
+        p->getNewCard(c, true);
     }
 }
 

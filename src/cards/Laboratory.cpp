@@ -1,7 +1,8 @@
 #include "Laboratory.hpp"
 #include "../game/Board.hpp"
 
-Laboratory::Laboratory(): Action(5, kEnumToString(KingdomCardName::Laboratory), true) {}
+Laboratory::Laboratory(): Card(5, kEnumToString(KingdomCardName::Laboratory), true),
+                            Action(5, kEnumToString(KingdomCardName::Laboratory), true) {}
 
 /*!
 //! Jouer la carte Laboratoire: +2 cartes, +1 action.

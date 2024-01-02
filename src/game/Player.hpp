@@ -42,7 +42,7 @@ public:
     Card* showCard(int indexInHand) const;
     void assignToGame(Board &b);
     void setBaseDeck(std::vector<Card*> baseDeck);
-    void getNewCard(Card *card, bool isCardEffect, bool goesDirectlyInHand=false);
+    void getNewCard(Card *card, bool isCardEffect);
     void getDeckFromDiscard();
     void getHandFromDeck();
     void getNewCardFromDeck();
@@ -71,4 +71,11 @@ public:
     void addCardsFromDeckToDiscard(int nbCards);
     bool addCardFromHandToDeck(int indexInHand);
     bool addCardFromDiscardToDeck(int indexInDiscard);
+    bool hasReactionCards();
+    bool hasVictoryCards();
+    void getNewCardInHand(Card *card, bool isCardEffect);
+    void getNewCardInDeck(Card *card, bool isCardEffect);
+    Card* getCardFromHand(int indexInHand);
+    Card* getTopCardFromDiscard();
+    Card* getTopCardFromDeck();
 };

@@ -106,13 +106,14 @@ int main(int argc, char* argv[]) {
         float xS = 0.1f;
         float yS = 0.1f;
         for(int i = 0; i < static_cast<int>(SetName::COUNT); i++) {
-            selectSetName.addButton(i, xS, yS, 150.f, 50.f, sEnumToString(static_cast<SetName>(i)), font, 24, window);
-            xS += 0.11f;
-            if(i % 7 == 0 && i != 0) { xS = 0.1f; yS += 0.1f; }
+            selectSetName.addButton(i, xS, yS, 200.f, 50.f, sEnumToString(static_cast<SetName>(i)), font, 24, window);
+            xS += 0.18f;
+            if(i % 4 == 0 && i != 0) { xS = 0.1f; yS += 0.1f; }
         }
         xS = 0.1f;
         yS = 0.1f;
 
+        // TODO bug d'affichage
         // Le groupe de boutons qui contient toutes les cartes Royaume disponibles au choix.
         ButtonGroup selectCardNames;
         for(int i = 0; i < static_cast<int>(KingdomCardName::COUNT); i++) {
@@ -523,12 +524,14 @@ int main(int argc, char* argv[]) {
                 if(roundState != ActionPhase || (roundState == ActionPhase && intervalChanged)) {
                     cardsInHand.clear();
                     float x = 0.05f;
-                    for(int i = j; i < k; i++) {
-                        cardsInHand.addButton(i, x, 0.75f, 0.1f, cardsTextureMap.at(p->showCard(i)->getTitle()), window);
-                        x += 0.1f;
+                    if(p->getNbCardsInHand() != 0) {
+                        for(int i = j; i < k; i++) {
+                            cardsInHand.addButton(i, x, 0.75f, 0.1f, cardsTextureMap.at(p->showCard(i)->getTitle()), window);
+                            x += 0.1f;
+                        }
+                        cardsInHand.draw(window);
+                        intervalChanged = false;
                     }
-                    cardsInHand.draw(window);
-                    intervalChanged = false;
                 } else {
                     cardsInHand.draw(window);
                 }
@@ -594,12 +597,28 @@ int main(int argc, char* argv[]) {
                     // Carte pas encore jouée (choix de cette valeur pour cardEffectPhase afin qu'un premier passage dans la boucle affiche de message au-dessus avant de jouer la carte et potentiellement devoir passer sur la console).
                     } else if(cardEffectPhase < -1) {
                         bool cardPlayed = b.getCurrentPlayer()->playCard(cardsInHand.getSelectedValue());
+                        std::cout << std::endl;
                         if(cardPlayed) {
+                            // TODO comment éviter de répéter ce code
+                            nbIntervals = p->getNbCardsInHand() / 5;
+                            if(p->getNbCardsInHand() % 5 != 0 || p->getNbCardsInHand() == 0) { nbIntervals++; }
+                            int j = selectedInterval*5;
+                            int k = selectedInterval+1 == nbIntervals ? p->getNbCardsInHand() : j+5;
+                            // std::cout << "p: " << p->getNbCardsInHand() << " k: " << k << std::endl;
+                            intervals.setString(std::to_string(selectedInterval+1) + "/" + std::to_string(nbIntervals));
+                            sf::FloatRect rectInt = intervals.getLocalBounds();
+                            intervals.setOrigin(rectInt.width/2, rectInt.height/2);
+                            float yPosInt = 0.85f * window.getSize().y;
+                            float xPosInt = 0.65f * window.getSize().x;
+                            intervals.setPosition(xPosInt, yPosInt);
+
                             cardsInHand.clear();
                             float x3 = 0.05f;
-                            for(int i = j; i < k; i++) {
-                                cardsInHand.addButton(i, x3, 0.75f, 0.1f, cardsTextureMap.at(p->showCard(i)->getTitle()), window);
-                                x3 += 0.1f;
+                            if(p->getNbCardsInHand() != 0) {
+                                for(int i = j; i < k; i++) {
+                                    cardsInHand.addButton(i, x3, 0.75f, 0.1f, cardsTextureMap.at(p->showCard(i)->getTitle()), window);
+                                    x3 += 0.1f;
+                                }
                             }
                             cardPlayed = false;
                         }

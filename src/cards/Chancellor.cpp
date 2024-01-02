@@ -1,7 +1,8 @@
 #include "Chancellor.hpp"
 #include "../game/Board.hpp"
 
-Chancellor::Chancellor(): Action(3, kEnumToString(KingdomCardName::Chancellor), true) {}
+Chancellor::Chancellor(): Card(3, kEnumToString(KingdomCardName::Chancellor), true),
+                            Action(3, kEnumToString(KingdomCardName::Chancellor), true) {}
 
 /*!
 //! Jouer la carte Chancelier: +2 pièces, permet de défausser son deck.

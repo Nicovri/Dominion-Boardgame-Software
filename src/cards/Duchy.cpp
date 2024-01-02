@@ -1,7 +1,8 @@
 #include "Duchy.hpp"
 #include "../game/Board.hpp"
 
-Duchy::Duchy(): Victory(5, oEnumToString(OtherCardName::Duchy), true, 3) {}
+Duchy::Duchy(): Card(5, oEnumToString(OtherCardName::Duchy), true),
+                Victory(5, oEnumToString(OtherCardName::Duchy), true, 3) {}
 
 /*!
 //! Jouer la carte Duché: +3 points de victoire.

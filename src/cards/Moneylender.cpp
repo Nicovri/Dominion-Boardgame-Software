@@ -1,7 +1,8 @@
 #include "Moneylender.hpp"
 #include "../game/Board.hpp"
 
-Moneylender::Moneylender(): Action(4, kEnumToString(KingdomCardName::Moneylender), true) {}
+Moneylender::Moneylender(): Card(4, kEnumToString(KingdomCardName::Moneylender), true),
+                            Action(4, kEnumToString(KingdomCardName::Moneylender), true) {}
 
 /*!
 //! Jouer la carte Prêteur Sur Gages: écarte un Cuivre en échange de +3 pièces.
@@ -10,11 +11,19 @@ Moneylender::Moneylender(): Action(4, kEnumToString(KingdomCardName::Moneylender
 void Moneylender::play(Board &b) {
     Player *p = b.getCurrentPlayer();
 
+    bool hasCopper = false;
+    for(int i = 0; i < p->getNbCardsInHand(); i++) {
+        if(p->showCard(i)->getTitle() == oEnumToString(OtherCardName::Copper)) {
+            hasCopper = true;
+        }
+    }
+    if(!hasCopper) { return; }
+
     int cardIndex = -2;
     while(cardIndex < -1 || cardIndex > p->getNbCardsInHand()-1 ||
             (0 <= cardIndex  && cardIndex <= p->getNbCardsInHand()-1 && p->showCard(cardIndex)->getTitle() != oEnumToString(OtherCardName::Copper))) {
         if(p->getNbCardsInHand() == 0) {
-            break;
+            return;
         }
 
         std::cout << p << std::endl;
@@ -26,12 +35,14 @@ void Moneylender::play(Board &b) {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             cardIndex = -2;
         }
+
         if(cardIndex == -1) {
-            break;
-        } else {
+            return;
+        }
+        if(0 <= cardIndex  && cardIndex <= p->getNbCardsInHand()-1 && p->showCard(cardIndex)->getTitle() == oEnumToString(OtherCardName::Copper)) {
             if(p->trashCard(cardIndex)) {
                 p->addCoins(3);
-                break;
+                return;
             }
         }
         cardIndex = -2;

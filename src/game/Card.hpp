@@ -12,7 +12,6 @@ class Card {
     bool isVisible;
 
 public:
-    Card();
     Card(int price, std::string title, bool isVisible);
     virtual ~Card() = default;
     virtual int getPrice() const;
@@ -20,6 +19,8 @@ public:
     virtual bool isActionCard() = 0;
     virtual bool isTreasureCard() = 0;
     virtual bool isVictoryCard() = 0;
+    virtual bool isAttackCard() = 0;
+    virtual bool isReactionCard() = 0;
     virtual void play(Board &b) = 0;
 
     friend std::ostream& operator<<(std::ostream &os, const Card *c);

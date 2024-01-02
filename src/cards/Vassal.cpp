@@ -1,7 +1,8 @@
 #include "Vassal.hpp"
 #include "../game/Board.hpp"
 
-Vassal::Vassal(): Action(3, kEnumToString(KingdomCardName::Vassal), true) {}
+Vassal::Vassal(): Card(3, kEnumToString(KingdomCardName::Vassal), true),
+                    Action(3, kEnumToString(KingdomCardName::Vassal), true) {}
 
 /*!
 //! Jouer la carte Vassal: +2 pièces, défausse la carte du dessus du deck, peut utiliser son effet si il s'agit d'une carte Action.

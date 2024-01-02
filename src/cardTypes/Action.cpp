@@ -11,3 +11,7 @@ bool Action::isActionCard() { return true; }
 bool Action::isTreasureCard() { return false; }
 
 bool Action::isVictoryCard() { return false; }
+
+bool Action::isAttackCard() { return false; }
+
+bool Action::isReactionCard() { return false; }

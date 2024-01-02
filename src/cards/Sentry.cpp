@@ -1,7 +1,8 @@
 #include "Sentry.hpp"
 #include "../game/Board.hpp"
 
-Sentry::Sentry(): Action(5, kEnumToString(KingdomCardName::Sentry), true) {}
+Sentry::Sentry(): Card(5, kEnumToString(KingdomCardName::Sentry), true),
+                    Action(5, kEnumToString(KingdomCardName::Sentry), true) {}
 
 /*!
 //! Jouer la carte Sentinelle: +1 carte, +1 action, regarde les 2 premières cartes du deck, écarte et/ou défausse puis replace le reste sur le deck.

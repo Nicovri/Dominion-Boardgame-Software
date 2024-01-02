@@ -33,6 +33,11 @@ Pile Set::createKingdomCardPile(KingdomCardName cardName, int nbPlayers) {
         case KingdomCardName::Harbinger: return Pile(new Harbinger(), 10);
         case KingdomCardName::Spy: return Pile(new Spy(), 10);
         case KingdomCardName::Library: return Pile(new Library(), 10);
+        case KingdomCardName::Moat: return Pile(new Moat(), 10);
+        case KingdomCardName::Bureaucrat: return Pile(new Bureaucrat(), 10);
+        case KingdomCardName::Merchant: return Pile(new Merchant(), 10);
+        case KingdomCardName::ThroneRoom: return Pile(new ThroneRoom(), 10);
+        case KingdomCardName::Adventurer: return Pile(new Adventurer(), 10);
         default: return Pile();
     }
 }
@@ -122,6 +127,78 @@ std::vector<Pile> Set::getSetCards(int nbPlayers, SetName setName) {
             setFromName.push_back(Pile(new Remodel(), 10));
             setFromName.push_back(Pile(new Witch(), 10));
             setFromName.push_back(Pile(new Village(), 10));
+            break;
+        case SetName::FirstGame:
+            setFromName.push_back(Pile(new Cellar(), 10));
+            setFromName.push_back(Pile(new Market(), 10));
+            setFromName.push_back(Pile(new Merchant(), 10));
+            setFromName.push_back(Pile(new Militia(), 10));
+            setFromName.push_back(Pile(new Mine(), 10));
+            setFromName.push_back(Pile(new Moat(), 10));
+            setFromName.push_back(Pile(new Remodel(), 10));
+            setFromName.push_back(Pile(new Smithy(), 10));
+            setFromName.push_back(Pile(new Village(), 10));
+            setFromName.push_back(Pile(new Workshop(), 10));
+            break;
+        case SetName::SizeDistortion:
+            setFromName.push_back(Pile(new Artisan(), 10));
+            setFromName.push_back(Pile(new Bandit(), 10));
+            setFromName.push_back(Pile(new Bureaucrat(), 10));
+            setFromName.push_back(Pile(new Chapel(), 10));
+            setFromName.push_back(Pile(new Festival(), 10));
+            setFromName.push_back(Pile(new Gardens(), nbPlayers == 2 ? 8 : 12));
+            setFromName.push_back(Pile(new Sentry(), 10));
+            setFromName.push_back(Pile(new ThroneRoom(), 10));
+            setFromName.push_back(Pile(new Witch(), 10));
+            setFromName.push_back(Pile(new Workshop(), 10));
+            break;
+        case SetName::DeckTop:
+            setFromName.push_back(Pile(new Artisan(), 10));
+            setFromName.push_back(Pile(new Bureaucrat(), 10));
+            setFromName.push_back(Pile(new CouncilRoom(), 10));
+            setFromName.push_back(Pile(new Festival(), 10));
+            setFromName.push_back(Pile(new Harbinger(), 10));
+            setFromName.push_back(Pile(new Laboratory(), 10));
+            setFromName.push_back(Pile(new Moneylender(), 10));
+            setFromName.push_back(Pile(new Sentry(), 10));
+            setFromName.push_back(Pile(new Vassal(), 10));
+            setFromName.push_back(Pile(new Village(), 10));
+            break;
+        case SetName::SleightOfHand:
+            setFromName.push_back(Pile(new Cellar(), 10));
+            setFromName.push_back(Pile(new CouncilRoom(), 10));
+            setFromName.push_back(Pile(new Festival(), 10));
+            setFromName.push_back(Pile(new Gardens(), nbPlayers == 2 ? 8 : 12));
+            setFromName.push_back(Pile(new Library(), 10));
+            setFromName.push_back(Pile(new Harbinger(), 10));
+            setFromName.push_back(Pile(new Militia(), 10));
+            setFromName.push_back(Pile(new Poacher(), 10));
+            setFromName.push_back(Pile(new Smithy(), 10));
+            setFromName.push_back(Pile(new ThroneRoom(), 10));
+            break;
+        case SetName::Improvements:
+            setFromName.push_back(Pile(new Artisan(), 10));
+            setFromName.push_back(Pile(new Cellar(), 10));
+            setFromName.push_back(Pile(new Market(), 10));
+            setFromName.push_back(Pile(new Merchant(), 10));
+            setFromName.push_back(Pile(new Mine(), 10));
+            setFromName.push_back(Pile(new Moat(), 10));
+            setFromName.push_back(Pile(new Moneylender(), 10));
+            setFromName.push_back(Pile(new Poacher(), 10));
+            setFromName.push_back(Pile(new Remodel(), 10));
+            setFromName.push_back(Pile(new Witch(), 10));
+            break;
+        case SetName::SilverAndGold:
+            setFromName.push_back(Pile(new Bandit(), 10));
+            setFromName.push_back(Pile(new Bureaucrat(), 10));
+            setFromName.push_back(Pile(new Chapel(), 10));
+            setFromName.push_back(Pile(new Harbinger(), 10));
+            setFromName.push_back(Pile(new Laboratory(), 10));
+            setFromName.push_back(Pile(new Merchant(), 10));
+            setFromName.push_back(Pile(new Mine(), 10));
+            setFromName.push_back(Pile(new Moneylender(), 10));
+            setFromName.push_back(Pile(new ThroneRoom(), 10));
+            setFromName.push_back(Pile(new Vassal(), 10));
             break;
         default:
             break;

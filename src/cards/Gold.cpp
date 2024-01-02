@@ -1,7 +1,8 @@
 #include "Gold.hpp"
 #include "../game/Board.hpp"
 
-Gold::Gold(): Treasure(6, oEnumToString(OtherCardName::Gold), true, 3) {}
+Gold::Gold(): Card(6, oEnumToString(OtherCardName::Gold), true),
+                Treasure(6, oEnumToString(OtherCardName::Gold), true, 3) {}
 
 /*!
 //! Jouer la carte Or: +3 pièces.

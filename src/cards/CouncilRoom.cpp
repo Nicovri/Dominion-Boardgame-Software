@@ -1,7 +1,8 @@
 #include "CouncilRoom.hpp"
 #include "../game/Board.hpp"
 
-CouncilRoom::CouncilRoom(): Action(5, kEnumToString(KingdomCardName::CouncilRoom), true) {}
+CouncilRoom::CouncilRoom(): Card(5, kEnumToString(KingdomCardName::CouncilRoom), true),
+                            Action(5, kEnumToString(KingdomCardName::CouncilRoom), true) {}
 
 /*!
 //! Jouer la carte Chambre Du Conseil: +4 cartes, +1 achat, chaque autre joueur pioche une carte de son deck.

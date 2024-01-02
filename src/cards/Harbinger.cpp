@@ -1,7 +1,8 @@
 #include "Harbinger.hpp"
 #include "../game/Board.hpp"
 
-Harbinger::Harbinger(): Action(3, kEnumToString(KingdomCardName::Harbinger), true) {}
+Harbinger::Harbinger(): Card(3, kEnumToString(KingdomCardName::Harbinger), true),
+                        Action(3, kEnumToString(KingdomCardName::Harbinger), true) {}
 
 /*!
 //! Jouer la carte Présage: +1 carte, +1 action, regarde la pile de défausse et permet de choisir une carte à placer sur le deck.

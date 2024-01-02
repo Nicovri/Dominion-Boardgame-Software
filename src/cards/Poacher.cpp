@@ -1,7 +1,8 @@
 #include "Poacher.hpp"
 #include "../game/Board.hpp"
 
-Poacher::Poacher(): Action(4, kEnumToString(KingdomCardName::Poacher), true) {}
+Poacher::Poacher(): Card(4, kEnumToString(KingdomCardName::Poacher), true),
+                    Action(4, kEnumToString(KingdomCardName::Poacher), true) {}
 
 /*!
 //! Jouer la carte Braconnier: +1 carte, +1 action, +1 pièce, défausse une carte pour chaque pile de jeu vide.

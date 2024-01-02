@@ -1,7 +1,8 @@
 #include "Artisan.hpp"
 #include "../game/Board.hpp"
 
-Artisan::Artisan(): Action(6, kEnumToString(KingdomCardName::Artisan), true) {}
+Artisan::Artisan(): Card(6, kEnumToString(KingdomCardName::Artisan), true),
+                    Action(6, kEnumToString(KingdomCardName::Artisan), true) {}
 
 /*!
 //! Jouer la carte Artisan: fait gagner une carte coûtant jusqu'à 5 pièces dans la main du joueur, place une carte de la main sur le deck.
@@ -14,7 +15,7 @@ void Artisan::play(Board &b) {
     
     Card *c = b.chooseCard(allowedPrice, true);
     if(c != NULL) {
-        p->getNewCard(c, true, true);
+        p->getNewCardInHand(c, true);
     }
 
     int cardIndex = -2;
@@ -32,6 +33,8 @@ void Artisan::play(Board &b) {
 
         if(!p->addCardFromHandToDeck(cardIndex)) {
             cardIndex = -2;
+        } else {
+            return;
         }
     }
 }

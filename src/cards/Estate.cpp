@@ -1,7 +1,8 @@
 #include "Estate.hpp"
 #include "../game/Board.hpp"
 
-Estate::Estate(): Victory(2, oEnumToString(OtherCardName::Estate), true, 1) {}
+Estate::Estate(): Card(2, oEnumToString(OtherCardName::Estate), true),
+                    Victory(2, oEnumToString(OtherCardName::Estate), true, 1) {}
 
 /*!
 //! Jouer la carte Domaine: +1 point de victoire.

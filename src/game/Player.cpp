@@ -95,6 +95,33 @@ std::vector<Card*> Player::showCardsInDiscard(int nbCards) const {
 }
 
 /*!
+//! Prend une carte de la main du joueur (ATTENTION UTILISER AVEC PRECAUTION pour limiter la perte de cartes).
+      \param indexInHand l'index de la carte choisie.
+*/
+Card* Player::getCardFromHand(int indexInHand) {
+    if(indexInHand <= this->getNbCardsInHand()-1 && indexInHand >= 0) {
+        return this->hand.getCard(indexInHand);
+    }
+    return NULL;
+}
+
+/*!
+//! Prend une carte de la défausse du joueur (ATTENTION UTILISER AVEC PRECAUTION pour limiter la perte de cartes).
+      \param indexInDiscard l'index de la carte choisie.
+*/
+Card* Player::getTopCardFromDiscard() {
+    return this->discard.getCard(discard.getNbCards()-1);
+}
+
+/*!
+//! Prend une carte du deck du joueur (ATTENTION UTILISER AVEC PRECAUTION pour limiter la perte de cartes).
+      \param indexInDeck l'index de la carte choisie.
+*/
+Card* Player::getTopCardFromDeck() {
+    return this->deck.getCard(deck.getNbCards()-1);
+}
+
+/*!
 //! Assigne un joueur à une nouvelle partie.
       \param b le plateau de jeu de la nouvelle partie.
 */
@@ -118,14 +145,35 @@ void Player::setBaseDeck(std::vector<Card*> baseDeck) {
 //! Récupère une nouvelle carte des piles du plateau de jeu et l'ajoute à la défausse.
       \param card la carte récupérée.
       \param isCardEffect la récupération est-elle due à l'effet d'une carte Action?
-      \param goesDirectlyInHand la carte récupérée va-t-elle directement dans la main du joueur?
 */
-void Player::getNewCard(Card *card, bool isCardEffect, bool goesDirectlyInHand) {
-    if(goesDirectlyInHand) {
-        this->hand.addCard(card);
-    } else {
-        this->discard.addCard(card);
+void Player::getNewCard(Card *card, bool isCardEffect) {
+    this->discard.addCard(card);
+    if(!isCardEffect) {
+        this->nbBuys--;
+        this->nbCoins -= card->getPrice();
     }
+}
+
+/*!
+//! Récupère une nouvelle carte des piles du plateau de jeu et l'ajoute à la main.
+      \param card la carte récupérée.
+      \param isCardEffect la récupération est-elle due à l'effet d'une carte Action?
+*/
+void Player::getNewCardInHand(Card *card, bool isCardEffect) {
+    this->hand.addCard(card);
+    if(!isCardEffect) {
+        this->nbBuys--;
+        this->nbCoins -= card->getPrice();
+    }
+}
+
+/*!
+//! Récupère une nouvelle carte des piles du plateau de jeu et l'ajoute au dessus du deck.
+      \param card la carte récupérée.
+      \param isCardEffect la récupération est-elle due à l'effet d'une carte Action?
+*/
+void Player::getNewCardInDeck(Card *card, bool isCardEffect) {
+    this->deck.addCard(card);
     if(!isCardEffect) {
         this->nbBuys--;
         this->nbCoins -= card->getPrice();
@@ -232,6 +280,26 @@ bool Player::hasActionCards() {
 bool Player::hasTreasureCards() {
     for(int i = 0; i < hand.getNbCards(); i++) {
         if(hand.showCard(i)->isTreasureCard()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Le joueur a-t-il des cartes Réaction dans sa main ?
+bool Player::hasReactionCards() {
+    for(int i = 0; i < hand.getNbCards(); i++) {
+        if(hand.showCard(i)->isReactionCard()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Le joueur a-t-il des cartes Victoire dans sa main ?
+bool Player::hasVictoryCards() {
+    for(int i = 0; i < hand.getNbCards(); i++) {
+        if(hand.showCard(i)->isVictoryCard()) {
             return true;
         }
     }

@@ -1,7 +1,8 @@
 #include "Province.hpp"
 #include "../game/Board.hpp"
 
-Province::Province(): Victory(8, oEnumToString(OtherCardName::Province), true, 6) {}
+Province::Province(): Card(8, oEnumToString(OtherCardName::Province), true),
+                        Victory(8, oEnumToString(OtherCardName::Province), true, 6) {}
 
 /*!
 //! Jouer la carte Province: +6 points de victoire.
