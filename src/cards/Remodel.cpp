@@ -12,6 +12,10 @@ void Remodel::play(Board &b) {
     Player *p = b.getCurrentPlayer();
     int allowedPrice = -1;
 
+    if(p->getNbCardsInHand() == 0) {
+        return;
+    }
+
     int cardIndex = -2;
     while(cardIndex < -1 || cardIndex > p->getNbCardsInHand()-1) {
 

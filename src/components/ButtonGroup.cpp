@@ -27,6 +27,12 @@ void ButtonGroup::removeButton(int index) {
     }
 }
 
+// Enlève un/des boutons du groupe contenant la valeur souhaitée.
+void ButtonGroup::removeButtonByValue(int value) {
+    buttons.erase(std::remove_if(buttons.begin(), buttons.end(),
+        [value](Button* button) { return button->getValue() == value; }), buttons.end());
+}
+
 // Enlève tous les boutons du groupe.
 void ButtonGroup::clear() {
     buttons.clear();
@@ -47,6 +53,25 @@ int ButtonGroup::getSelectedValue() const {
         }
     }
     return -1;
+}
+
+int ButtonGroup::getValueAtPosition(const sf::Vector2f& position) const {
+    for (Button* button : buttons) {
+        if (button->contains(position)) {
+            return button->getValue();
+        }
+    }
+    return -1;
+}
+
+// Modifie le bouton selectionné.
+void ButtonGroup::setSelectedValue(int value) {
+    for(std::size_t i = 0; i < buttons.size(); i++) {
+        buttons[i]->setSelected(false);
+        if(int(i) == value) {
+            buttons[i]->setSelected(true);
+        }
+    }
 }
 
 // Permet au bouton cliqué d'être selectionné.

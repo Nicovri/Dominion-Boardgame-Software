@@ -9,4 +9,5 @@ class Gardens: public Victory {
 public:
     Gardens();
     void play(Board &b);
+    void setVictoryPoints(Board &b);
 };

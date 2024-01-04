@@ -35,6 +35,17 @@ enum class KingdomCardName {
     Merchant,
     ThroneRoom,
     Adventurer,
+    Thief,
+    Ironworks,
+    Harem,
+    Replace,
+    Swindler,
+    Mill,
+    MiningVillage,
+    ShantyTown,
+    TradingPost,
+    Steward,
+    Pawn,
     COUNT
 };
 

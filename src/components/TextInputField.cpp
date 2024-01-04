@@ -2,10 +2,10 @@
 
 TextInputField::TextInputField(float relativeX, float relativeY, sf::Font& font, sf::RenderWindow& window): content("") {
     text.setFont(font);
-    text.setCharacterSize(24);
+    text.setCharacterSize(32);
     text.setFillColor(sf::Color::Black);
 
-    inputField.setSize(sf::Vector2f(200.f, 30.f));
+    inputField.setSize(sf::Vector2f(800.f, 40.f));
     inputField.setOutlineThickness(2.f);
     inputField.setFillColor(sf::Color::White);
     inputField.setOutlineColor(sf::Color::Black);
@@ -23,7 +23,7 @@ void TextInputField::draw(sf::RenderWindow& window) {
 void TextInputField::setPositionRelativeToWindow(float relativeX, float relativeY, sf::RenderWindow& window) {
     sf::Vector2u windowSize = window.getSize();
     inputField.setPosition(windowSize.x * relativeX - inputField.getSize().x / 2.f, windowSize.y * relativeY - inputField.getSize().y / 2.f);
-    text.setPosition(windowSize.x * relativeX - inputField.getSize().x / 2.f, windowSize.y * relativeY - inputField.getSize().y / 2.f);
+    text.setPosition(windowSize.x * relativeX - inputField.getSize().x / 2.f + 5, windowSize.y * relativeY - inputField.getSize().y / 2.f);
 }
 
 // Efface le texte contenu dans le champ de saisie.
@@ -45,10 +45,15 @@ const std::string& TextInputField::getContent() const {
 // Permet au texte entré au clavier d'être ajouté dans le champ de saisie.
 void TextInputField::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::TextEntered) {
+        sf::Text tempText = text;
+        tempText.setString(content + static_cast<char>(event.text.unicode));
+
         if (event.text.unicode == 8 && content.size() > 0) {
             content.pop_back();
         } else if (event.text.unicode >= 32 && event.text.unicode < 128) {
-            content += static_cast<char>(event.text.unicode);
+            if(tempText.getGlobalBounds().width <= inputField.getSize().x - 10) {
+                content += static_cast<char>(event.text.unicode);
+            }
         }
         updateText();
     }

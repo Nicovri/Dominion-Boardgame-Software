@@ -9,4 +9,5 @@ class Curse: public Victory {
 public:
     Curse();
     void play(Board &b);
+    void setVictoryPoints(Board &b);
 };

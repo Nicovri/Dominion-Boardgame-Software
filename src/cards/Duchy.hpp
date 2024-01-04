@@ -9,4 +9,5 @@ class Duchy: public Victory {
 public:
     Duchy();
     void play(Board &b);
+    void setVictoryPoints(Board &b);
 };

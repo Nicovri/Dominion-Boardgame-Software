@@ -9,4 +9,5 @@ class Province: public Victory {
 public:
     Province();
     void play(Board &b);
+    void setVictoryPoints(Board &b);
 };

@@ -42,7 +42,7 @@ void Pile::setTotalVictoryPoints() const {
     if(!this->isEmpty()) {
         for(const auto& card : cardStack) {
             if(card->isVictoryCard()) {
-                card->play(*game);
+                dynamic_cast<Victory*>(card)->setVictoryPoints(*game);
             }
         }
     }

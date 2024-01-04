@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <random>
 #include "Card.hpp"
+#include "../cardTypes/Victory.hpp"
 
 class Board;
 

@@ -38,6 +38,17 @@ Pile Set::createKingdomCardPile(KingdomCardName cardName, int nbPlayers) {
         case KingdomCardName::Merchant: return Pile(new Merchant(), 10);
         case KingdomCardName::ThroneRoom: return Pile(new ThroneRoom(), 10);
         case KingdomCardName::Adventurer: return Pile(new Adventurer(), 10);
+        case KingdomCardName::Thief: return Pile(new Thief(), 10);
+        case KingdomCardName::Ironworks: return Pile(new Ironworks(), 10);
+        case KingdomCardName::Harem: return Pile(new Harem(), nbPlayers == 2 ? 8 : 12);
+        case KingdomCardName::Replace: return Pile(new Replace(), 10);
+        case KingdomCardName::Swindler: return Pile(new Swindler(), 10);
+        case KingdomCardName::Mill: return Pile(new Mill(), nbPlayers == 2 ? 8 : 12);
+        case KingdomCardName::MiningVillage: return Pile(new MiningVillage(), 10);
+        case KingdomCardName::ShantyTown: return Pile(new ShantyTown(), 10);
+        case KingdomCardName::TradingPost: return Pile(new TradingPost(), 10);
+        case KingdomCardName::Steward: return Pile(new Steward(), 10);
+        case KingdomCardName::Pawn: return Pile(new Pawn(), 10);
         default: return Pile();
     }
 }

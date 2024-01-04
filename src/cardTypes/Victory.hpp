@@ -18,4 +18,6 @@ public:
     bool isAttackCard();
     bool isReactionCard();
     virtual void play(Board &b) = 0;
+
+    virtual void setVictoryPoints(Board &b) = 0;
 };

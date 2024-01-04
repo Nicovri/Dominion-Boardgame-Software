@@ -9,4 +9,5 @@ class Estate: public Victory {
 public:
     Estate();
     void play(Board &b);
+    void setVictoryPoints(Board &b);
 };

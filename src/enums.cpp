@@ -33,6 +33,17 @@ const std::string kEnumToString(KingdomCardName value) {
         case KingdomCardName::Merchant: return "Merchant";
         case KingdomCardName::ThroneRoom: return "ThroneRoom";
         case KingdomCardName::Adventurer: return "Adventurer";
+        case KingdomCardName::Thief: return "Thief";
+        case KingdomCardName::Ironworks: return "Ironworks";
+        case KingdomCardName::Harem: return "Harem";
+        case KingdomCardName::Replace: return "Replace";
+        case KingdomCardName::Swindler: return "Swindler";
+        case KingdomCardName::Mill: return "Mill";
+        case KingdomCardName::MiningVillage: return "MiningVillage";
+        case KingdomCardName::ShantyTown: return "ShantyTown";
+        case KingdomCardName::TradingPost: return "TradingPost";
+        case KingdomCardName::Steward: return "Steward";
+        case KingdomCardName::Pawn: return "Pawn";
         default: return "";
     }
 }

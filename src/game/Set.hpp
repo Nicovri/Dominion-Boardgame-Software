@@ -44,6 +44,17 @@
 #include "../cards/Merchant.hpp"
 #include "../cards/ThroneRoom.hpp"
 #include "../cards/Adventurer.hpp"
+#include "../cards/Thief.hpp"
+#include "../cards/Ironworks.hpp"
+#include "../cards/Harem.hpp"
+#include "../cards/Replace.hpp"
+#include "../cards/Swindler.hpp"
+#include "../cards/Mill.hpp"
+#include "../cards/MiningVillage.hpp"
+#include "../cards/ShantyTown.hpp"
+#include "../cards/TradingPost.hpp"
+#include "../cards/Steward.hpp"
+#include "../cards/Pawn.hpp"
 
 // Classe statique permettant l'instanciation des piles du plateau et des decks initiaux des joueurs.
 class Set {

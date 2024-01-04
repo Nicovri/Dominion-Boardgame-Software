@@ -24,11 +24,15 @@ public:
     std::vector<Player*> getPlayers() const;
     std::vector<Pile> getPiles() const;
 
+    std::string showTitleLastCardInTrash() const;
     int getNbPlayers() const;
     int getNbPiles() const;
+    int getNbCardsInTrash() const;
+    int getNbEmptyPiles() const;
     Player* getCurrentPlayer() const;
     bool initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles);
     Card* chooseCard(int allowedPrice, bool isCardEffect);
+    Card* chooseCard(int allowedPrice, int pileIndex);
     Card* chooseCard(std::string cardName);
     bool trashCard(Card* c);
     void playActionCard();
@@ -40,8 +44,4 @@ public:
 
     friend std::ostream& operator<<(std::ostream &os, const Board &b);
 
-    Card* chooseCard(int allowedPrice, int pileIndex);
-    std::string showTitleLastCardInTrash() const;
-    int getNbCardsInTrash() const;
-    int getNbEmptyPiles() const;
 };
