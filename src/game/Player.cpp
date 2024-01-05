@@ -4,9 +4,9 @@
 Player::Player(std::string username): username(username), nbActions(0), nbBuys(0), nbCoins(0) {}
 
 Player::~Player() {
-    // delete &deck;
-    // delete &discard;
-    // delete &hand;
+    // deck.~Pile();
+    // discard.~Pile();
+    // hand.~Pile();
 }
 
 Player::Player(const Player &p): username(p.username), nbActions(p.nbActions), nbBuys(p.nbBuys), nbCoins(p.nbCoins), deck(p.deck), discard(p.discard), hand(p.hand) {}

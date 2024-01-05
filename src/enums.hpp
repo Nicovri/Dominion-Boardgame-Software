@@ -4,6 +4,8 @@
 
 // Enumération des noms des cartes Royaume disponibles en jeu.
 enum class KingdomCardName {
+    // From Base
+
     Workshop,
     Woodcutter,
     Cellar,
@@ -36,6 +38,9 @@ enum class KingdomCardName {
     ThroneRoom,
     Adventurer,
     Thief,
+
+    // From Intrigue
+
     Ironworks,
     Harem,
     Replace,
@@ -46,6 +51,10 @@ enum class KingdomCardName {
     TradingPost,
     Steward,
     Pawn,
+    Lurker,
+    Diplomat,
+    Courtyard,
+
     COUNT
 };
 
@@ -84,6 +93,7 @@ enum class SetName {
     SleightOfHand, // Cellar, CouncilRoom, Festival, Gardens, Library, Harbinger, Militia, Poacher, Smithy, ThroneRoom
     Improvements, // Artisan, Cellar, Market, Merchant, Mine, Moat, Moneylender, Poacher, Remodel, Witch
     SilverAndGold, // Bandit, Bureaucrat, Chapel, Harbinger, Laboratory, Merchant, Mine, Moneylender, ThroneRoom, Vassal
+    Deconstruction, // Bandit, Mine, Remodel, ThroneRoom, Village, Diplomat, Harem, Lurker, Replace, Swindler
     COUNT
 };
 
@@ -93,3 +103,30 @@ enum class SetName {
       \return le nom du set correspondant.
 */
 const std::string sEnumToString(SetName value);
+
+// Enumération des noms des extensions disponibles en jeu.
+enum class ExtensionName {
+    Base,
+    Intrigue,
+    Seaside,
+
+    Prosperity,
+
+    Hinterlands,
+
+
+    Adventures,
+    Empires,
+    Nocturne,
+
+
+    Allies,
+    COUNT
+};
+
+/*!
+//! Conversion de l'énumération des extensions de cartes en std::string.
+      \param value la valeur de l'énumération.
+      \return le nom du set correspondant.
+*/
+const std::string eEnumToString(ExtensionName value);

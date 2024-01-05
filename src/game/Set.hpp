@@ -55,6 +55,9 @@
 #include "../cards/TradingPost.hpp"
 #include "../cards/Steward.hpp"
 #include "../cards/Pawn.hpp"
+#include "../cards/Lurker.hpp"
+#include "../cards/Diplomat.hpp"
+#include "../cards/Courtyard.hpp"
 
 // Classe statique permettant l'instanciation des piles du plateau et des decks initiaux des joueurs.
 class Set {

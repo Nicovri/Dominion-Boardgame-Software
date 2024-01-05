@@ -20,11 +20,11 @@ Board::Board(Player &p1, Player &p2, Player &p3, Player &p4) { this->players.pus
 
 Board::~Board() {
     // for(Pile p : piles) {
-    //     delete &p;
+    //     p.~Pile();
     // }
-    // delete &trash;
+    // trash.~Pile();
     // for(Player *p : players) {
-    //     delete &p;
+    //     p->~Player();
     // }
 }
 
@@ -83,6 +83,21 @@ bool Board::initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles
         }
     }
     return true;
+}
+
+/*!
+//! Montre les cartes choisies du rebut. Ne supprime pas ces cartes.
+      \param nbCards le nombre de cartes à montrer.
+*/
+std::vector<Card*> Board::showCardsInTrash(int nbCards) const {
+    std::vector<Card*> cards;
+    for(int i = 0; i < nbCards; i++) {
+        Card *c = trash.showCard(trash.getNbCards() - i - 1);
+        if(c != NULL) {
+            cards.push_back(c);
+        }
+    }
+    return cards;
 }
 
 /*!
@@ -146,6 +161,15 @@ Card* Board::chooseCard(std::string cardName) {
         }
         i++;
     }
+    return c;
+}
+
+/*!
+//! Récupère une carte du rebut (ATTENTION UTILISER AVEC PRECAUTION pour limiter la perte de cartes).
+      \param indexInTrash l'index de la carte dans le rebut.
+*/
+Card* Board::chooseCardFromTrash(int indexInTrash) {
+    Card *c = trash.getCard(trash.getNbCards() - indexInTrash - 1);
     return c;
 }
 

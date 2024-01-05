@@ -27,8 +27,13 @@ make run
 For the GUI version, use the following command:
 
 ```bash
-make run ARGS="1"
+make run ARGS="1 0"
 ```
+
+ARGS takes 2 integers:
+
+- 1 for GUI and anything else for CLI
+- the second integer is a background choice. If nothing given, it is chosen randomly. 0 corresponds to base background, the most neutral.
 
 ---
 
@@ -59,5 +64,10 @@ make run
 Pour la version GUI, utilisez la commande suivante :
 
 ```bash
-make run ARGS="1"
+make run ARGS="1 0"
 ```
+
+ARGS prend 2 entiers :
+
+- 1 pour le mode GUI et autre chose pour le mode CLI
+- le deuxième entier est un choix de fond d'écran. Si rien n'est donné, il est choisi aléatoirement. 0 correspond au fond d'écran de base, le plus neutre.

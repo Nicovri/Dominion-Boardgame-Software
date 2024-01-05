@@ -49,6 +49,9 @@ Pile Set::createKingdomCardPile(KingdomCardName cardName, int nbPlayers) {
         case KingdomCardName::TradingPost: return Pile(new TradingPost(), 10);
         case KingdomCardName::Steward: return Pile(new Steward(), 10);
         case KingdomCardName::Pawn: return Pile(new Pawn(), 10);
+        case KingdomCardName::Lurker: return Pile(new Lurker(), 10);
+        case KingdomCardName::Diplomat: return Pile(new Diplomat(), 10);
+        case KingdomCardName::Courtyard: return Pile(new Courtyard(), 10);
         default: return Pile();
     }
 }
@@ -210,6 +213,18 @@ std::vector<Pile> Set::getSetCards(int nbPlayers, SetName setName) {
             setFromName.push_back(Pile(new Moneylender(), 10));
             setFromName.push_back(Pile(new ThroneRoom(), 10));
             setFromName.push_back(Pile(new Vassal(), 10));
+            break;
+        case SetName::Deconstruction:
+            setFromName.push_back(Pile(new Bandit(), 10));
+            setFromName.push_back(Pile(new Mine(), 10));
+            setFromName.push_back(Pile(new Remodel(), 10));
+            setFromName.push_back(Pile(new ThroneRoom(), 10));
+            setFromName.push_back(Pile(new Village(), 10));
+            setFromName.push_back(Pile(new Diplomat(), 10));
+            setFromName.push_back(Pile(new Harem(), 10));
+            setFromName.push_back(Pile(new Lurker(), 10));
+            setFromName.push_back(Pile(new Replace(), 10));
+            setFromName.push_back(Pile(new Swindler(), 10));
             break;
         default:
             break;

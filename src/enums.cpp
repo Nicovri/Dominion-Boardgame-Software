@@ -44,6 +44,9 @@ const std::string kEnumToString(KingdomCardName value) {
         case KingdomCardName::TradingPost: return "TradingPost";
         case KingdomCardName::Steward: return "Steward";
         case KingdomCardName::Pawn: return "Pawn";
+        case KingdomCardName::Lurker: return "Lurker";
+        case KingdomCardName::Diplomat: return "Diplomat";
+        case KingdomCardName::Courtyard: return "Courtyard";
         default: return "";
     }
 }
@@ -70,6 +73,22 @@ const std::string sEnumToString(SetName value) {
         case SetName::SleightOfHand: return "Sleight of Hand";
         case SetName::Improvements: return "Improvements";
         case SetName::SilverAndGold: return "Silver & Gold";
+        case SetName::Deconstruction: return "Deconstruction";
+        default: return "";
+    }
+}
+
+const std::string eEnumToString(ExtensionName value) {
+    switch (value) {
+        case ExtensionName::Base: return "Base";
+        case ExtensionName::Intrigue: return "Intrigue";
+        case ExtensionName::Seaside: return "Seaside";
+        case ExtensionName::Prosperity: return "Prosperity";
+        case ExtensionName::Hinterlands: return "Hinterlands";
+        case ExtensionName::Adventures: return "Adventures";
+        case ExtensionName::Empires: return "Empires";
+        case ExtensionName::Nocturne: return "Nocturne";
+        case ExtensionName::Allies: return "Allies";
         default: return "";
     }
 }

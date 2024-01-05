@@ -17,7 +17,7 @@ Pile::Pile(std::vector<Card*> cards) {
 Pile::~Pile() {
     // for(Card *c : cardStack) {
     //     if(c != NULL) {
-    //         delete &c;
+    //         c->~Card();
     //     }
     // }
 }

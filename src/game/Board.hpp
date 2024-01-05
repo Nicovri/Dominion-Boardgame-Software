@@ -31,9 +31,11 @@ public:
     int getNbEmptyPiles() const;
     Player* getCurrentPlayer() const;
     bool initializeBoard(std::vector<Card*> baseDeck, std::vector<Pile> piles);
+    std::vector<Card*> showCardsInTrash(int nbCards) const;
     Card* chooseCard(int allowedPrice, bool isCardEffect);
     Card* chooseCard(int allowedPrice, int pileIndex);
     Card* chooseCard(std::string cardName);
+    Card* chooseCardFromTrash(int indexInTrash);
     bool trashCard(Card* c);
     void playActionCard();
     void nextPlayerRound();
