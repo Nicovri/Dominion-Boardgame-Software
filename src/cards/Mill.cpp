@@ -41,10 +41,12 @@ void Mill::play(Board &b) {
                 cardIndex = -2;
             }
 
-            Card *c = p->showCard(cardIndex);
-            if(c != NULL) {
-                if(p->discardCard(cardIndex)) {
-                    cardDiscarded++;
+            if(0 <= cardIndex && cardIndex <= p->getNbCardsInHand()-1) {
+                Card *c = p->showCard(cardIndex);
+                if(c != NULL) {
+                    if(p->discardCard(cardIndex)) {
+                        cardDiscarded++;
+                    }
                 }
             }
         }

@@ -46,6 +46,8 @@ int main(int argc, char* argv[]) {
         // Variables de style
         const sf::Color TEXT_COLOR = sf::Color::Black;
         const sf::Color TEXT_BG_COLOR = sf::Color(91, 172, 166, 180);
+        const int NB_CARDS_CHOICE = 40;
+        const int NB_CARDS_HAND = 5;
         sf::FloatRect textPositionToCenter;
         sf::Font font;
         if (!font.loadFromFile("assets/open-sans.ttf")) { return EXIT_FAILURE; }
@@ -264,7 +266,7 @@ int main(int argc, char* argv[]) {
                                 selectCardNames.clear();
                                 float xC = 0.1f;
                                 float yC = 0.15f;
-                                for(int i = 0; i < 40; i++) {
+                                for(int i = 0; i < NB_CARDS_CHOICE; i++) {
                                     selectCardNames.addButton(i, xC, yC, 150.f, 50.f, kEnumToString(static_cast<KingdomCardName>(i)), font, 24, window);
                                     xC += 0.11f;
                                     if((i+1) % 8 == 0 && i != 0) { xC = 0.1f; yC += 0.1f; }
@@ -291,8 +293,8 @@ int main(int argc, char* argv[]) {
 
                         // Sur le bouton de défilement des cartes lors du choix des cartes: on affiche les 40 cartes suivantes afin de pouvoir en sélectionner et ne pas surcharger l'interface
                         if(moreCardsButton.contains(mousePos) && gameState == SetGeneration && setInitOption == 2) {
-                            nbIntervalsCards = static_cast<int>(KingdomCardName::COUNT) / 40;
-                            if(static_cast<int>(KingdomCardName::COUNT) % 40 != 0) { nbIntervalsCards++; }
+                            nbIntervalsCards = static_cast<int>(KingdomCardName::COUNT) / NB_CARDS_CHOICE;
+                            if(static_cast<int>(KingdomCardName::COUNT) % NB_CARDS_CHOICE != 0) { nbIntervalsCards++; }
 
                             if(selectedIntervalCards+1 >= nbIntervalsCards) {
                                 selectedIntervalCards = 0;
@@ -301,8 +303,8 @@ int main(int argc, char* argv[]) {
                             }
                             intervalCardsChanged = true;
 
-                            int j = selectedIntervalCards*40;
-                            int k = selectedIntervalCards+1 == nbIntervalsCards ? static_cast<int>(KingdomCardName::COUNT) : j+40;
+                            int j = selectedIntervalCards*NB_CARDS_CHOICE;
+                            int k = selectedIntervalCards+1 == nbIntervalsCards ? static_cast<int>(KingdomCardName::COUNT) : j+NB_CARDS_CHOICE;
                             if(intervalCardsChanged) {
                                 selectCardNames.clear();
                                 float xC = 0.1f;
@@ -483,6 +485,7 @@ int main(int argc, char* argv[]) {
             if(gameState == Resume) {
                 playButton.draw(window);
                 resumeButton.draw(window);
+                chooseOptionsText.draw(window);
                 selectNbPlayers.draw(window);
                 selectSetInitMode.draw(window);
             }
@@ -500,7 +503,7 @@ int main(int argc, char* argv[]) {
                 } else if(setInitOption == 2) {
                     selectCardNames.draw(window);
                     cardNameText.draw(window);
-                    if(static_cast<int>(KingdomCardName::COUNT) > 40) {
+                    if(static_cast<int>(KingdomCardName::COUNT) > NB_CARDS_CHOICE) {
                         moreCardsButton.draw(window);
                     }
                 } else {
@@ -555,10 +558,10 @@ int main(int argc, char* argv[]) {
                                         "\nCoins: " + std::to_string(p->getNbCoins()) +
                                         "\nVictory: " + std::to_string(p->getTotalVictoryPoints()), X_PLAYER_INFO, 0.22f, window);
 
-                nbIntervals = p->getNbCardsInHand() / 5;
-                if(p->getNbCardsInHand() % 5 != 0) { nbIntervals++; }
-                int j = selectedInterval*5;
-                int k = selectedInterval+1 == nbIntervals ? p->getNbCardsInHand() : j+5;
+                nbIntervals = p->getNbCardsInHand() / NB_CARDS_HAND;
+                if(p->getNbCardsInHand() % NB_CARDS_HAND != 0) { nbIntervals++; }
+                int j = selectedInterval*NB_CARDS_HAND;
+                int k = selectedInterval+1 == nbIntervals ? p->getNbCardsInHand() : j+NB_CARDS_HAND;
                 // std::cout << "p: " << p->getNbCardsInHand() << " k: " << k << std::endl;
                 intervalsText.setString(std::to_string(selectedInterval+1) + "/" + std::to_string(nbIntervals), 0.5f, 0.85f, window);
 
@@ -610,7 +613,7 @@ int main(int argc, char* argv[]) {
                 dataPlayerText.draw(window);
                 cardsLeftInPiles.draw(window);
                 otherPiles.draw(window);
-                if(p->getNbCardsInHand() > 5) {
+                if(p->getNbCardsInHand() > NB_CARDS_HAND) {
                     rightArrow.draw(window);
                     intervalsText.draw(window);
                 }
