@@ -16,10 +16,11 @@ void ThroneRoom::play(Board &b) {
     }
 
     int cardIndex = -2;
-    while(cardIndex < -1 || cardIndex > p->getNbCardsInHand()-1) {
+    while(cardIndex < -1 || cardIndex > p->getNbCardsInHand()-1 ||
+            (0 <= cardIndex && cardIndex <= p->getNbCardsInHand()-1 && !p->showCard(cardIndex)->isActionCard())) {
 
         std::cout << p << std::endl;
-        std::cout << p->getUsername() << ", which card would you like to play twice?: ";
+        std::cout << p->getUsername() << ", which Action card would you like to play twice?: ";
         std::cin >> cardIndex;
 
         if(std::cin.fail()) {
@@ -31,7 +32,7 @@ void ThroneRoom::play(Board &b) {
             return;
         }
         
-        if(0 <= cardIndex && cardIndex <= p->getNbCardsInHand()-1) {
+        if(0 <= cardIndex && cardIndex <= p->getNbCardsInHand()-1 && p->showCard(cardIndex)->isActionCard()) {
             Card *c = p->showCard(cardIndex);
             bool wasDiscarded = p->discardCard(cardIndex);
             c->play(b);
