@@ -221,7 +221,7 @@ std::vector<Pile> Set::getSetCards(int nbPlayers, SetName setName) {
             setFromName.push_back(Pile(new ThroneRoom(), 10));
             setFromName.push_back(Pile(new Village(), 10));
             setFromName.push_back(Pile(new Diplomat(), 10));
-            setFromName.push_back(Pile(new Harem(), 10));
+            setFromName.push_back(Pile(new Harem(), nbPlayers == 2 ? 8 : 12));
             setFromName.push_back(Pile(new Lurker(), 10));
             setFromName.push_back(Pile(new Replace(), 10));
             setFromName.push_back(Pile(new Swindler(), 10));
